@@ -125,7 +125,7 @@ img {
 
 /* Custom scrollbar for modern browsers */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 3px;
 }
 
 ::-webkit-scrollbar-track {
@@ -139,4 +139,24 @@ img {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #22c55e;
-}
+}@keyframes slideInFromRight {
+          0% {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          100% {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        
+        @keyframes slideInFromLeft {
+          0% {
+            transform: translateX(-100%);
+            opacity: 0;
+          }
+          100% {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }

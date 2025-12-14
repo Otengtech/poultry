@@ -7,6 +7,7 @@ import heroImage from "../../../public/assets/heroimage.jpg";
 const HeroSection = ({ content }) => {
   const sectionRef = useScrollReveal();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState("right"); // 'right' or 'left'
   const [isAnimating, setIsAnimating] = useState(false);
   const timeoutRef = useRef(null);
 
@@ -24,17 +25,16 @@ const HeroSection = ({ content }) => {
     if (!content || !content.length) return;
 
     const rotateContent = () => {
+      setDirection("right");
       setIsAnimating(true);
 
-      // Wait for fade-out animation to complete before changing content
       timeoutRef.current = setTimeout(() => {
         setCurrentIndex((prev) => (prev + 1) % content.length);
-
-        // Wait a bit before allowing fade-in
+        
         timeoutRef.current = setTimeout(() => {
           setIsAnimating(false);
         }, 100);
-      }, 500);
+      }, 600);
     };
 
     const interval = setInterval(rotateContent, 6000);
@@ -47,9 +47,28 @@ const HeroSection = ({ content }) => {
     };
   }, [content]);
 
+  const handleDotClick = (index) => {
+    if (index === currentIndex) return;
+    
+    setDirection(index > currentIndex ? "right" : "left");
+    setIsAnimating(true);
+
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    
+    timeoutRef.current = setTimeout(() => {
+      setCurrentIndex(index);
+      
+      timeoutRef.current = setTimeout(() => {
+        setIsAnimating(false);
+      }, 100);
+    }, 600);
+  };
+
   if (!content || !content.length) return null;
 
   const hero = content[currentIndex];
+  const nextIndex = (currentIndex + 1) % content.length;
+  const nextHero = content[nextIndex];
 
   return (
     <section className="relative w-full overflow-hidden">
@@ -69,40 +88,97 @@ const HeroSection = ({ content }) => {
           ref={sectionRef}
           className="relative z-10 h-full flex items-center justify-center px-4 text-center"
         >
-          <div className="text-white space-y-6 max-w-3xl">
+          <div className="text-white space-y-6 max-w-3xl w-full">
             {/* Tagline with slide-in animation */}
-            <p className="text-lime-300 text-lg transform translate-y-0 opacity-100 transition-all duration-700 delay-100">
-              EGGXCELLENTLY YOURS
-            </p>
-
-            {/* Title with fade animation */}
-            <div className="relative h-28 sm:h-32 lg:h-32 overflow-hidden">
-              <h1
-                key={currentIndex}
-                className={`text-4xl sm:text-5xl lg:text-6xl font-bold absolute inset-0 flex items-center justify-center transition-all duration-500 ${
+            <div className="overflow-hidden h-7">
+              <p
+                key={`tagline-${currentIndex}`}
+                className={`text-lime-300 text-lg transition-all duration-700 delay-100 transform ${
                   isAnimating
-                    ? "opacity-0 transform -translate-y-4"
-                    : "opacity-100 transform translate-y-0"
+                    ? direction === "right"
+                      ? "-translate-x-full opacity-0"
+                      : "translate-x-full opacity-0"
+                    : "translate-x-0 opacity-100"
+                }`}
+              >
+                EGGXCELLENTLY YOURS
+              </p>
+            </div>
+
+            {/* Title with slide animation */}
+            <div className="relative h-28 sm:h-32 lg:h-36 overflow-hidden">
+              {/* Current title sliding out */}
+              <h1
+                key={`title-out-${currentIndex}`}
+                className={`text-4xl sm:text-5xl lg:text-6xl font-bold absolute inset-0 flex items-center justify-center transition-all duration-700 ${
+                  isAnimating
+                    ? direction === "right"
+                      ? "-translate-x-full opacity-0"
+                      : "translate-x-full opacity-0"
+                    : "translate-x-0 opacity-100"
                 }`}
               >
                 {hero.title}
               </h1>
+              
+              {/* Next title sliding in */}
+              {isAnimating && (
+                <h1
+                  key={`title-in-${nextIndex}`}
+                  className={`text-4xl sm:text-5xl lg:text-6xl font-bold absolute inset-0 flex items-center justify-center transition-all duration-700 ${
+                    direction === "right"
+                      ? "translate-x-full opacity-0"
+                      : "-translate-x-full opacity-0"
+                  }`}
+                  style={{
+                    animation: isAnimating
+                      ? `slideIn${direction === "right" ? "FromRight" : "FromLeft"} 0.7s ease-out forwards`
+                      : "none",
+                  }}
+                >
+                  {nextHero.title}
+                </h1>
+              )}
             </div>
 
-            {/* Description with staggered fade-in */}
-            <p
-              key={`desc-${currentIndex}`}
-              className={`text-lg text-gray-200 transition-all duration-500 delay-200 ${
-                isAnimating
-                  ? "opacity-0 transform translate-y-4"
-                  : "opacity-100 transform translate-y-0"
-              }`}
-            >
-              {hero.description}
-            </p>
+            {/* Description with slide animation */}
+            <div className="relative h-24 sm:h-28 overflow-hidden">
+              {/* Current description sliding out */}
+              <p
+                key={`desc-out-${currentIndex}`}
+                className={`text-lg text-gray-200 transition-all duration-700 delay-200 absolute inset-0 flex items-center justify-center ${
+                  isAnimating
+                    ? direction === "right"
+                      ? "-translate-x-full opacity-0"
+                      : "translate-x-full opacity-0"
+                    : "translate-x-0 opacity-100"
+                }`}
+              >
+                {hero.description}
+              </p>
+              
+              {/* Next description sliding in */}
+              {isAnimating && (
+                <p
+                  key={`desc-in-${nextIndex}`}
+                  className={`text-lg text-gray-200 absolute inset-0 flex items-center justify-center transition-all duration-700 delay-200 ${
+                    direction === "right"
+                      ? "translate-x-full opacity-0"
+                      : "-translate-x-full opacity-0"
+                  }`}
+                  style={{
+                    animation: isAnimating
+                      ? `slideIn${direction === "right" ? "FromRight" : "FromLeft"} 0.7s ease-out 0.2s forwards`
+                      : "none",
+                  }}
+                >
+                  {nextHero.description}
+                </p>
+              )}
+            </div>
 
-            {/* Button with hover animation */}
-            <div className="flex justify-center items-center w-full">
+            {/* Button - keep consistent */}
+            <div className="flex justify-center items-center w-full pt-4">
               <Link to="/products">
                 <button className="px-6 py-3 bg-lime-400 text-black rounded-full flex items-center justify-center gap-2 group relative overflow-hidden transition-all duration-300 hover:bg-lime-500 hover:shadow-lg hover:scale-105 transform">
                   <span className="relative flex items-center justify-center gap-2">
@@ -121,13 +197,7 @@ const HeroSection = ({ content }) => {
             {content.map((_, index) => (
               <button
                 key={index}
-                onClick={() => {
-                  setIsAnimating(true);
-                  setTimeout(() => {
-                    setCurrentIndex(index);
-                    setTimeout(() => setIsAnimating(false), 100);
-                  }, 500);
-                }}
+                onClick={() => handleDotClick(index)}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
                   index === currentIndex
                     ? "bg-lime-400 w-8"
