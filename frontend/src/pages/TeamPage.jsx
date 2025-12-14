@@ -31,14 +31,14 @@ const SocialIcon = ({ platform, size = "h-4 w-4", className = "" }) => {
     phone: Phone
   };
   
-  const Icon = icons[platform];
-  if (!Icon) return null;
+  const IconComponent = icons[platform];
+  if (!IconComponent) return null;
   
-  return <Icon className={`${size} ${className}`} />;
+  return <IconComponent className={`${size} ${className}`} />;
 };
 
-// Stats Card Component
-const StatCard = ({ icon: Icon, number, label, description, delay = 0 }) => {
+// Stats Card Component - FIXED VERSION
+const StatCard = ({ icon: IconComponent, number, label, description, delay = 0 }) => {
   const ref = useScrollReveal();
   
   return (
@@ -51,8 +51,8 @@ const StatCard = ({ icon: Icon, number, label, description, delay = 0 }) => {
         <div className="flex items-start space-x-4">
           <div className="flex-shrink-0">
             <div className="p-3 bg-lime-100 rounded-xl group-hover:bg-lime-500 transition-colors">
-              {/* Use the icon passed as prop */}
-              <Icon className="h-6 w-6 text-lime-600 group-hover:text-white transition-colors" />
+              {/* Use the icon passed as prop - FIXED: Use IconComponent instead of Icon */}
+              {IconComponent && <IconComponent className="h-6 w-6 text-lime-600 group-hover:text-white transition-colors" />}
             </div>
           </div>
           <div>
@@ -69,7 +69,6 @@ const StatCard = ({ icon: Icon, number, label, description, delay = 0 }) => {
     </div>
   );
 };
-
 
 // Team Member Card Component
 const TeamMemberCard = ({ member, index }) => {
@@ -192,14 +191,13 @@ const OurTeam = () => {
   const textRef = useScrollReveal();
   const ctaRef = useScrollReveal();
 
-  // Stats data
- const stats = [
-  { icon: Award, number: "15+", label: "Years Experience", description: "Collective industry experience" },
-  { icon: Users, number: "100%", label: "Quality Focus", description: "Dedicated to excellence" },
-  { icon: Clock, number: "24/7", label: "Support", description: "Always here to help" },
-  { icon: Shield, number: "50+", label: "Projects", description: "Successfully delivered" }
-];
-
+  // Stats data - FIXED: Make sure icons are imported components
+  const stats = [
+    { icon: Award, number: "15+", label: "Years Experience", description: "Collective industry experience" },
+    { icon: Users, number: "100%", label: "Quality Focus", description: "Dedicated to excellence" },
+    { icon: Clock, number: "24/7", label: "Support", description: "Always here to help" },
+    { icon: Shield, number: "50+", label: "Projects", description: "Successfully delivered" }
+  ];
 
   useEffect(() => {
     loadPageContent("team");
@@ -313,8 +311,7 @@ const OurTeam = () => {
               <TeamMemberCard 
                 key={member.id} 
                 member={member} 
-                index={index} 
-                totalMembers={pageData.members.length}
+                index={index}
               />
             ))}
           </div>

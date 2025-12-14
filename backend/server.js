@@ -23,6 +23,7 @@ app.get('/login', (req, res) => {
 const allowedOrigins = [
   process.env.CLIENT_URL,
   "http://localhost:5000",
+  "https://naya-axis-foods-backend.vercel.app",
   "https://poultry-ihc4.onrender.com",
   "http://localhost:5173",
   "https://nayaaxisfoods.vercel.app"

@@ -3,8 +3,8 @@ import { ContentContext } from "./ContentContext";
 import axios from "axios";
 
 export default function ContentProvider({ children }) {
-  const apiBase = import.meta.env.VITE_API_BASE_URL;
-  // const apiBase = "http://localhost:5000/content";
+  // const apiBase = import.meta.env.VITE_API_BASE_URL;
+  const apiBase = "http://localhost:5000/content";
 
   // Define all pages and their endpoints
   const pages = [
