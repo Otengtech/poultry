@@ -25,7 +25,7 @@ const allowedOrigins = [
   "http://localhost:5000",
   "https://poultry-ihc4.onrender.com",
   "http://localhost:5173",
-  "https://portryfarm.vercel.app"
+  "https://nayaaxisfoods.vercel.app"
 ];
 
 app.use(cors({
