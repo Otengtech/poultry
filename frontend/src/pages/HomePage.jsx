@@ -11,6 +11,7 @@ import Loader from "../components/Loader";
 const Home = () => {
   const { homeContent, loadingHome} = useContext(ContentContext);
 
+console.log(homeContent.heroSection);
 
   if (loadingHome) return <Loader />;
   if (!homeContent) return <p>Error loading home page.</p>;

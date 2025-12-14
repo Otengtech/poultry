@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useScrollReveal } from "../../animation/useScrollReveal";
-import heroImage from "../../../public/assets/heroimage.jpg";
 
 const HeroSection = ({ content }) => {
   const sectionRef = useScrollReveal();
@@ -74,12 +73,12 @@ const HeroSection = ({ content }) => {
     <section className="relative w-full overflow-hidden">
       <div
         className="w-full bg-cover bg-center h-[75vh] relative"
-        style={{ backgroundImage: `url(${heroImage})` }}
+        style={{ backgroundImage: `url(/assets/heroimage.jpg)` }}
       >
         {/* Subtle parallax effect for background */}
         <div
           className="absolute inset-0 bg-cover bg-center transform scale-105 transition-transform duration-10000 ease-out"
-          style={{ backgroundImage: `url(${heroImage})` }}
+          style={{ backgroundImage: `url(/assets/heroimage.jpg)` }}
         />
         {/* Background overlay with fade-in */}
         <div className="absolute inset-0 bg-black/50 duration-1000" />

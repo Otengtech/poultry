@@ -38,7 +38,7 @@ const SocialIcon = ({ platform, size = "h-4 w-4", className = "" }) => {
 };
 
 // Stats Card Component
-const StatCard = ({ number, label, description, delay = 0 }) => {
+const StatCard = ({ icon: Icon, number, label, description, delay = 0 }) => {
   const ref = useScrollReveal();
   
   return (
@@ -51,6 +51,7 @@ const StatCard = ({ number, label, description, delay = 0 }) => {
         <div className="flex items-start space-x-4">
           <div className="flex-shrink-0">
             <div className="p-3 bg-lime-100 rounded-xl group-hover:bg-lime-500 transition-colors">
+              {/* Use the icon passed as prop */}
               <Icon className="h-6 w-6 text-lime-600 group-hover:text-white transition-colors" />
             </div>
           </div>
@@ -68,6 +69,7 @@ const StatCard = ({ number, label, description, delay = 0 }) => {
     </div>
   );
 };
+
 
 // Team Member Card Component
 const TeamMemberCard = ({ member, index }) => {
@@ -191,32 +193,13 @@ const OurTeam = () => {
   const ctaRef = useScrollReveal();
 
   // Stats data
-  const stats = [
-    { 
-      icon: Award, 
-      number: "15+", 
-      label: "Years Experience", 
-      description: "Collective industry experience" 
-    },
-    { 
-      icon: Users, 
-      number: "100%", 
-      label: "Quality Focus", 
-      description: "Dedicated to excellence" 
-    },
-    { 
-      icon: Clock, 
-      number: "24/7", 
-      label: "Support", 
-      description: "Always here to help" 
-    },
-    { 
-      icon: Shield, 
-      number: "50+", 
-      label: "Projects", 
-      description: "Successfully delivered" 
-    }
-  ];
+ const stats = [
+  { icon: Award, number: "15+", label: "Years Experience", description: "Collective industry experience" },
+  { icon: Users, number: "100%", label: "Quality Focus", description: "Dedicated to excellence" },
+  { icon: Clock, number: "24/7", label: "Support", description: "Always here to help" },
+  { icon: Shield, number: "50+", label: "Projects", description: "Successfully delivered" }
+];
+
 
   useEffect(() => {
     loadPageContent("team");
