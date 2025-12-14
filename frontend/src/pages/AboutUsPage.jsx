@@ -1,18 +1,62 @@
-import React, { useContext, useEffect } from "react";
-import { ContentContext } from "../context/ContentContext";
+import React from "react";
 import { useScrollReveal } from "../animation/useScrollReveal";
 import Footer from "../components/homecomponents/Footer";
-import Loader from "../components/Loader";
+
+const data = {
+  banner: {
+    title: "ABOUT PAGE",
+    image: "../../assets/banner1.jpg",
+  },
+  story: {
+    since: "Since 2018",
+    title: "This Is Our Story",
+    paragraphs: [
+      "NAYA Axis FOODS is an Agribusiness that started as a backyard poultry farm in 2018. It was registered as a fulltime business in April 2019 at the Registrar General Department. It Currently has 2 branches in Accra – Adenta and Aburi - Mariakrom in the Eastern Region. NAYA Success Axis aims to be one of the poultry giants in Ghana and the subregion.",
+      "The core business is Poultry farming & processing to increase the shelf-life of chicken and add variety to locally produced chicken. The business employs Four(4) fulltime staff and Four(4) other part-time and casual staff. We have over Thirty(30) others working indirectly along our value chain operations.",
+    ],
+  },
+  mission: {
+    title: "Our Mission",
+    description:
+      "To provide convenient, ready-to-consume, locally raised (and spiced) Chicken with longer shelf-life and Eggs to consumers.",
+    points: [
+      "Deliver premium quality poultry products",
+      "Promote sustainable farming practices",
+      "Ensure animal welfare in all operations",
+      "Support local farming communities",
+    ],
+  },
+  vision: {
+    title: "Our Vision",
+    description:
+      "Leader in locally produced poultry products, changing mindsets, and making positive impact in communities",
+    points: [
+      "Lead in sustainable poultry farming",
+      "Expand nationwide with quality standards",
+      "Innovate with eco-friendly technologies",
+      "Educate next-generation farmers",
+    ],
+  },
+  values_section: {
+    title: "Products",
+    description: "The business currently has the following products on the shelf;",
+    products: [
+      "Poultry / Chicken Eggs",
+      "Broiler and Layer Chickens",
+      "Charcoal Smoked Chicken",
+      "Spicy Grilled Chicken",
+      "Chicken Chips and Khebabs",
+      "Poultry Manure",
+      "Dog Food from the Offal",
+    ],
+    problem:
+      "Local poultry processors in Ghana lack the infrastructure and equipment to produce chicken cuts and other processed options and varieties preferred by most consumers.",
+    solution:
+      "Crunchy Chicken Chips made with locally reared chicken, spiced, dried, and thinly sliced to last for not less than one month. Our solution adds value to chicken to increase shelf-life and reduce post-harvest losses.",
+  },
+};
 
 const AboutSection = () => {
-  const { aboutContent, loadingAbout, loadPageContent } = useContext(ContentContext);
-
-  // Load About page content when component mounts
-  useEffect(() => {
-    loadPageContent("about");
-  }, []);
-
-    // Scroll reveal refs
   const bannerRef = useScrollReveal();
   const storyTitleRef = useScrollReveal();
   const storyTextRef = useScrollReveal();
@@ -21,20 +65,8 @@ const AboutSection = () => {
   const productsRef = useScrollReveal();
   const problemSolutionRef = useScrollReveal();
 
-  if (loadingAbout) return <Loader />;
-
-  const data = aboutContent?.aboutPage;
-  
-  if (!data)
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-xl text-gray-600">Error loading About Page data.</p>
-      </div>
-    );
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-orange-50">
-
       {/* Banner */}
       <div
         className="relative w-full h-96 lg:h-[420px] bg-cover bg-center"
@@ -43,150 +75,85 @@ const AboutSection = () => {
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <h1
             ref={bannerRef}
-            className="scroll-reveal opacity-0 translate-y-10 text-5xl lg:text-7xl font-bold text-center text-white"
+            className="scroll-reveal opacity-0 translate-y-10 text-5xl lg:text-7xl font-bold text-white"
           >
             {data.banner.title}
           </h1>
         </div>
       </div>
 
-      {/* Hero Section */}
-      <section className="relative py-6 lg:py-10 overflow-hidden">
-        <div className="absolute inset-0 opacity-5">
+      {/* Story */}
+      <section className="py-10">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <span className="inline-block px-4 py-2 mb-4 bg-amber-100 text-amber-800 rounded-full">
+              {data.story.since}
+            </span>
+            <h2
+              ref={storyTitleRef}
+              className="scroll-reveal opacity-0 translate-y-10 text-4xl font-black mb-4"
+            >
+              {data.story.title}
+            </h2>
+          </div>
+
           <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `radial-gradient(#f4b63c 1px, transparent 1px)`,
-              backgroundSize: "40px 40px",
-            }}
-          />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center">
-            <div className="w-full max-w-5xl">
-              <div className="mb-8 items-center">
-                <div className="flex flex-col md:flex-row gap-8 items-center">
-
-                  {/* Left Column */}
-                  <div className="md:w-1/2">
-                    <div className="inline-flex items-center px-4 py-2 rounded-full bg-amber-100 text-amber-800 font-medium mb-6">
-                      {data.story.since}
-                    </div>
-
-                    <h1
-                      ref={storyTitleRef}
-                      className="scroll-reveal opacity-0 translate-y-10 text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-tight mb-6"
-                    >
-                      {data.story.title}
-                    </h1>
-                  </div>
-
-                  {/* Right Column Text */}
-                  <div
-                    ref={storyTextRef}
-                    className="scroll-reveal opacity-0 translate-y-10 md:w-1/2 text-md"
-                  >
-                    <p className="text-gray-600 mb-4">
-                      {data.story.paragraphs[0]}
-                    </p>
-                    <p className="text-gray-600">{data.story.paragraphs[1]}</p>
-                  </div>
-
-                </div>
-              </div>
-            </div>
+            ref={storyTextRef}
+            className="scroll-reveal opacity-0 translate-y-10 text-gray-600 space-y-4"
+          >
+            {data.story.paragraphs.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Mission & Vision Section */}
+      {/* Mission, Vision, Products, Problem & Solution */}
       <section className="py-10 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-12">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10">
+          {/* Mission */}
+          <div ref={missionRef} className="scroll-reveal p-8 rounded-3xl bg-amber-50">
+            <h3 className="text-3xl font-bold mb-4">{data.mission.title}</h3>
+            <p className="mb-6">{data.mission.description}</p>
+            <ul className="space-y-2">
+              {data.mission.points.map((m, i) => (
+                <li key={i}>• {m}</li>
+              ))}
+            </ul>
+          </div>
 
-            {/* Mission */}
-            <div
-              ref={missionRef}
-              className="scroll-reveal opacity-0 translate-y-10 bg-gradient-to-br from-amber-50 to-orange-50 rounded-3xl p-8"
-            >
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                {data.mission.title}
-              </h2>
-              <p className="text-gray-700 leading-relaxed mb-6">
-                {data.mission.description}
-              </p>
+          {/* Vision */}
+          <div ref={visionRef} className="scroll-reveal p-8 rounded-3xl bg-orange-50">
+            <h3 className="text-3xl font-bold mb-4">{data.vision.title}</h3>
+            <p className="mb-6">{data.vision.description}</p>
+            <ul className="space-y-2">
+              {data.vision.points.map((v, i) => (
+                <li key={i}>• {v}</li>
+              ))}
+            </ul>
+          </div>
 
-              <ul className="space-y-3">
-                {data.mission.points.map((point, idx) => (
-                  <li key={idx} className="text-gray-700 flex items-start gap-2">
-                    <span className="text-[#f4b63c] font-bold">•</span>
-                    {point}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {/* Products */}
+          <div ref={productsRef} className="scroll-reveal p-8 rounded-3xl bg-amber-50">
+            <h3 className="text-3xl font-bold mb-4">{data.values_section.title}</h3>
+            <p className="mb-6">{data.values_section.description}</p>
+            <ul className="space-y-2">
+              {data.values_section.products.map((p, i) => (
+                <li key={i}>• {p}</li>
+              ))}
+            </ul>
+          </div>
 
-            {/* Vision */}
-            <div
-              ref={visionRef}
-              className="scroll-reveal opacity-0 translate-y-10 bg-gradient-to-br from-orange-50 to-amber-50 rounded-3xl p-8"
-            >
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                {data.vision.title}
-              </h2>
-              <p className="text-gray-700 leading-relaxed mb-6">
-                {data.vision.description}
-              </p>
+          {/* Problem & Solution */}
+          <div
+            ref={problemSolutionRef}
+            className="scroll-reveal p-8 rounded-3xl bg-orange-50"
+          >
+            <h3 className="text-3xl font-bold mb-2">Problem</h3>
+            <p className="mb-6">{data.values_section.problem}</p>
 
-              <ul className="space-y-3">
-                {data.vision.points.map((point, idx) => (
-                  <li key={idx} className="text-gray-700 flex items-start gap-2">
-                    <span className="text-[#f4b63c] font-bold">•</span>
-                    {point}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Products */}
-            <div
-              ref={productsRef}
-              className="scroll-reveal opacity-0 translate-y-10 bg-gradient-to-br from-orange-50 to-amber-50 rounded-3xl p-8"
-            >
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                {data.values_section.title}
-              </h2>
-              <p className="text-gray-700 leading-relaxed mb-6">
-                {data.values_section.description}
-              </p>
-
-              <ul className="space-y-3">
-                {data.values_section.products.map((p, idx) => (
-                  <li key={idx} className="text-gray-700 flex items-start gap-2">
-                    <span className="text-[#f4b63c] font-bold">•</span>
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Problem & Solution */}
-            <div
-              ref={problemSolutionRef}
-              className="scroll-reveal opacity-0 translate-y-10 bg-gradient-to-br from-orange-50 to-amber-50 rounded-3xl p-8"
-            >
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Problem</h2>
-              <p className="text-gray-700 leading-relaxed mb-6">
-                {data.values_section.problem}
-              </p>
-
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Solution</h2>
-              <p className="text-gray-700 leading-relaxed mb-6">
-                {data.values_section.solution}
-              </p>
-            </div>
-
+            <h3 className="text-3xl font-bold mb-2">Solution</h3>
+            <p>{data.values_section.solution}</p>
           </div>
         </div>
       </section>

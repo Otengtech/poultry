@@ -61,7 +61,7 @@ const Footer = () => {
               },
               {
                 title: "Support",
-                links: ['FAQ', 'Privacy', 'Products', 'Orders']
+                links: ['FAQ', 'Privacy', 'Products', 'Order']
               }
             ].map((column, idx) => (
               <div key={idx}>

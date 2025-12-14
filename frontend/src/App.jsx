@@ -1,6 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import { useContext } from "react";
-import { ContentContext } from "./context/ContentContext";
 
 import Home from "./pages/HomePage";
 import Navbar from "./components/Navbar";
@@ -15,18 +13,13 @@ import OrdersPage from "./pages/OrdersPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import Loader from "./components/Loader";
 import TopButton from "./components/TopButton";
-import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
-  const { loading } = useContext(ContentContext);
 
   return (
     <>
-      <ScrollToTop />
       <Navbar />
-      {loading ? (
-        <Loader />
-      ) : (
+        {/* <Loader /> */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<ProductsPage />} />
@@ -39,7 +32,6 @@ function App() {
           <Route path="/order" element={<OrdersPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
-      )}
       <TopButton />
     </>
   );

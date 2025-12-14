@@ -1,7 +1,24 @@
 import React, { useState } from "react";
 import { useScrollReveal } from "../../animation/useScrollReveal";
 
-const Newsletter = ({ content }) => {
+/* =========================
+   JSON CONTENT (INLINE)
+========================= */
+const newsletterSection = {
+  title: "Stay Updated with Our Latest Insights",
+  description:
+    "Subscribe to our newsletter to receive the latest farming tips, market trends, and sustainable practices directly in your inbox.",
+  inputPlaceholder: "Enter your email",
+  buttonText: "Subscribe",
+};
+
+/* =========================
+   COMPONENT
+========================= */
+const Newsletter = () => {
+  const { title, description, inputPlaceholder, buttonText } =
+    newsletterSection;
+
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState({
     loading: false,
@@ -9,10 +26,8 @@ const Newsletter = ({ content }) => {
     error: null,
   });
 
-  const API_URL = "VITE_API_URI=https://naya-axis-foods-backend.vercel.app";
+  const API_URL = "https://naya-axis-foods-backend.vercel.app";
   const sectionRef = useScrollReveal();
-
-  if (!content) return null;
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -53,12 +68,10 @@ const Newsletter = ({ content }) => {
       className="scroll-reveal opacity-0 translate-y-8 max-w-7xl mx-auto px-4 py-12"
     >
       <div className="bg-lime-100 rounded-2xl p-8 text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          {content.title}
-        </h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">{title}</h2>
 
         <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-          {content.description}
+          {description}
         </p>
 
         <form
@@ -69,7 +82,7 @@ const Newsletter = ({ content }) => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder={content.inputPlaceholder}
+            placeholder={inputPlaceholder}
             className="flex-grow px-6 py-3 rounded-full border focus:ring-2 focus:ring-lime-400"
             required
           />
@@ -79,7 +92,7 @@ const Newsletter = ({ content }) => {
             disabled={status.loading}
             className="px-8 py-3 bg-lime-400 text-white font-semibold rounded-full hover:bg-lime-500 transition"
           >
-            {status.loading ? "Subscribing..." : "Subscribe"}
+            {status.loading ? "Subscribing..." : buttonText}
           </button>
         </form>
 

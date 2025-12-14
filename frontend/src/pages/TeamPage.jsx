@@ -1,7 +1,5 @@
-import React, { useContext, useEffect, useRef } from "react";
-import { ContentContext } from "../context/ContentContext";
+import React from "react";
 import { Link } from "react-router-dom";
-import Loader from "../components/Loader";
 import {
   ArrowRight,
   Facebook,
@@ -14,13 +12,57 @@ import {
   Clock,
   Users,
   Mail,
-  Phone
+  Phone,
 } from "lucide-react";
 import { useScrollReveal } from "../animation/useScrollReveal";
 import Footer from "../components/homecomponents/Footer";
 
-// Social Icon Component
-const SocialIcon = ({ platform, size = "h-4 w-4", className = "" }) => {
+/* ================= TEAM PAGE DATA (INLINE JSON) ================= */
+const teamPageData = {
+  title: "Meet Our Team",
+  text: "Our team works really hard to keep this wonderful company going to produce and meet consumers' needs.",
+  members: [
+    {
+      id: "1",
+      image: "../../assets/team1.jpg",
+      socials: ["facebook", "whatsapp", "twitter"],
+      name: "Rabie Mark",
+      position: "Lead Farmer",
+      description:
+        "Specializes in organic farming with 15 years of experience in sustainable agriculture.",
+    },
+    {
+      id: "2",
+      image: "../../assets/team2.jpg",
+      socials: ["facebook", "instagram", "linkedin"],
+      name: "Sarah Johnson",
+      position: "Agricultural Engineer",
+      description:
+        "Expert in modern irrigation systems and soil management techniques.",
+    },
+    {
+      id: "3",
+      image: "../../assets/team3.jpg",
+      socials: ["whatsapp", "twitter", "linkedin"],
+      name: "Miguel Kean",
+      position: "Harvest Manager",
+      description:
+        "Oversees harvesting operations ensuring quality and efficiency across all farms.",
+    },
+    {
+      id: "4",
+      image: "../../assets/team4.jpg",
+      socials: ["facebook", "instagram", "whatsapp"],
+      name: "Amara Chen",
+      position: "Sustainability Officer",
+      description:
+        "Implements eco-friendly practices and manages our green certification programs.",
+    },
+  ],
+};
+
+/* ================= SOCIAL ICON ================= */
+const SocialIcon = ({ platform, className = "h-4 w-4" }) => {
   const icons = {
     facebook: Facebook,
     whatsapp: MessageCircle,
@@ -28,41 +70,32 @@ const SocialIcon = ({ platform, size = "h-4 w-4", className = "" }) => {
     instagram: Instagram,
     linkedin: Linkedin,
     mail: Mail,
-    phone: Phone
+    phone: Phone,
   };
-  
-  const IconComponent = icons[platform];
-  if (!IconComponent) return null;
-  
-  return <IconComponent className={`${size} ${className}`} />;
+
+  const Icon = icons[platform];
+  return Icon ? <Icon className={className} /> : null;
 };
 
-// Stats Card Component - FIXED VERSION
-const StatCard = ({ icon: IconComponent, number, label, description, delay = 0 }) => {
+/* ================= STAT CARD ================= */
+const StatCard = ({ icon: Icon, number, label, description, delay }) => {
   const ref = useScrollReveal();
-  
+
   return (
-    <div 
-      ref={ref} 
+    <div
+      ref={ref}
       className="scroll-reveal opacity-0 translate-y-8"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group hover:border-lime-200">
-        <div className="flex items-start space-x-4">
-          <div className="flex-shrink-0">
-            <div className="p-3 bg-lime-100 rounded-xl group-hover:bg-lime-500 transition-colors">
-              {/* Use the icon passed as prop - FIXED: Use IconComponent instead of Icon */}
-              {IconComponent && <IconComponent className="h-6 w-6 text-lime-600 group-hover:text-white transition-colors" />}
-            </div>
+      <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition border">
+        <div className="flex gap-4">
+          <div className="p-3 bg-lime-100 rounded-xl">
+            <Icon className="h-6 w-6 text-lime-600" />
           </div>
           <div>
-            <div className="text-2xl font-bold text-gray-900 group-hover:text-lime-600 transition-colors">
-              {number}
-            </div>
-            <div className="text-sm font-semibold text-gray-700 mt-1">{label}</div>
-            {description && (
-              <p className="text-xs text-gray-500 mt-2">{description}</p>
-            )}
+            <h4 className="text-2xl font-bold">{number}</h4>
+            <p className="text-sm font-semibold">{label}</p>
+            <p className="text-xs text-gray-500 mt-1">{description}</p>
           </div>
         </div>
       </div>
@@ -70,263 +103,132 @@ const StatCard = ({ icon: IconComponent, number, label, description, delay = 0 }
   );
 };
 
-// Team Member Card Component
+/* ================= TEAM MEMBER CARD ================= */
 const TeamMemberCard = ({ member, index }) => {
   const ref = useScrollReveal();
-  const delay = (index % 4) * 100; // Stagger animation based on position
-  
+
   return (
-    <div 
-      ref={ref} 
+    <div
+      ref={ref}
       className="scroll-reveal opacity-0 translate-y-8"
-      style={{ animationDelay: `${delay}ms` }}
+      style={{ animationDelay: `${index * 100}ms` }}
     >
-      <div className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-lime-200 transform hover:-translate-y-1 cursor-pointer">
-        {/* Image Section */}
-        <div className="relative h-72 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition overflow-hidden group">
+        <div className="relative h-72">
           <img
             src={member.image}
             alt={member.name}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            loading="lazy"
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           />
-          
-          {/* Overlay Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          
-          {/* Position Badge */}
-          <div className="absolute top-4 left-4">
-            <span className="px-3 py-1.5 text-xs font-bold text-white bg-lime-600/90 backdrop-blur-sm rounded-full shadow-lg">
-              {member.position}
-            </span>
+
+          <div className="absolute top-4 left-4 bg-lime-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+            {member.position}
           </div>
-          
-          {/* Social Links (Appear on hover) */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-            {member.socials?.map((social, i) => (
-              <a
+
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 opacity-0 group-hover:opacity-100 transition">
+            {member.socials.map((social, i) => (
+              <span
                 key={i}
-                href="#"
-                className="p-2.5 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-lime-500 hover:text-white transform hover:-translate-y-1 transition-all duration-300"
-                onClick={(e) => e.stopPropagation()}
-                aria-label={`${member.name}'s ${social} profile`}
+                className="p-2 bg-white rounded-full shadow hover:bg-lime-500 hover:text-white transition"
               >
                 <SocialIcon platform={social} />
-              </a>
+              </span>
             ))}
           </div>
         </div>
-        
-        {/* Info Section */}
+
         <div className="p-6">
-          <div className="mb-3">
-            <h3 className="text-xl font-bold text-gray-900 group-hover:text-lime-700 transition-colors">
-              {member.name}
-            </h3>
-            <div className="flex items-center text-sm text-gray-500 mt-1">
-              <Users className="h-3 w-3 mr-1" />
-              {member.department || "General Team"}
-            </div>
-          </div>
-          
-          <p className="text-gray-600 text-sm line-clamp-2">
-            {member.shortBio || `${member.name} is a dedicated team member with expertise in their field.`}
+          <h3 className="text-xl font-bold">{member.name}</h3>
+          <p className="text-gray-600 text-sm mt-2">
+            {member.description}
           </p>
-          
-          {/* Experience & Skills */}
-          <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
-            {member.experience && (
-              <div className="flex items-center text-xs text-gray-500">
-                <Award className="h-3 w-3 mr-1" />
-                {member.experience}
-              </div>
-            )}
-            
-            <div className="flex items-center text-xs text-lime-600 font-medium">
-              <Shield className="h-3 w-3 mr-1" />
-              Expert
-            </div>
-          </div>
         </div>
       </div>
     </div>
   );
 };
 
-// Loading State Component
-const TeamLoadingState = () => (
-  <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center">
-    <div className="text-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-lime-500 mx-auto"></div>
-      <p className="mt-4 text-gray-600">Loading...</p>
-    </div>
-  </div>
-);
-
-// Error State Component
-const TeamErrorState = () => (
-  <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center">
-    <div className="text-center max-w-md p-8 bg-white rounded-2xl shadow-lg">
-      <div className="text-red-500 mb-4">
-        <Users className="h-16 w-16 mx-auto" />
-      </div>
-      <h3 className="text-xl font-bold text-gray-900 mb-2">Unable to load team data</h3>
-      <p className="text-gray-600 mb-6">Please check your connection and try again.</p>
-      <button 
-        onClick={() => window.location.reload()}
-        className="bg-lime-500 hover:bg-lime-600 text-white font-medium py-2.5 px-6 rounded-lg transition-colors"
-      >
-        Retry
-      </button>
-    </div>
-  </div>
-);
-
 const OurTeam = () => {
-  const { teamContent, loadingTeam, loadPageContent } = useContext(ContentContext);
-  const pageData = teamContent?.teamPage;
-
-  // Scroll Reveal Refs
   const titleRef = useScrollReveal();
   const textRef = useScrollReveal();
   const ctaRef = useScrollReveal();
 
-  // Stats data - FIXED: Make sure icons are imported components
   const stats = [
-    { icon: Award, number: "15+", label: "Years Experience", description: "Collective industry experience" },
-    { icon: Users, number: "100%", label: "Quality Focus", description: "Dedicated to excellence" },
-    { icon: Clock, number: "24/7", label: "Support", description: "Always here to help" },
-    { icon: Shield, number: "50+", label: "Projects", description: "Successfully delivered" }
+    {
+      icon: Award,
+      number: "15+",
+      label: "Years Experience",
+      description: "Industry expertise",
+    },
+    {
+      icon: Users,
+      number: "100%",
+      label: "Quality Focus",
+      description: "Commitment to excellence",
+    },
+    {
+      icon: Clock,
+      number: "24/7",
+      label: "Support",
+      description: "Always available",
+    },
+    {
+      icon: Shield,
+      number: "50+",
+      label: "Projects",
+      description: "Successfully delivered",
+    },
   ];
-
-  useEffect(() => {
-    loadPageContent("team");
-  }, []);
-
-  if (loadingTeam) return <TeamLoadingState />;
-
-  if (!pageData) return <TeamErrorState />;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
-      {/* Hero Section */}
-      <section className="py-20 lg:py-28 relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-gradient-to-br from-lime-50/30 via-transparent to-emerald-50/20"></div>
-        
-        <div className="container mx-auto px-4 max-w-7xl relative">
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4">
           {/* Header */}
-          <div className="max-w-4xl mx-auto mb-16 text-center">
-            <div ref={titleRef} className="scroll-reveal opacity-0 translate-y-8 mb-8">
-              <span className="inline-flex items-center px-4 py-2 bg-lime-100 text-lime-700 text-sm font-semibold rounded-full mb-6">
-                <Users className="h-4 w-4 mr-2" />
-                Meet Our Team
-              </span>
-              
-              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                {pageData.title || "Our Dedicated Team"}
+          <div className="text-center mb-16">
+            <div ref={titleRef} className="scroll-reveal opacity-0 translate-y-8">
+              <h1 className="text-4xl lg:text-5xl font-bold mb-4">
+                {teamPageData.title}
               </h1>
-              
-              <div className="flex justify-center mb-6">
-                <div className="h-1 w-20 bg-gradient-to-r from-lime-400 to-lime-600 rounded-full"></div>
-              </div>
             </div>
 
-            {/* Description */}
-            <div ref={textRef} className="scroll-reveal opacity-0 translate-y-8 mb-12">
-              <p className="text-lg lg:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                {pageData.text || "We're a passionate team of experts dedicated to delivering exceptional results and building lasting relationships with our clients."}
+            <div ref={textRef} className="scroll-reveal opacity-0 translate-y-8">
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                {teamPageData.text}
               </p>
             </div>
 
-            {/* CTA Section */}
-            <div ref={ctaRef} className="scroll-reveal opacity-0 translate-y-8">
-              <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mb-16">
-                <Link
-                  to="/contact"
-                  className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-lime-500 to-lime-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:from-lime-600 hover:to-lime-700 transition-all duration-300 transform hover:-translate-y-0.5"
-                >
-                  Join Our Team
-                  <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform" />
-                </Link>
-                
-                <Link
-                  to="/about"
-                  className="group inline-flex items-center justify-center px-8 py-4 bg-white text-gray-700 font-semibold rounded-xl border-2 border-gray-200 hover:border-lime-300 hover:text-lime-700 transition-all duration-300"
-                >
-                  Learn About Us
-                  <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform" />
-                </Link>
-              </div>
-              
-              {/* Team Avatars Preview */}
-              {pageData.members && pageData.members.length > 0 && (
-                <div className="flex justify-center -space-x-3 mb-8">
-                  {pageData.members.slice(0, 6).map((member) => (
-                    <div key={member.id} className="relative group">
-                      <img
-                        src={member.image}
-                        alt={member.name}
-                        className="w-12 h-12 rounded-full border-3 border-white shadow-lg object-cover group-hover:scale-110 transition-transform duration-300"
-                      />
-                      <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="bg-gray-900 text-white text-xs py-1 px-2 rounded whitespace-nowrap">
-                          {member.name.split(' ')[0]}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  {pageData.members.length > 6 && (
-                    <div className="w-12 h-12 rounded-full bg-lime-100 border-3 border-white flex items-center justify-center">
-                      <span className="text-lime-700 font-bold text-sm">
-                        +{pageData.members.length - 6}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
+            <div ref={ctaRef} className="scroll-reveal opacity-0 translate-y-8 mt-8">
+              <Link
+                to="/contact"
+                className="inline-flex items-center px-8 py-4 bg-lime-500 text-white rounded-xl font-semibold hover:bg-lime-600 transition"
+              >
+                Join Our Team
+                <ArrowRight className="ml-2" />
+              </Link>
             </div>
           </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-            {stats.map((stat, index) => (
-              <StatCard key={index} {...stat} delay={index * 100} />
+          {/* Stats */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+            {stats.map((stat, i) => (
+              <StatCard key={i} {...stat} delay={i * 100} />
             ))}
           </div>
 
-          {/* Team Grid Header */}
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Meet Our Experts
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Our diverse team of professionals brings together years of experience and passion for excellence.
-            </p>
-          </div>
-
           {/* Team Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {pageData.members?.map((member, index) => (
-              <TeamMemberCard 
-                key={member.id} 
-                member={member} 
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {teamPageData.members.map((member, index) => (
+              <TeamMemberCard
+                key={member.id}
+                member={member}
                 index={index}
               />
             ))}
           </div>
-
-          {/* Empty State for Members */}
-          {(!pageData.members || pageData.members.length === 0) && (
-            <div className="text-center py-12">
-              <Users className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">No team members found</h3>
-              <p className="text-gray-500">Our team information is currently being updated.</p>
-            </div>
-          )}
         </div>
       </section>
-      
+
       <Footer />
     </div>
   );
