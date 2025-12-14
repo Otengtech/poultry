@@ -9,7 +9,7 @@ const Newsletter = ({ content }) => {
     error: null,
   });
 
-  const API_URL = import.meta.env.VITE_API_URI;
+  const API_URL = "VITE_API_URI=https://naya-axis-foods-backend.vercel.app";
   const sectionRef = useScrollReveal();
 
   if (!content) return null;
