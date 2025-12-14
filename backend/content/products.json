@@ -1,0 +1,111 @@
+{
+    "productsPage": {
+        "banner1": "../../assets/banner1.jpg",
+            "categories": [
+                {
+                    "id": "all",
+                    "name": "All Products",
+                    "icon": "ArrowRight",
+                    "count": 12
+                },
+                {
+                    "id": "Eggs",
+                    "name": "Fresh Eggs",
+                    "icon": "Egg",
+                    "count": 4
+                },
+                {
+                    "id": "Poultry",
+                    "name": "Layers",
+                    "icon": "Bird",
+                    "count": 5
+                },
+                {
+                    "id": "Chicken Meats",
+                    "name": "Chicken Meats",
+                    "icon": "Drumstick",
+                    "count": 3
+                }
+            ],
+                "products": [
+                    {
+                        "id": 1,
+                        "name": "Eggs",
+                        "category": "eggs",
+                        "price": 60,
+                        "status": "Available Now",
+                        "size": "Full Crate",
+                        "image": "../../assets/egg.jpg",
+                        "delivery": "Delivery options available"
+                    },
+                    {
+                        "id": 2,
+                        "name": "Layers",
+                        "category": "birds",
+                        "size": "Huge sizes",
+                        "price": 90,
+                        "status": "Available Now",
+                        "image": "../../assets/blog3.jpg",
+                        "delivery": "Delivery options available"
+                    },
+                    {
+                        "id": 3,
+                        "name": "Chicken Breast",
+                        "category": "meat",
+                        "price": 150,
+                        "status": "Available Now",
+                        "size": "2kg",
+                        "image": "../../assets/breast.jpg",
+                        "delivery": "Delivery options available"
+                    },
+                    {
+                        "id": 4,
+                        "name": "Chicken Wings",
+                        "category": "meat",
+                        "price": 150,
+                        "status": "Available Now",
+                        "size": "2kg",
+                        "image": "../../assets/wing.jpg",
+                        "delivery": "Delivery options available"
+                    },
+                    {
+                        "id": 5,
+                        "name": "Chicken Thighs",
+                        "category": "meat",
+                        "price": 150,
+                        "status": "Available Now",
+                        "size": "2kg",
+                        "image": "../../assets/tighs.jpg",
+                        "delivery": "Delivery options available"
+                    },
+                    {
+                        "id": 6,
+                        "name": "Chicken Neck, Feet and Back",
+                        "category": "meat",
+                        "price": 100,
+                        "status": "Available Now",
+                        "image": "../../assets/feet.jpg",
+                        "delivery": "Delivery options available"
+                    },
+                    {
+                        "id": 7,
+                        "name": "Full Chicken",
+                        "category": "meat",
+                        "price": 180,
+                        "status": "Available Now",
+                        "image": "../../assets/fullchicken.jpg",
+                        "delivery": "Delivery options available"
+                    },
+                    {
+                        "id": 8,
+                        "name": "Chicken Drumsticks",
+                        "category": "meat",
+                        "price": 150,
+                        "status": "Available Now",
+                        "size": "2kg",
+                        "image": "../../assets/drumsticks.jpg",
+                        "delivery": "Delivery options available"
+                    }
+                ]
+    }
+}

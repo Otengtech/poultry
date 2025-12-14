@@ -1,0 +1,10 @@
+{
+  "id": 1,
+  "name": "Sample Product",
+  "category": "Electronics",
+  "size": "Medium",
+  "price": 250,
+  "delivery": "2-3 days",
+  "status": "Available Now",
+  "image": "/images/sample-product.jpg"
+}

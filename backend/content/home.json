@@ -1,0 +1,292 @@
+{
+    "heroSection": {
+        "message": {
+            "heroMessages": [
+                {
+                    "title": "NAYA SUCCESS AXIS FOODS",
+                    "description": "Experience quality eggs, meats and chicks nurtured with care and delivered to you."
+                },
+                {
+                    "title": "Premium Poultry Services",
+                    "description": "We provide healthy livestock and reliable delivery for farms and homes."
+                },
+                {
+                    "title": "Quality, Fresh and Organic",
+                    "description": "Enjoy farm-fresh products raised with the highest standards for safety and nutrition."
+                },
+                {
+                    "title": "Trusted by Farmers Nationwide",
+                    "description": "Your reliable partner for poultry supply, consulting, and farm management."
+                },
+                {
+                    "title": "Healthy Birds, Healthy Business",
+                    "description": "Our expert poultry practices ensure your birds grow strong, healthy, and productive."
+                },
+                {
+                    "title": "Sustainable Farming Solutions",
+                    "description": "We combine modern poultry techniques with eco-friendly methods to support long-term growth."
+                }
+            ]
+        }
+    },
+    "whyChooseUs": {
+        "title": "Quality, innovation and food safety.",
+            "text1": "NAYA Success Axis is an Agribusiness that started as a backyard poultry farm in 2018. It was registered as a fulltime business in April 2019 at the Registrar General Department. It Currently has 2 branches in Accra – Adenta and Aburi - Mariakrom in the Eastern Region. ",
+                "products": [
+                    {
+                        "id": "1",
+                        "category": "Layer",
+                        "link": "/products",
+                        "image": "../../assets/blog3.jpg",
+                        "text": "Healthy, well-raised live poultry layers sourced from trusted farms."
+                    },
+                    {
+                        "id": "2",
+                        "category": "Fresh Eggs",
+                        "link": "/products",
+                        "image": "../../assets/eggs.jpg",
+                        "text": "Farm-fresh eggs collected daily, ensuring natural taste and quality."
+                    },
+                    {
+                        "id": "3",
+                        "category": "Broiler Meat",
+                        "link": "/products",
+                        "image": "../../assets/p2.webp",
+                        "text": "Clean, high-quality broiler wings, breast, thighs, neck, full broiler etc."
+                    },
+                    {
+                        "id": "4",
+                        "category": "Smoked Chicken",
+                        "link": "/products",
+                        "image": "../../assets/p1.avif",
+                        "text": "Healthy smoked chicken in various prices and sizes, very clean and hygienic."
+                    }
+                ],
+                    "image": "../../assets/img1.jpg",
+                        "title2": "We take care of your health",
+                            "text2": "Our poultry and eggs are sourced from healthy, well-maintained farms to ensure that every product you consume is safe, nutritious, and of the highest quality. Your health is our priority."
+    },
+    "productsSection": {
+        "title": "Our Services",
+            "banner1": "../../assets/banner1.jpg",
+                "products": [
+                    {
+                        "id": 1,
+                        "name": "The Best Poultry",
+                        "icon": "../assets/poultry.jpg",
+                        "text": "Fresh and healthy poultry raised on trusted farms, ensuring top quality for your meals."
+                    },
+                    {
+                        "id": 2,
+                        "name": "Chick Quality",
+                        "icon": "../assets/chick.jpg",
+                        "text": "Healthy, strong chicks ideal for farmers and hatcheries, sourced from reliable breeders."
+                    },
+                    {
+                        "id": 3,
+                        "name": "Pasteurized Egg",
+                        "icon": "../assets/eggs.jpg",
+                        "text": "Safe and hygienically pasteurized eggs, retaining all nutrients and natural flavor."
+                    }
+                ]
+    },
+    "testimonialSection": {
+        "title": "What They’re Saying",
+            "testimonials": [
+                {
+                    "id": 1,
+                    "name": "Michael Rodriguez",
+                    "role": "Commercial Farmer, Texas",
+                    "content": "The quality of chicks we received was exceptional. 98% survival rate and they're thriving. Best poultry supplier we've worked with in 15 years of farming.",
+                    "rating": 5,
+                    "avatar": "../../assets/avatar1.jfif"
+                },
+                {
+                    "id": 2,
+                    "name": "Sarah Johnson",
+                    "role": "Organic Farm Owner, Oregon",
+                    "content": "Their commitment to animal welfare and organic practices aligns perfectly with our values. The eggs are consistently fresh and customers love them.",
+                    "rating": 5,
+                    "avatar": "../../assets/avatar2.jfif"
+                },
+                {
+                    "id": 3,
+                    "name": "Felix Oteng",
+                    "role": "On-Farm Supervisor, Ghana",
+                    "content": "I really like your website interface it is really nice, catchy and easily navigated. Your products are all quality, I really loved the chicken meat.",
+                    "rating": 5,
+                    "avatar": "../../assets/avatar3.jfif"
+                }
+            ],
+                "images": [
+                    {
+                        "id": "1",
+                        "img": "../../assets/tighs.jpg"
+                    },
+                    {
+                        "id": "2",
+                        "img": "../../assets/wing.jpg"
+                    },
+                    {
+                        "id": "3",
+                        "img": "../../assets/drumsticks.jpg"
+                    },
+                    {
+                        "id": "4",
+                        "img": "../../assets/feet.jpg"
+                    },
+                    {
+                        "id": "5",
+                        "img": "../../assets/breast.jpg"
+                    },
+                    {
+                        "id": "6",
+                        "img": "../../assets/smoke.jpg"
+                    }
+                ]
+    },
+    "ourteamSection": {
+        "title": "Meet Our Team",
+            "text": "Our team works really hard to keep this wonderful company going to produce and meet consumers' needs.",
+                "members": [
+                    {
+                        "id": "1",
+                        "image": "../../assets/team1.jpg",
+                        "socials": ["facebook", "whatsapp", "twitter"],
+                        "name": "Rabie Mark",
+                        "position": "Lead Farmer",
+                        "description": "Specializes in organic farming with 15 years of experience in sustainable agriculture."
+                    },
+                    {
+                        "id": "2",
+                        "image": "../../assets/team2.jpg",
+                        "socials": ["facebook", "instagram", "linkedin"],
+                        "name": "Sarah Johnson",
+                        "position": "Agricultural Engineer",
+                        "description": "Expert in modern irrigation systems and soil management techniques."
+                    },
+                    {
+                        "id": "3",
+                        "image": "../../assets/team3.jpg",
+                        "socials": ["whatsapp", "twitter", "linkedin"],
+                        "name": "Miguel Kean",
+                        "position": "Harvest Manager",
+                        "description": "Oversees harvesting operations ensuring quality and efficiency across all farms."
+                    },
+                    {
+                        "id": "4",
+                        "image": "../../assets/team4.jpg",
+                        "socials": ["facebook", "instagram", "whatsapp"],
+                        "name": "Amara Chen",
+                        "position": "Sustainability Officer",
+                        "description": "Implements eco-friendly practices and manages our green certification programs."
+                    }
+                ]
+    },
+    "newsletterSection": {
+        "title": "Stay Updated with Our Latest Insights",
+            "description": "Subscribe to our newsletter to receive the latest farming tips, market trends, and sustainable practices directly in your inbox.",
+                "inputPlaceholder": "Enter your email",
+                    "buttonText": "Subscribe"
+    },
+    "blogSection": {
+        "banner": "../../assets/banner.jpg",
+            "title": "View Our Blog",
+                "text": "Explore our various blog posts for more detailed information.",
+                    "blogs": [
+                        {
+                            "id": "1",
+                            "category": "Farming Tips",
+                            "img": "../../assets/blog1.jpg",
+                            "title": "How to Improve Soil Health Naturally",
+                            "description": "Discover simple organic methods to boost soil fertility and support plant growth.",
+                            "date": "2025-01-10"
+                        },
+                        {
+                            "id": "2",
+                            "category": "Agriculture",
+                            "img": "../../assets/blog2.jpg",
+                            "title": "The Future of Smart Farming",
+                            "description": "A look into innovative technologies transforming modern farming.",
+                            "date": "2025-01-14"
+                        },
+                        {
+                            "id": "3",
+                            "category": "Harvesting",
+                            "img": "../../assets/blog3.jpg",
+                            "title": "Best Practices for Efficient Harvesting",
+                            "description": "Learn techniques to maximize yield and reduce crop loss.",
+                            "date": "2025-01-20"
+                        },
+                        {
+                            "id": "4",
+                            "category": "Sustainability",
+                            "img": "../../assets/blog4.jpg",
+                            "title": "Sustainable Methods for Greener Farming",
+                            "description": "Eco-friendly strategies to maintain long-term agricultural productivity.",
+                            "date": "2025-01-25"
+                        },
+                        {
+                            "id": "5",
+                            "category": "Market Trends",
+                            "img": "../../assets/blog5.jpg",
+                            "title": "Understanding Current Agricultural Market Trends",
+                            "description": "Insights on pricing, demand, and upcoming opportunities in the market.",
+                            "date": "2025-01-29"
+                        }
+                    ]
+    },
+    "aboutSection": {
+        "home": {
+            "title": "Welcome to Our Store",
+                "subtitle": "Quality products curated just for you",
+                    "heroImage": "/images/hero.jpg"
+        },
+
+        "products": {
+            "title": "Our Products",
+                "items": [
+                    {
+                        "id": 1,
+                        "name": "Product One",
+                        "price": 49.99,
+                        "image": "/images/product1.jpg"
+                    },
+                    {
+                        "id": 2,
+                        "name": "Product Two",
+                        "price": 59.99,
+                        "image": "/images/product2.jpg"
+                    }
+                ]
+        },
+
+        "about": {
+            "title": "About Us",
+                "description": "We are a company dedicated to providing quality products and exceptional customer service."
+        },
+
+        "contact": {
+            "title": "Contact Us",
+                "email": "support@example.com",
+                    "phone": "+233 000 000 000",
+                        "address": "Accra, Ghana"
+        },
+
+        "blog": {
+            "title": "Our Blog",
+                "posts": [
+                    {
+                        "id": 1,
+                        "title": "How to Choose Quality Products",
+                        "snippet": "Learn how to identify the best products for your needs..."
+                    },
+                    {
+                        "id": 2,
+                        "title": "Behind the Scenes",
+                        "snippet": "A look at how we operate and deliver value..."
+                    }
+                ]
+        }
+    }
+}

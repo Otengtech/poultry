@@ -1,0 +1,57 @@
+{
+    "reviewPage": {
+        "title": "What They’re Saying",
+            "testimonials": [
+                {
+                    "id": 1,
+                    "name": "Michael Rodriguez",
+                    "email": "michaelrod@gmail.com",
+                    "content": "The quality of chicks we received was exceptional. 98% survival rate and they're thriving. Best poultry supplier we've worked with in 15 years of farming.",
+                    "rating": 5,
+                    "avatar": "../../assets/avatar1.jfif"
+                },
+                {
+                    "id": 2,
+                    "name": "Sarah Johnson",
+                    "email": "john123sarah@gmail.com",
+                    "content": "Their commitment to animal welfare and organic practices aligns perfectly with our values. The eggs are consistently fresh and customers love them.",
+                    "rating": 5,
+                    "avatar": "../../assets/avatar2.jfif"
+                },
+                {
+                    "id": 3,
+                    "name": "Felix Oteng",
+                    "email": "ultimate90@gmail.com",
+                    "content": "I really like your website interface it is really nice, catchy and easily navigated. Your products are all quality, I really loved the chicken meat.",
+                    "rating": 5,
+                    "avatar": "../../assets/avatar3.jfif"
+                }
+            ],
+                "images": [
+                    {
+                        "id": "1",
+                        "img": "../../assets/image1.jpg"
+                    },
+                    {
+                        "id": "2",
+                        "img": "../../assets/image2.jpg"
+                    },
+                    {
+                        "id": "3",
+                        "img": "../../assets/image3.jpg"
+                    },
+                    {
+                        "id": "4",
+                        "img": "../../assets/image4.jpg"
+                    },
+                    {
+                        "id": "5",
+                        "img": "../../assets/image5.jpg"
+                    },
+                    {
+                        "id": "6",
+                        "img": "../../assets/image6.jpg"
+                    }
+                ]
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "contactPage": {
+        "banner": {
+            "title": "CONTACT PAGE",
+                "image": "/assets/blog4.jpg"
+        },
+
+        "leftContent": {
+            "heading": "Produced in Ghana by",
+                "description": "We are dedicated to providing fresh, organic, and hygienically processed poultry products. Proudly produced in Ghana with high standards to serve homes, restaurants, and marketplaces.",
+                    "location": "Adenta, Accra - Ghana",
+                        "postalCode": "GD-0280-880",
+                            "pickUpLocation": "Pick-up Location: Adenta",
+                                "deliveryInfo": "Delivery options available"
+        },
+
+        "contacts": {
+            "phoneNumbers": ["024 438 4928", "059 711 3385"],
+                "whatsapp": "024 438 4928",
+                    "email": "nayasuccessaxis@gmail.com",
+                        "facebook": "Naya Success Axis Farms",
+                            "instagram": "nayasuccessaxisfarms"
+        },
+
+        "rightForm": {
+            "title": "Send Us a Message",
+                "fields": [
+                    {
+                        "name": "name",
+                        "label": "Full Name",
+                        "type": "text",
+                        "required": true
+                    },
+                    {
+                        "name": "address",
+                        "label": "Address",
+                        "type": "text",
+                        "required": true
+                    },
+                    {
+                        "name": "message",
+                        "label": "Your Message",
+                        "type": "textarea",
+                        "required": true
+                    }
+                ],
+                    "buttonText": "Send Message"
+        }
+    }
+}

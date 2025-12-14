@@ -1,0 +1,40 @@
+{
+    "teamPage": {
+        "title": "Meet Our Team",
+            "text": "Our team works really hard to keep this wonderful company going to produce and meet consumers' needs.",
+                "members": [
+                    {
+                        "id": "1",
+                        "image": "../../assets/team1.jpg",
+                        "socials": ["facebook", "whatsapp", "twitter"],
+                        "name": "Rabie Mark",
+                        "position": "Lead Farmer",
+                        "description": "Specializes in organic farming with 15 years of experience in sustainable agriculture."
+                    },
+                    {
+                        "id": "2",
+                        "image": "../../assets/team2.jpg",
+                        "socials": ["facebook", "instagram", "linkedin"],
+                        "name": "Sarah Johnson",
+                        "position": "Agricultural Engineer",
+                        "description": "Expert in modern irrigation systems and soil management techniques."
+                    },
+                    {
+                        "id": "3",
+                        "image": "../../assets/team3.jpg",
+                        "socials": ["whatsapp", "twitter", "linkedin"],
+                        "name": "Miguel Kean",
+                        "position": "Harvest Manager",
+                        "description": "Oversees harvesting operations ensuring quality and efficiency across all farms."
+                    },
+                    {
+                        "id": "4",
+                        "image": "../../assets/team4.jpg",
+                        "socials": ["facebook", "instagram", "whatsapp"],
+                        "name": "Amara Chen",
+                        "position": "Sustainability Officer",
+                        "description": "Implements eco-friendly practices and manages our green certification programs."
+                    }
+                ]
+    }
+}
