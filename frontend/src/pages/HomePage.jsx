@@ -18,7 +18,7 @@ console.log(homeContent.heroSection);
 
   return (
     <div>
-      {/* <HeroSection content={homeContent?.heroSection?.message?.heroMessages || []}/> */}
+      <HeroSection content={homeContent?.heroSection?.message?.heroMessages || []}/>
       <WhyChooseUsSection content={homeContent.whyChooseUs}/>
       <TestimonialSection content={homeContent.testimonialSection}/>
       <OurTeam content={homeContent.ourteamSection}/>
