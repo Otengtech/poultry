@@ -207,9 +207,7 @@ const ReviewPage = () => {
       formDataToSend.append('email', formData.email);
       formDataToSend.append('content', formData.message);
       formDataToSend.append('rating', formData.rating.toString());
-      if (formData.avatar) {
-        formDataToSend.append('avatar', formData.avatar);
-      }
+      
 
       // Submit review to API
       const response = await axios.post(
