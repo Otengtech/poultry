@@ -2,11 +2,13 @@ import express from "express";
 import cors from "cors";
 import heroRoute from "./routes/hero.js";
 import newsletterRoute from "./routes/newsletter.js";
+import contactRoute from "./routes/contact.js";
 
 const app = express();
 
 const allowedOrigins = [
-  "http://localhost:5173", // dev frontend
+  "http://localhost:5173",
+  "http://localhost:5000", // dev frontend
   "https://naya-axis-foods-frontend.vercel.app", // prod frontend
 ];
 
@@ -29,6 +31,7 @@ app.use(express.json());
 // Routes
 app.use("/hero", heroRoute);
 app.use("/subscribe", newsletterRoute);
+app.use("/contact", contactRoute)
 
 // Start server
 const PORT = process.env.PORT || 5000;

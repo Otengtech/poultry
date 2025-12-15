@@ -1,21 +1,15 @@
 import React, { useState } from "react";
-import {
-  MapPin,
-  Phone,
-  Mail,
-  Facebook,
-  Instagram,
-} from "lucide-react";
+import { MapPin, Phone, Mail, Facebook, Instagram } from "lucide-react";
 import Footer from "../components/homecomponents/Footer";
-import { useScrollReveal } from "../animation/useScrollReveal";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-/* ================= CONTACT PAGE JSON ================= */
+/* ================= CONTACT PAGE DATA ================= */
 const contactPage = {
   banner: {
     title: "CONTACT PAGE",
     image: "/assets/blog4.jpg",
   },
-
   leftContent: {
     heading: "Produced in Ghana by",
     description:
@@ -25,15 +19,12 @@ const contactPage = {
     pickUpLocation: "Pick-up Location: Adenta",
     deliveryInfo: "Delivery options available",
   },
-
   contacts: {
     phoneNumbers: ["024 438 4928", "059 711 3385"],
-    whatsapp: "024 438 4928",
     email: "nayasuccessaxis@gmail.com",
     facebook: "Naya Success Axis Farms",
     instagram: "nayasuccessaxisfarms",
   },
-
   rightForm: {
     title: "Send Us a Message",
     buttonText: "Send Message",
@@ -41,84 +32,105 @@ const contactPage = {
 };
 
 const ContactPage = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+  /* ================= STATE ================= */
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const [status, setStatus] = useState({
-    loading: false,
-    success: null,
-    error: null,
-  });
-
+  /* ================= API ================= */
+  // const API_URL = "http://localhost:5000";
   const API_URL = import.meta.env.VITE_API_URL;
 
-  // Scroll reveal refs
-  const bannerRef = useScrollReveal();
-  const leftRef = useScrollReveal();
-  const formRef = useScrollReveal();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
+  /* ================= SUBMIT HANDLER ================= */
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setStatus({ loading: true, success: null, error: null });
+  e.preventDefault();
 
-    try {
-      const res = await fetch(`${API_URL}/api/contact`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+  const trimmedName = name.trim();
+  const trimmedEmail = email.trim();
+  const trimmedMessage = message.trim();
 
-      if (!res.ok) throw new Error("Failed to send");
+  // 1️⃣ Empty fields check
+  if (!trimmedName || !trimmedEmail || !trimmedMessage) {
+    toast.error("All fields are required");
+    return;
+  }
 
-      const data = await res.json();
-      setStatus({
-        loading: false,
-        success: data.message || "Message sent successfully!",
-        error: null,
-      });
+  // 2️⃣ Name validation
+  if (trimmedName.length < 2) {
+    toast.error("Name must be at least 2 characters");
+    return;
+  }
 
-      setFormData({ name: "", email: "", message: "" });
-    } catch (err) {
-      setStatus({
-        loading: false,
-        success: null,
-        error: "Failed to send message. Please try again.",
-      });
+  // 3️⃣ Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(trimmedEmail)) {
+    toast.error("Please enter a valid email address");
+    return;
+  }
+
+  // 4️⃣ Message validation
+  if (trimmedMessage.length < 10) {
+    toast.error("Message must be at least 10 characters");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const res = await fetch(`${API_URL}/contact`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: trimmedName,
+        email: trimmedEmail,
+        message: trimmedMessage,
+      }),
+    });
+
+    const data = await res.json();
+
+    // 5️⃣ Backend error handling
+    if (!res.ok) {
+      toast.error(data.message || "Failed to send message");
+      return;
     }
-  };
+
+    toast.success(data.message || "Message sent successfully!");
+
+    setName("");
+    setEmail("");
+    setMessage("");
+  } catch (error) {
+    toast.error("Network error. Please try again later.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-lime-50 to-white">
+      {/* ================= TOAST ================= */}
+      <ToastContainer />
+
       {/* ================= BANNER ================= */}
       <div
-        className="relative w-full h-96 lg:h-[420px] bg-cover bg-top"
+        className="relative w-full h-96 bg-cover bg-top"
         style={{ backgroundImage: `url(${contactPage.banner.image})` }}
       >
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-          <h1
-            ref={bannerRef}
-            className="scroll-reveal opacity-0 translate-y-10 text-5xl lg:text-7xl font-bold text-white text-center"
-          >
+          <h1 className="text-5xl font-bold text-white text-center">
             {contactPage.banner.title}
           </h1>
         </div>
       </div>
 
-      {/* ================= MAIN CONTENT ================= */}
+      {/* ================= MAIN ================= */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 lg:px-20 grid lg:grid-cols-2 gap-12">
-          {/* LEFT CONTENT */}
-          <div
-            ref={leftRef}
-            className="scroll-reveal opacity-0 translate-y-10 space-y-6"
-          >
+          {/* ================= LEFT ================= */}
+          <div className="space-y-6">
             <h2 className="text-xl font-bold text-gray-700">
               {contactPage.leftContent.heading}
             </h2>
@@ -148,7 +160,7 @@ const ContactPage = () => {
               </div>
             </div>
 
-            {/* CONTACT DETAILS */}
+            {/* ================= CONTACT DETAILS ================= */}
             <div className="space-y-2">
               <h4 className="font-semibold text-gray-900">Contacts:</h4>
 
@@ -176,9 +188,8 @@ const ContactPage = () => {
 
           {/* ================= FORM ================= */}
           <form
-            ref={formRef}
             onSubmit={handleSubmit}
-            className="scroll-reveal opacity-0 translate-y-10 bg-white rounded-3xl p-8 space-y-6 shadow-lg"
+            className="bg-white rounded-3xl p-8 space-y-6 shadow-lg"
           >
             <h3 className="text-2xl font-bold text-gray-800">
               {contactPage.rightForm.title}
@@ -186,48 +197,35 @@ const ContactPage = () => {
 
             <input
               type="text"
-              name="name"
               placeholder="Full Name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full border border-lime-400 rounded-full px-4 py-3 text-sm"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full border border-lime-400 rounded-full px-4 py-3"
             />
 
             <input
               type="email"
-              name="email"
               placeholder="Email Address"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full border border-lime-400 rounded-full px-4 py-3 text-sm"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border border-lime-400 rounded-full px-4 py-3"
             />
 
             <textarea
-              name="message"
               placeholder="Your Message"
-              rows={4}
-              value={formData.message}
-              onChange={handleChange}
-              required
-              className="w-full border border-lime-400 rounded-2xl px-4 py-3 text-sm resize-none"
+              rows="4"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="w-full border border-lime-400 rounded-2xl px-4 py-3 resize-none"
             />
 
             <button
               type="submit"
-              disabled={status.loading}
+              disabled={loading}
               className="w-full bg-gradient-to-r from-green-500 to-lime-400 font-semibold py-3 rounded-full"
             >
-              {status.loading ? "Sending..." : contactPage.rightForm.buttonText}
+              {loading ? "Sending..." : contactPage.rightForm.buttonText}
             </button>
-
-            {status.success && (
-              <p className="text-green-500 text-center">{status.success}</p>
-            )}
-            {status.error && (
-              <p className="text-red-500 text-center">{status.error}</p>
-            )}
           </form>
         </div>
       </section>

@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Home from "./pages/HomePage";
 import Navbar from "./components/Navbar";
@@ -33,6 +35,15 @@ function App() {
           <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
       <TopButton />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnHover
+      />
     </>
   );
 }

@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { useScrollReveal } from "../../animation/useScrollReveal";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 /* =========================
    JSON CONTENT (INLINE)
@@ -26,41 +29,53 @@ const Newsletter = () => {
     error: null,
   });
 
-  const API_URL = "https://naya-axis-foods-backend.vercel.app";
+  // const API_URL = "http://localhost:5000";
+  const API_URL = import.meta.env.VITE_API_URL;
   const sectionRef = useScrollReveal();
 
-  const handleSubscribe = async (e) => {
-    e.preventDefault();
-    setStatus({ loading: true, success: null, error: null });
+ const handleSubscribe = async (e) => {
+  e.preventDefault();
 
-    try {
-      const res = await fetch(`${API_URL}/subscribe`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+  // 1️⃣ Trim spaces
+  const trimmedEmail = email.trim();
 
-      const data = await res.json();
+  // 2️⃣ Empty check
+  if (!trimmedEmail) {
+    toast.error("Email address is required");
+    return;
+  }
 
-      if (!res.ok) {
-        throw new Error(data.message || "Subscription failed");
-      }
+  // 3️⃣ Email format validation (simple & reliable)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-      setStatus({
-        loading: false,
-        success: data.message || "Subscribed successfully!",
-        error: null,
-      });
+  if (!emailRegex.test(trimmedEmail)) {
+    toast.error("Please enter a valid email address");
+    return;
+  }
 
-      setEmail("");
-    } catch (err) {
-      setStatus({
-        loading: false,
-        success: null,
-        error: err.message || "Something went wrong",
-      });
+  try {
+    const res = await fetch(`${API_URL}/subscribe`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: trimmedEmail }),
+    });
+
+    const data = await res.json();
+
+    // 4️⃣ Backend error handling
+    if (!res.ok) {
+      toast.error(data.message || "Subscription failed");
+      return;
     }
-  };
+
+    toast.success(data.message || "Subscribed successfully!");
+    setEmail("");
+  } catch (err) {
+    toast.error("Network error. Please try again later.");
+  }
+};
+
+
 
   return (
     <section
@@ -84,7 +99,6 @@ const Newsletter = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder={inputPlaceholder}
             className="flex-grow px-6 py-3 rounded-full border focus:ring-2 focus:ring-lime-400"
-            required
           />
 
           <button
