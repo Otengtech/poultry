@@ -59,6 +59,14 @@ body {
   scrollbar-width: none; /* Firefox */
 }
 
+.no-scrollbar {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+
 /* Add smooth transitions for all animated elements */
 * {
   backface-visibility: hidden;
