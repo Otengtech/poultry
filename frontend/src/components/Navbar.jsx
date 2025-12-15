@@ -17,10 +17,10 @@ const ResponsiveNavbar = () => {
   ];
 
   const pagesDropdownItems = [
-    { label: "Privacy", href: "/privacy" },
-    { label: "FAQ", href: "/faq" },
     { label: "Our Team", href: "/team" },
     { label: "Reviews", href: "/review" },
+    { label: "Privacy", href: "/privacy" },
+    { label: "FAQ", href: "/faq" },
   ];
 
   const socialLinks = [

@@ -1,97 +1,8 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Footer from "../components/homecomponents/Footer";
 import bannerVideo from "../video/video.mp4";
-
-/* ================= PRODUCTS PAGE DATA (INLINE JSON) ================= */
-const productsPageData = {
-  banner1: "../../assets/banner1.jpg",
-  categories: [
-    { id: "all", name: "All Products", count: 12 },
-    { id: "eggs", name: "Fresh Eggs", count: 4 },
-    { id: "birds", name: "Layers", count: 5 },
-    { id: "meat", name: "Chicken Meats", count: 3 },
-  ],
-  products: [
-    {
-      id: 1,
-      name: "Eggs",
-      category: "eggs",
-      price: 60,
-      status: "Available Now",
-      size: "Full Crate",
-      image: "../../assets/egg.jpg",
-      delivery: "Delivery options available",
-    },
-    {
-      id: 2,
-      name: "Layers",
-      category: "birds",
-      size: "Huge sizes",
-      price: 90,
-      status: "Available Now",
-      image: "../../assets/blog3.jpg",
-      delivery: "Delivery options available",
-    },
-    {
-      id: 3,
-      name: "Chicken Breast",
-      category: "meat",
-      price: 150,
-      status: "Available Now",
-      size: "2kg",
-      image: "../../assets/breast.jpg",
-      delivery: "Delivery options available",
-    },
-    {
-      id: 4,
-      name: "Chicken Wings",
-      category: "meat",
-      price: 150,
-      status: "Available Now",
-      size: "2kg",
-      image: "../../assets/wing.jpg",
-      delivery: "Delivery options available",
-    },
-    {
-      id: 5,
-      name: "Chicken Thighs",
-      category: "meat",
-      price: 150,
-      status: "Available Now",
-      size: "2kg",
-      image: "../../assets/tighs.jpg",
-      delivery: "Delivery options available",
-    },
-    {
-      id: 6,
-      name: "Chicken Neck, Feet and Back",
-      category: "meat",
-      price: 100,
-      status: "Available Now",
-      image: "../../assets/feet.jpg",
-      delivery: "Delivery options available",
-    },
-    {
-      id: 7,
-      name: "Full Chicken",
-      category: "meat",
-      price: 180,
-      status: "Available Now",
-      image: "../../assets/fullchicken.jpg",
-      delivery: "Delivery options available",
-    },
-    {
-      id: 8,
-      name: "Chicken Drumsticks",
-      category: "meat",
-      price: 150,
-      status: "Available Now",
-      size: "2kg",
-      image: "../../assets/drumsticks.jpg",
-      delivery: "Delivery options available",
-    },
-  ],
-};
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const ProductsSection = () => {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -99,8 +10,31 @@ const ProductsSection = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showOrderMessage, setShowOrderMessage] = useState(false);
   const [orderMessageProduct, setOrderMessageProduct] = useState(null);
+  const [products, setProducts] = useState([]);
 
-  const { products, categories } = productsPageData;
+  const productCategories = [
+    { id: "all", name: "All" },
+    { id: "eggs", name: "Eggs" },
+    { id: "meat", name: "Meat" },
+    { id: "chicks", name: "Chicks" },
+  ];
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/get-product`);
+        // const res = await axios.get(`/api/get-product`);
+        setProducts(res.data.data);
+      } catch (err) {
+        console.log("Error fetching products: ", err);
+        toast.error("Failed to load products");
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   /* ================= FILTER LOGIC ================= */
   const filteredProducts = useMemo(() => {
@@ -156,14 +90,31 @@ const ProductsSection = () => {
       </div>
 
       <div className="container mx-auto px-4 py-12">
+        {/* Category Filters */}
+        <div className="flex justify-center gap-4 mb-6 flex-wrap">
+          {productCategories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              className={`px-4 py-2 rounded-full font-semibold ${
+                activeCategory === cat.id
+                  ? "bg-lime-500 text-white"
+                  : "bg-white text-gray-700 border border-gray-300"
+              }`}
+            >
+              {cat.name}
+            </button>
+          ))}
+        </div>
+
         {/* Search */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-10">
+        <div className="bg-transparent rounded-2xl shadow-xl mb-10">
           <input
             type="text"
             placeholder="Search products..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-lime-500 outline-none"
+            className="w-full bg-transparent border-2 border-lime-500 rounded-xl py-3 px-4 focus:border-lime-500 outline-none"
           />
         </div>
 
@@ -172,7 +123,7 @@ const ProductsSection = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
               <div
-                key={product.id}
+                key={product._id}
                 className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden cursor-pointer"
               >
                 <div
@@ -218,27 +169,35 @@ const ProductsSection = () => {
       {/* Product Modal */}
       {selectedProduct && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-3xl w-full relative">
+          <div className="bg-white rounded-2xl max-w-3xl w-full relative shadow-2xl">
             <button
-              className="absolute top-4 right-4 text-gray-700"
+              className="absolute top-4 right-4 text-gray-700 text-xl font-bold"
               onClick={() => setSelectedProduct(null)}
             >
               ✕
             </button>
 
-            <div className="grid md:grid-cols-2">
+            <div className="grid md:grid-cols-2 gap-4">
               <img
                 src={selectedProduct.image}
                 alt={selectedProduct.name}
                 className="w-full h-full object-cover rounded-l-2xl"
               />
-              <div className="p-8">
-                <h2 className="text-3xl font-bold">
-                  {selectedProduct.name}
-                </h2>
-                <p className="text-xl text-lime-600 font-bold mt-2">
-                  GHS {selectedProduct.price}
-                </p>
+              <div className="p-8 flex flex-col justify-between">
+                <div>
+                  <h2 className="text-3xl font-bold">
+                    {selectedProduct.name}
+                  </h2>
+                  <p className="text-xl text-lime-600 font-bold mt-2">
+                    GHS {selectedProduct.price}
+                  </p>
+                  {selectedProduct.size && (
+                    <p className="text-gray-600 mt-2">
+                      Size: {selectedProduct.size}
+                    </p>
+                  )}
+                  <p className="text-gray-700 mt-4">{selectedProduct.description}</p>
+                </div>
 
                 <button
                   onClick={() => handleAddToOrders(selectedProduct)}

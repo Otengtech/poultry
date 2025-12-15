@@ -160,3 +160,52 @@ img {
             opacity: 1;
           }
         }
+
+        @keyframes news-scroll {
+            from {
+              transform: translateY(0);
+            }
+            to {
+              transform: translateY(-50%);
+            }
+          }
+
+          .animate-news-scroll {
+            animation: news-scroll 20s linear infinite;
+          }
+
+          .pause-animation {
+            animation-play-state: paused;
+          }
+          /* Smooth scroll behavior */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for news feed */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth scrolling animation */
+@keyframes smooth-scroll {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-smooth-scroll {
+  animation: smooth-scroll 30s linear infinite;
+}
+
+.group:hover .animate-smooth-scroll {
+  animation-play-state: paused;
+}
