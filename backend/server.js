@@ -1,8 +1,5 @@
 import express from "express";
 import cors from "cors";
-import heroRoute from "./routes/hero.js";
-import newsletterRoute from "./routes/newsletter.js";
-import contactRoute from "./routes/contact.js";
 
 const app = express();
 
@@ -27,11 +24,6 @@ app.use(
 
 // parse JSON bodies
 app.use(express.json());
-
-// Routes
-app.use("/hero", heroRoute);
-app.use("/subscribe", newsletterRoute);
-app.use("/contact", contactRoute)
 
 // Start server
 const PORT = process.env.PORT || 5000;

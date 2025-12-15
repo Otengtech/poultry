@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -9,58 +9,36 @@ import {
   Linkedin,
 } from "lucide-react";
 import { useScrollReveal } from "../../animation/useScrollReveal";
+import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const OurTeam = () => {
+  const [ staff, setStaff ] = useState([]);
 
-  /* ===============================
-     HARD-CODED CONTENT
-  ================================ */
-  const teamContent = {
-    title: "Meet Our Expert Team",
-    text: "Our professionals bring together creativity, experience, and dedication to help businesses grow, innovate, and succeed in a competitive digital world.",
+  const API_URL = import.meta.env.VITE_API_URL;
 
-    members: [
-      {
-        id: 1,
-        name: "Ebenezer Oteng",
-        position: "Founder & CEO",
-        image: "/assets/team1.jpg",
-        socials: ["facebook", "twitter", "linkedin"],
-      },
-      {
-        id: 2,
-        name: "Ama Mensah",
-        position: "Project Manager",
-        image: "/assets/team2.jpg",
-        socials: ["linkedin", "instagram"],
-      },
-      {
-        id: 3,
-        name: "Kwame Asante",
-        position: "Lead Developer",
-        image: "/assets/team3.jpg",
-        socials: ["twitter", "linkedin"],
-      },
-      {
-        id: 4,
-        name: "Akosua Boateng",
-        position: "UI/UX Designer",
-        image: "/assets/team4.jpg",
-        socials: ["instagram", "facebook"],
-      },
-    ],
-  };
+  useEffect(()=>{
+    const fetchStaffs = async()=>{
+      try{
+        const res = await axios.get(`${API_URL}/get-staff`)
+          console.log("staffs data ", res.data.staff);
+          setStaff(res.data.staff)
+      }
+      catch(err){
+        toast.error("error fecthing staffs ", err);
+      }
+    }
 
-  /* ===============================
-     SCROLL REVEAL HOOKS
-  ================================ */
+    fetchStaffs()
+  }, [])
+
   const titleRef = useScrollReveal();
   const textRef = useScrollReveal();
-  const cardRefs = teamContent.members.map(() => useScrollReveal());
+  const cardRefs = useScrollReveal();
+  // const cardRefs = staff.map(() => useScrollReveal());
 
-  /* ===============================
-     SOCIAL ICON HELPER
-  ================================ */
+
   const SocialIcon = ({ platform, size = "h-4 w-4" }) => {
     const icons = {
       facebook: Facebook,
@@ -76,6 +54,7 @@ const OurTeam = () => {
 
   return (
     <section className="py-16 lg:py-24 bg-gradient-to-b from-white to-gray-50">
+      
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
 
         {/* ===============================
@@ -91,7 +70,7 @@ const OurTeam = () => {
               </span>
 
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight text-center lg:text-left">
-                {teamContent.title}
+                Meet the Dedicated Team
               </h1>
 
               <div className="h-1 w-20 bg-lime-500 rounded-full mx-auto lg:mx-0" />
@@ -100,7 +79,7 @@ const OurTeam = () => {
             {/* DESCRIPTION */}
             <div ref={textRef} className="scroll-reveal mt-8 space-y-6">
               <p className="text-lg lg:text-xl text-gray-600 leading-relaxed text-center lg:text-left">
-                {teamContent.text}
+                Our team works really hard to keep this wonderful company going to produce and meet consumers' needs.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
@@ -114,9 +93,9 @@ const OurTeam = () => {
 
                 {/* MEMBER THUMBNAILS */}
                 <div className="flex -space-x-2">
-                  {teamContent.members.slice(0, 4).map((member) => (
+                  {staff.slice(0, 4).map((member, idx) => (
                     <div
-                      key={member.id}
+                      key={member.idx}
                       className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200"
                     >
                       <img
@@ -132,16 +111,11 @@ const OurTeam = () => {
 
           </div>
         </div>
-
-        {/* ===============================
-            TEAM GRID
-        ================================ */}
+  
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-          {teamContent.members.map((member, index) => (
+          {staff.map((member, index) => (
             <div
-              key={member.id}
-              ref={cardRefs[index]}
-              className="scroll-reveal"
+              key={index}
             >
               <div className="bg-lime-100 rounded-2xl shadow-md border overflow-hidden transition hover:-translate-y-2 hover:shadow-xl">
 
@@ -159,7 +133,7 @@ const OurTeam = () => {
                   </span>
 
                   {/* SOCIAL ICONS */}
-                  <div className="absolute bottom-4 right-4 flex space-x-2">
+                  {/* <div className="absolute bottom-4 right-4 flex space-x-2">
                     {member.socials.map((social, i) => (
                       <a
                         key={i}
@@ -169,13 +143,13 @@ const OurTeam = () => {
                         <SocialIcon platform={social} />
                       </a>
                     ))}
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* INFO */}
                 <div className="p-6 text-center">
                   <h3 className="text-md font-bold text-gray-900">
-                    {member.name}
+                    {member.title}
                   </h3>
                 </div>
 
