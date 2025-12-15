@@ -1,237 +1,126 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import {
-  ArrowRight,
-  Facebook,
-  MessageCircle,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Award,
-  Shield,
-  Clock,
-  Users,
-  Mail,
-  Phone,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa"; // Import React Icons
 import { useScrollReveal } from "../animation/useScrollReveal";
-import Footer from "../components/homecomponents/Footer";
+import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-/* ================= TEAM PAGE DATA (INLINE JSON) ================= */
-const teamPageData = {
-  title: "Meet Our Team",
-  text: "Our team works really hard to keep this wonderful company going to produce and meet consumers' needs.",
-  members: [
-    {
-      id: "1",
-      image: "../../assets/team1.jpg",
-      socials: ["facebook", "whatsapp", "twitter"],
-      name: "Rabie Mark",
-      position: "Lead Farmer",
-      description:
-        "Specializes in organic farming with 15 years of experience in sustainable agriculture.",
-    },
-    {
-      id: "2",
-      image: "../../assets/team2.jpg",
-      socials: ["facebook", "instagram", "linkedin"],
-      name: "Sarah Johnson",
-      position: "Agricultural Engineer",
-      description:
-        "Expert in modern irrigation systems and soil management techniques.",
-    },
-    {
-      id: "3",
-      image: "../../assets/team3.jpg",
-      socials: ["whatsapp", "twitter", "linkedin"],
-      name: "Miguel Kean",
-      position: "Harvest Manager",
-      description:
-        "Oversees harvesting operations ensuring quality and efficiency across all farms.",
-    },
-    {
-      id: "4",
-      image: "../../assets/team4.jpg",
-      socials: ["facebook", "instagram", "whatsapp"],
-      name: "Amara Chen",
-      position: "Sustainability Officer",
-      description:
-        "Implements eco-friendly practices and manages our green certification programs.",
-    },
-  ],
-};
+const TeamPage = () => {
+  const [staff, setStaff] = useState([]);
+  const API_URL = import.meta.env.VITE_API_URL;
 
-/* ================= SOCIAL ICON ================= */
-const SocialIcon = ({ platform, className = "h-4 w-4" }) => {
-  const icons = {
-    facebook: Facebook,
-    whatsapp: MessageCircle,
-    twitter: Twitter,
-    instagram: Instagram,
-    linkedin: Linkedin,
-    mail: Mail,
-    phone: Phone,
-  };
+  useEffect(() => {
+    const fetchStaffs = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/get-staff`);
+        console.log("staffs data ", res.data.staff);
+        setStaff(res.data.staff);
+      } catch (err) {
+        toast.error("error fetching staffs ", err);
+      }
+    };
+    fetchStaffs();
+  }, []);
 
-  const Icon = icons[platform];
-  return Icon ? <Icon className={className} /> : null;
-};
-
-/* ================= STAT CARD ================= */
-const StatCard = ({ icon: Icon, number, label, description, delay }) => {
-  const ref = useScrollReveal();
-
-  return (
-    <div
-      ref={ref}
-      className="scroll-reveal opacity-0 translate-y-8"
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition border">
-        <div className="flex gap-4">
-          <div className="p-3 bg-lime-100 rounded-xl">
-            <Icon className="h-6 w-6 text-lime-600" />
-          </div>
-          <div>
-            <h4 className="text-2xl font-bold">{number}</h4>
-            <p className="text-sm font-semibold">{label}</p>
-            <p className="text-xs text-gray-500 mt-1">{description}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-/* ================= TEAM MEMBER CARD ================= */
-const TeamMemberCard = ({ member, index }) => {
-  const ref = useScrollReveal();
-
-  return (
-    <div
-      ref={ref}
-      className="scroll-reveal opacity-0 translate-y-8"
-      style={{ animationDelay: `${index * 100}ms` }}
-    >
-      <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition overflow-hidden group">
-        <div className="relative h-72">
-          <img
-            src={member.image}
-            alt={member.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-          />
-
-          <div className="absolute top-4 left-4 bg-lime-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-            {member.position}
-          </div>
-
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 opacity-0 group-hover:opacity-100 transition">
-            {member.socials.map((social, i) => (
-              <span
-                key={i}
-                className="p-2 bg-white rounded-full shadow hover:bg-lime-500 hover:text-white transition"
-              >
-                <SocialIcon platform={social} />
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="p-6">
-          <h3 className="text-xl font-bold">{member.name}</h3>
-          <p className="text-gray-600 text-sm mt-2">
-            {member.description}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const OurTeam = () => {
   const titleRef = useScrollReveal();
   const textRef = useScrollReveal();
-  const ctaRef = useScrollReveal();
-
-  const stats = [
-    {
-      icon: Award,
-      number: "15+",
-      label: "Years Experience",
-      description: "Industry expertise",
-    },
-    {
-      icon: Users,
-      number: "100%",
-      label: "Quality Focus",
-      description: "Commitment to excellence",
-    },
-    {
-      icon: Clock,
-      number: "24/7",
-      label: "Support",
-      description: "Always available",
-    },
-    {
-      icon: Shield,
-      number: "50+",
-      label: "Projects",
-      description: "Successfully delivered",
-    },
-  ];
+  const cardRefs = useScrollReveal();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4">
-          {/* Header */}
-          <div className="text-center mb-16">
-            <div ref={titleRef} className="scroll-reveal opacity-0 translate-y-8">
-              <h1 className="text-4xl lg:text-5xl font-bold mb-4">
-                {teamPageData.title}
+    <section className="py-16 lg:py-24 bg-gradient-to-b from-white to-gray-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        {/* ===============================
+            TOP CONTENT
+        ================================ */}
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start mb-16">
+          <div className="lg:w-2/3 mx-auto">
+            {/* TITLE */}
+            <div ref={titleRef} className="scroll-reveal space-y-4">
+              <span className="inline-block text-sm font-semibold text-lime-600 bg-emerald-50 px-4 py-2 rounded-full">
+                Our Experts
+              </span>
+              <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight text-center lg:text-left">
+                These are our dedicated Staff
               </h1>
+              <div className="h-1 w-20 bg-lime-500 rounded-full mx-auto lg:mx-0" />
             </div>
 
-            <div ref={textRef} className="scroll-reveal opacity-0 translate-y-8">
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                {teamPageData.text}
+            {/* DESCRIPTION */}
+            <div ref={textRef} className="scroll-reveal mt-8 space-y-6">
+              <p className="text-lg lg:text-xl text-gray-600 leading-relaxed text-center lg:text-left">
+                They works really hard to keep this wonderful company going to produce and meet consumers' needs.
               </p>
             </div>
-
-            <div ref={ctaRef} className="scroll-reveal opacity-0 translate-y-8 mt-8">
-              <Link
-                to="/contact"
-                className="inline-flex items-center px-8 py-4 bg-lime-500 text-white rounded-xl font-semibold hover:bg-lime-600 transition"
-              >
-                Join Our Team
-                <ArrowRight className="ml-2" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-            {stats.map((stat, i) => (
-              <StatCard key={i} {...stat} delay={i * 100} />
-            ))}
-          </div>
-
-          {/* Team Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {teamPageData.members.map((member, index) => (
-              <TeamMemberCard
-                key={member.id}
-                member={member}
-                index={index}
-              />
-            ))}
           </div>
         </div>
-      </section>
 
-      <Footer />
-    </div>
+        {/* ===============================
+            TEAM CARDS WITH SOCIAL ICONS
+        ================================ */}
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl px-4 sm:px-8 mx-auto">
+          {staff.map((member, index) => (
+            <div key={index} ref={cardRefs} className="scroll-reveal">
+              <div className="bg-lime-100 max-w-full sm:max-w-80 md:max-w-80 rounded-2xl shadow-md border overflow-hidden transition hover:-translate-y-2 hover:shadow-xl">
+                {/* IMAGE */}
+                <div className="relative h-72 overflow-hidden group">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-full object-fit transition-transform duration-700 group-hover:scale-105"
+                  />
+
+                  {/* POSITION BADGE */}
+                  <span className="absolute top-4 left-4 px-3 py-1 text-xs font-semibold text-white bg-lime-500 rounded-full">
+                    {member.position}
+                  </span>
+
+                  {/* SOCIAL ICONS - Added Here */}
+                  <div className="absolute -bottom-10 right-4 flex space-x-2 transition-all duration-500 group-hover:bottom-4">
+                    <a
+                      href="#"
+                      className="p-3 bg-white text-blue-600 rounded-full shadow-lg hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-110"
+                      aria-label="Facebook"
+                    >
+                      <FaFacebookF className="w-4 h-4" />
+                    </a>
+                    <a
+                      href="#"
+                      className="p-3 bg-white text-pink-600 rounded-full shadow-lg hover:bg-pink-600 hover:text-white transition-all duration-300 hover:scale-110"
+                      aria-label="Instagram"
+                    >
+                      <FaInstagram className="w-4 h-4" />
+                    </a>
+                    <a
+                      href="#"
+                      className="p-3 bg-white text-green-600 rounded-full shadow-lg hover:bg-green-600 hover:text-white transition-all duration-300 hover:scale-110"
+                      aria-label="WhatsApp"
+                    >
+                      <FaWhatsapp className="w-4 h-4" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* INFO */}
+                <div className="p-6 text-center">
+                  <h3 className="text-xl font-bold text-gray-900 mb-1">
+                    {member.name}
+                  </h3>
+                  <p className="text-md font-semibold text-lime-600 mb-3">
+                    {member.title}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {member.description || "Expert in poultry management"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 };
 
-export default OurTeam;
+export default TeamPage;

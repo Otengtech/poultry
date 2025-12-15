@@ -15,7 +15,6 @@ const OurTeam = () => {
     const fetchStaffs = async () => {
       try {
         const res = await axios.get(`${API_URL}/get-staff`);
-        // const res = await axios.get(`/api/get-staff`);
         console.log("staffs data ", res.data.staff);
         setStaff(res.data.staff);
       } catch (err) {
@@ -93,7 +92,7 @@ const OurTeam = () => {
                   <img
                     src={member.image}
                     alt={member.name}
-                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full md:object-cover object-fit transition-transform duration-700 group-hover:scale-105"
                   />
 
                   {/* POSITION BADGE */}

@@ -1,7 +1,11 @@
-import express from "express";
-import cors from "cors";
+// backend/server.js
+import express from 'express'
+import multer from 'multer' // <-- INSTALL THIS: npm install multer
+import cors from 'cors'
 
 const app = express();
+app.use(cors());
+app.use(express.json());
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -21,6 +25,26 @@ app.use(
     credentials: true,
   })
 );
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/') // folder to save files
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname)
+  }
+});
+
+const upload = multer({ storage: storage });
+
+// Your route WITH multer middleware
+app.post('/api/Create-review', upload.single('avatar'), (req, res) => {
+  console.log('File:', req.file);
+  console.log('Body:', req.body);
+  // Save to DB here
+  res.json({ success: true, review: req.body });
+});
 
 // parse JSON bodies
 app.use(express.json());

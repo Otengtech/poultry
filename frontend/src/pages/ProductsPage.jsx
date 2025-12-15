@@ -25,7 +25,6 @@ const ProductsSection = () => {
     const fetchProducts = async () => {
       try {
         const res = await axios.get(`${API_URL}/get-product`);
-        // const res = await axios.get(`/api/get-product`);
         setProducts(res.data.data);
       } catch (err) {
         console.log("Error fetching products: ", err);
@@ -167,49 +166,73 @@ const ProductsSection = () => {
       </div>
 
       {/* Product Modal */}
-      {selectedProduct && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-3xl w-full relative shadow-2xl">
+{selectedProduct && (
+  <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-3">
+    <div className="bg-white rounded-2xl max-w-3xl w-full relative shadow-2xl overflow-hidden max-h-[95vh]">
+      
+      {/* Top Close Icon */}
+      <button
+        className="absolute top-3 right-3 z-10 bg-white rounded-full w-9 h-9 flex items-center justify-center text-gray-700 text-lg font-bold shadow"
+        onClick={() => setSelectedProduct(null)}
+        aria-label="Close modal"
+      >
+        ✕
+      </button>
+
+      <div className="grid md:grid-cols-2">
+        {/* Product Image */}
+        <div className="w-full h-56 md:h-full">
+          <img
+            src={selectedProduct.image}
+            alt={selectedProduct.name}
+            className="w-full h-full object-cover md:rounded-l-2xl"
+          />
+        </div>
+
+        {/* Product Details */}
+        <div className="p-6 flex flex-col justify-between overflow-y-auto">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold">
+              {selectedProduct.name}
+            </h2>
+
+            <p className="text-xl text-lime-600 font-bold mt-2">
+              GHS {selectedProduct.price}
+            </p>
+
+            {selectedProduct.size && (
+              <p className="text-gray-600 mt-2">
+                Size: {selectedProduct.size}
+              </p>
+            )}
+
+            <p className="text-gray-700 mt-4">
+              {selectedProduct.description}
+            </p>
+          </div>
+
+          {/* Buttons */}
+          <div className="mt-6 flex flex-col gap-3">
             <button
-              className="absolute top-4 right-4 text-gray-700 text-xl font-bold"
-              onClick={() => setSelectedProduct(null)}
+              onClick={() => handleAddToOrders(selectedProduct)}
+              className="w-full bg-lime-500 text-white py-3 rounded-xl font-semibold hover:bg-lime-400 transition"
             >
-              ✕
+              Add to Orders
             </button>
 
-            <div className="grid md:grid-cols-2 gap-4">
-              <img
-                src={selectedProduct.image}
-                alt={selectedProduct.name}
-                className="w-full h-full object-cover rounded-l-2xl"
-              />
-              <div className="p-8 flex flex-col justify-between">
-                <div>
-                  <h2 className="text-3xl font-bold">
-                    {selectedProduct.name}
-                  </h2>
-                  <p className="text-xl text-lime-600 font-bold mt-2">
-                    GHS {selectedProduct.price}
-                  </p>
-                  {selectedProduct.size && (
-                    <p className="text-gray-600 mt-2">
-                      Size: {selectedProduct.size}
-                    </p>
-                  )}
-                  <p className="text-gray-700 mt-4">{selectedProduct.description}</p>
-                </div>
-
-                <button
-                  onClick={() => handleAddToOrders(selectedProduct)}
-                  className="mt-6 w-full bg-lime-500 text-white py-3 rounded-xl font-semibold hover:bg-lime-400"
-                >
-                  Add to Orders
-                </button>
-              </div>
-            </div>
+            <button
+              onClick={() => setSelectedProduct(null)}
+              className="w-full border border-gray-300 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-100 transition"
+            >
+              Close
+            </button>
           </div>
         </div>
-      )}
+      </div>
+    </div>
+  </div>
+)}
+
 
       {/* Order Message */}
       {showOrderMessage && orderMessageProduct && (
