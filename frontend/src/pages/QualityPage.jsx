@@ -247,7 +247,7 @@ const QualitiesPage = () => {
         </div>
 
         {/* CTA Section */}
-        <div className="bg-gradient-to-r from-green-600 to-emerald-700 rounded-3xl p-8 md:p-12 text-center text-white">
+        <div className="bg-gradient-to-r from-green-600 to-emerald-700 rounded-3xl mb-4 p-8 md:p-12 text-center text-white">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Experience Our Quality Firsthand
           </h2>

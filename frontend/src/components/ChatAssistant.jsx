@@ -557,7 +557,7 @@ const ChatAssistant = () => {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                   placeholder="Ask about products, delivery, ordering..."
-                  className="flex-1 border border-gray-300 rounded-full px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="flex-1 border border-gray-300 rounded-full px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
                 <button
                   onClick={() => handleSendMessage()}
@@ -576,7 +576,7 @@ const ChatAssistant = () => {
               {/* Contact Links */}
               <div className="flex justify-center gap-4 mt-4 pt-4 border-t border-gray-100">
                 <a
-                  href="https://wa.me/233XXXXXXXXX"
+                  href="https://wa.me/233597113385"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-green-600 hover:text-green-700 text-sm"
@@ -585,19 +585,12 @@ const ChatAssistant = () => {
                   WhatsApp
                 </a>
                 <a
-                  href="tel:+233302XXXXXX"
+                  href="tel:+233597113385"
                   className="flex items-center gap-2 text-green-600 hover:text-green-700 text-sm"
                 >
                   <Icons.Phone className="h-4 w-4" />
                   Call Us
                 </a>
-                <Link
-                  to="/how-we-operate"
-                  className="flex items-center gap-2 text-green-600 hover:text-green-700 text-sm"
-                >
-                  <Icons.Info className="h-4 w-4" />
-                  How We Operate
-                </Link>
               </div>
             </div>
           </div>
