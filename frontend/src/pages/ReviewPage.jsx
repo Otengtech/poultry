@@ -64,7 +64,7 @@ const ReviewPage = () => {
     email: "",
     rating: 5,
     message: "",
-    avatar: null,
+    image: null,
   });
   const [avatarPreview, setAvatarPreview] = useState(null);
   const fileInputRef = useRef(null);
@@ -159,7 +159,7 @@ const ReviewPage = () => {
 
       setFormData((prev) => ({
         ...prev,
-        avatar: file,
+        image: file,
       }));
 
       // Create preview URL
@@ -174,7 +174,7 @@ const ReviewPage = () => {
   const handleRemoveAvatar = () => {
     setFormData((prev) => ({
       ...prev,
-      avatar: null,
+      image: null,
     }));
     setAvatarPreview(null);
     if (fileInputRef.current) {
@@ -190,6 +190,11 @@ const ReviewPage = () => {
       alert('Please fill in all required fields');
       return;
     }
+
+     if (!formData.image) {
+    alert("Please upload a profile picture");
+    return;
+  }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -207,8 +212,8 @@ const ReviewPage = () => {
       formDataToSend.append('email', formData.email);
       formDataToSend.append('content', formData.message);
       formDataToSend.append('rating', formData.rating.toString());
-      if (formData.avatar) {
-        formDataToSend.append('avatar', formData.avatar);
+      if (formData.image) {
+        formDataToSend.append('image', formData.image);
       }
 
       // Submit review to API
@@ -419,7 +424,7 @@ const ReviewPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   {currentReviews.map((review, index) => (
                     <div
-                      key={review.id || index}
+                      key={index}
                       className="bg-lime-50 rounded-2xl p-4 md:p-6 hover:shadow-md transition-shadow"
                     >
                       <div className="flex items-center gap-2 mb-3">
@@ -528,7 +533,7 @@ const ReviewPage = () => {
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
                 <User className="w-4 h-4" />
-                Full Name *
+                Full Name
               </label>
               <input
                 type="text"
@@ -546,7 +551,7 @@ const ReviewPage = () => {
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
                 <Mail className="w-4 h-4" />
-                Email Address *
+                Email Address
               </label>
               <input
                 type="email"
@@ -564,7 +569,7 @@ const ReviewPage = () => {
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
                 <Star className="w-4 h-4" />
-                Your Rating *
+                Your Rating
               </label>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -595,7 +600,7 @@ const ReviewPage = () => {
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
                 <Camera className="w-4 h-4" />
-                Profile Picture (Optional)
+                Profile Picture
               </label>
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <div className="relative">
@@ -632,6 +637,7 @@ const ReviewPage = () => {
                     className="hidden"
                     id="avatar-upload"
                     disabled={submitting}
+                    required
                   />
                   <label
                     htmlFor="avatar-upload"

@@ -2,6 +2,7 @@
 import express from 'express'
 import multer from 'multer' // <-- INSTALL THIS: npm install multer
 import cors from 'cors'
+import cloudinary from 'cloudinary'
 
 const app = express();
 app.use(cors());
@@ -36,18 +37,33 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage: multer.memoryStorage() });
 
-// Your route WITH multer middleware
-app.post('/api/Create-review', upload.single('avatar'), (req, res) => {
-  console.log('File:', req.file);
-  console.log('Body:', req.body);
-  // Save to DB here
-  res.json({ success: true, review: req.body });
+app.post("/Create-review", upload.single("image"), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: "Reviewer image is required" });
+  }
+
+  const uploadResult = await cloudinary.uploader.upload_stream(
+    { folder: "reviews" },
+    (error, result) => {
+      if (error) throw error;
+
+      res.status(201).json({
+        success: true,
+        review: {
+          name: req.body.name,
+          email: req.body.email,
+          content: req.body.content,
+          rating: Number(req.body.rating),
+          image: result.secure_url,
+        },
+      });
+    }
+  ).end(req.file.buffer);
 });
 
-// parse JSON bodies
-app.use(express.json());
+
 
 // Start server
 const PORT = process.env.PORT || 5000;
