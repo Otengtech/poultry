@@ -148,7 +148,7 @@ const AboutSection = () => {
               to="/about"
               className="inline-flex items-center gap-2 bg-lime-400 hover:bg-lime-500 px-6 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg"
             >
-              Learn more <Icons.ArrowRight className="h-5 w-5" />
+              About Us <Icons.ArrowRight className="h-5 w-5" />
             </Link>
           </div>
         </div>

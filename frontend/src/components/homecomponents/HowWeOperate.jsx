@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import * as Icons from "lucide-react";
+import {FaHome, FaCut, FaOpenBox, FaSnowFlakes, FaWhatsapp, FaPhone, FaStore, FaShoppingCart} from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { FaWhatsapp } from "react-icons/fa";
+import * as Icons from "lucide-react"
 
 /* =========================
    OPERATION DATA
@@ -9,69 +9,74 @@ import { FaWhatsapp } from "react-icons/fa";
 const operationData = {
   hero: {
     title: "From Our Farms to Your Table",
-    description: "Discover our transparent process from farm preparation to doorstep delivery. We ensure every product meets our high standards of quality and freshness."
+    description:
+      "Discover our transparent process from farm preparation to doorstep delivery. We ensure every product meets our high standards of quality and freshness.",
   },
-  
+
   // Preparation Process
   preparation: [
     {
       id: 1,
       step: "Farm Selection",
       title: "Sourcing & Quality Check",
-      description: "We source poultry from our own certified farms in Adenta and Aburi. Each bird undergoes health checks before processing.",
+      description:
+        "We source poultry from our own certified farms in Adenta and Aburi. Each bird undergoes health checks before processing.",
       details: [
         "Daily farm inspections",
         "Health certification verification",
         "Weight and quality grading",
-        "Antibiotic-free certification"
+        "Antibiotic-free certification",
       ],
-      icon: "Home",
-      time: "Day 1: Morning"
+      icon: "FaHome",
+      time: "Day 1: Morning",
     },
     {
       id: 2,
       step: "Processing",
       title: "Hygienic Processing",
-      description: "Processing in our HACCP-certified facility with strict hygiene protocols. Cold chain maintained throughout.",
+      description:
+        "Processing in our HACCP-certified facility with strict hygiene protocols. Cold chain maintained throughout.",
       details: [
         "Humane handling standards",
         "Hygienic processing equipment",
         "Temperature-controlled environment",
-        "Government inspection passed"
+        "Government inspection passed",
       ],
-      icon: "Scissors",
-      time: "Day 1: Processing Day"
+      icon: "FaCut",
+      time: "Day 1: Processing Day",
     },
     {
       id: 3,
       step: "Packaging",
       title: "Safe Packaging",
-      description: "Vacuum-sealed packaging with production date and batch numbers. Products labeled for traceability.",
+      description:
+        "Vacuum-sealed packaging with production date and batch numbers. Products labeled for traceability.",
       details: [
         "Food-grade packaging materials",
         "Vacuum sealing for freshness",
         "Clear expiration dating",
-        "Batch tracking numbers"
+        "Batch tracking numbers",
       ],
-      icon: "Package",
-      time: "Day 1: After Processing"
+      icon: "FaOpenBox",
+      time: "Day 1: After Processing",
     },
     {
       id: 4,
       step: "Storage",
       title: "Cold Storage",
-      description: "Immediate refrigeration at 0-4°C. Products stored in temperature-monitored cold rooms.",
+      description:
+        "Immediate refrigeration at 0-4°C. Products stored in temperature-monitored cold rooms.",
       details: [
         "24/7 temperature monitoring",
         "Regular quality checks",
         "First-in-first-out system",
-        "Separate storage for different products"
+        "Separate storage for different products",
       ],
-      icon: "Snowflake",
-      time: "Until Delivery"
-    }
+      icon: "FaSnowflake",
+      time: "Until Delivery",
+    },
   ],
-  
+
   // Ordering Process
   ordering: {
     title: "How to Order",
@@ -79,66 +84,68 @@ const operationData = {
       {
         id: 1,
         name: "Website Orders",
-        icon: "Home",
+        icon: "FaWhatsapp",
         process: [
           "Browse products on our website",
           "Add items to cart",
-          "Select delivery location",
-          "Choose delivery time slot",
-          "Secure online payment",
-          "Receive order confirmation"
+          "Fill in checkout form",
+          "Submit checkout form",
+          "Only Cash on delivery for now",
+          "Our team is working on other payment methods",
+          "View order in my orders page",
+          "Receive order confirmation",
         ],
         deliveryTime: "Within 24 hours",
-        minOrder: "No minimum"
+        minOrder: "No minimum",
       },
       {
         id: 2,
         name: "WhatsApp Orders",
-        icon: "Phone",
+        icon: "FaPhone",
         process: [
           "Message us on WhatsApp (+233 24 438 4928)",
           "Send product list",
           "Share delivery address",
           "Receive price quotation",
           "Confirm order via message",
-          "Cash on delivery available"
+          "Cash on delivery available",
         ],
         deliveryTime: "Within 24 hours",
-        minOrder: "₵100 minimum"
+        minOrder: "₵100 minimum",
       },
       {
         id: 3,
         name: "Phone Orders",
-        icon: "Phone",
+        icon: "FaShoppingCart",
         process: [
           "Call our hotline (024 438 4928 / 059 711 3385)",
           "Speak with our sales team",
           "Place your order",
           "Confirm delivery details",
-          "Receive SMS confirmation",
-          "Flexible payment options"
+          "Receive confirmation",
+          "Cah on delivery available",
         ],
         deliveryTime: "Same day (order before 12 PM)",
-        minOrder: "₵150 minimum"
+        minOrder: "₵150 minimum",
       },
       {
         id: 4,
         name: "Walk-in Purchase",
-        icon: "Store",
+        icon: "FaStore",
         process: [
           "Visit our retail shops",
           "Select fresh products",
           "Professional assistance",
           "Immediate pickup",
           "Bulk purchase discounts",
-          "Product recommendations"
+          "Product recommendations",
         ],
         deliveryTime: "Immediate",
-        minOrder: "No minimum"
-      }
-    ]
+        minOrder: "No minimum",
+      },
+    ],
   },
-  
+
   // Delivery Channels
   delivery: {
     title: "Delivery Network",
@@ -149,7 +156,7 @@ const operationData = {
         coverage: ["Accra Metro", "Adenta", "Madina", "Tema"],
         vehicles: "Refrigerated vans",
         time: "6 AM - 8 PM daily",
-        fee: "Free for orders above ₵300"
+        fee: "Free for orders above ₵300",
       },
       {
         id: 2,
@@ -157,7 +164,7 @@ const operationData = {
         coverage: ["Greater Accra", "Eastern Region"],
         vehicles: "Cold chain partners",
         time: "Next day delivery",
-        fee: "₵20-₵50 depending on location"
+        fee: "₵20-₵50 depending on location",
       },
       {
         id: 3,
@@ -165,11 +172,11 @@ const operationData = {
         coverage: ["Adenta Branch", "Aburi Branch", "Madina Market"],
         vehicles: "Self pickup",
         time: "8 AM - 6 PM daily",
-        fee: "Free"
-      }
-    ]
+        fee: "Free",
+      },
+    ],
   },
-  
+
   // Locations
   locations: [
     {
@@ -178,8 +185,13 @@ const operationData = {
       address: "Adenta Housing Down, Near Adenta Barrier, Accra",
       hours: "Mon-Sat: 7:00 AM - 8:00 PM | Sun: 8:00 AM - 6:00 PM",
       contact: "0302 XXX XXX | 0555 XXX XXX",
-      services: ["Fresh Sales", "Bulk Orders", "Delivery Hub", "Customer Service"],
-      coordinates: "5.7227° N, 0.1726° W"
+      services: [
+        "Fresh Sales",
+        "Bulk Orders",
+        "Delivery Hub",
+        "Customer Service",
+      ],
+      coordinates: "5.7227° N, 0.1726° W",
     },
     {
       id: 2,
@@ -188,7 +200,7 @@ const operationData = {
       hours: "Mon-Fri: 8:00 AM - 6:00 PM | Sat: 8:00 AM - 4:00 PM",
       contact: "0332 XXX XXX",
       services: ["Farm Fresh", "Processing", "Wholesale", "Farm Tours"],
-      coordinates: "5.8480° N, 0.1755° W"
+      coordinates: "5.8480° N, 0.1755° W",
     },
     {
       id: 3,
@@ -196,11 +208,16 @@ const operationData = {
       address: "Madina Market, Section 3, Accra",
       hours: "Daily: 6:00 AM - 8:00 PM",
       contact: "0244 XXX XXX",
-      services: ["Retail Sales", "Eggs", "Processed Chicken", "Same Day Orders"],
-      coordinates: "5.6860° N, 0.1700° W"
-    }
+      services: [
+        "Retail Sales",
+        "Eggs",
+        "Processed Chicken",
+        "Same Day Orders",
+      ],
+      coordinates: "5.6860° N, 0.1700° W",
+    },
   ],
-  
+
   // Products Available
   products: {
     fresh: [
@@ -209,7 +226,7 @@ const operationData = {
       "Fresh Eggs (Crates)",
       "Live Layers",
       "Smoked Chicken",
-      "Chicken Breast"
+      "Chicken Breast",
     ],
     packaged: [
       "Vacuum-packed Chicken",
@@ -217,41 +234,45 @@ const operationData = {
       "Marinated Chicken",
       "Ready-to-Cook Packs",
       "Family Value Packs",
-      "Bulk Wholesale (50kg+)"
-    ]
+      "Bulk Wholesale (50kg+)",
+    ],
   },
-  
+
   // FAQ
   faq: [
     {
       question: "How fresh are your products?",
-      answer: "We process daily and deliver within 24 hours. Products are dated so you know exactly when they were processed."
+      answer:
+        "We process daily and deliver within 24 hours. Products are dated so you know exactly when they were processed.",
     },
     {
       question: "What payment methods do you accept?",
-      answer: "Mobile Money (MTN, Vodafone), Bank Transfer, Cash on Delivery (for certain areas), and Credit/Debit cards online."
+      answer:
+        "Mobile Money (MTN, Vodafone), Bank Transfer, Cash on Delivery (for certain areas), and Credit/Debit cards online.",
     },
     {
       question: "Can I order for a specific delivery time?",
-      answer: "Yes! You can choose 2-hour delivery windows when ordering through our website or WhatsApp."
+      answer:
+        "Yes! You can choose 2-hour delivery windows when ordering through our website or WhatsApp.",
     },
     {
       question: "Do you supply to restaurants and hotels?",
-      answer: "Absolutely. We have special wholesale packages and regular supply contracts for businesses. Contact our business sales team."
-    }
-  ]
+      answer:
+        "Absolutely. We have special wholesale packages and regular supply contracts for businesses. Contact our business sales team.",
+    },
+  ],
 };
 
 /* =========================
    COMPONENT
 ========================= */
 const HowWeOperate = () => {
-  const { hero, preparation, ordering, delivery, locations, products, faq } = operationData;
+  const { hero, preparation, ordering, products, faq } =
+    operationData;
   const [activeFAQ, setActiveFAQ] = useState(null);
 
   return (
     <div className="min-h-screen bg-gray-50">
-      
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-green-800 to-green-600 text-white py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -259,9 +280,7 @@ const HowWeOperate = () => {
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
               {hero.title}
             </h1>
-            <p className="text-lg text-green-100 mb-8">
-              {hero.description}
-            </p>
+            <p className="text-lg text-green-100 mb-8">{hero.description}</p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
                 to="/products"
@@ -269,12 +288,17 @@ const HowWeOperate = () => {
               >
                 Order Now <Icons.ShoppingCart className="h-5 w-5" />
               </Link>
-              <a
-                href="#ordering"
+              <button
+                onClick={() => {
+                  document.getElementById("ordering")?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }}
                 className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-6 py-3 rounded-full font-semibold transition-all border border-white/30"
               >
                 How to Order <Icons.ArrowDown className="h-5 w-5" />
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -298,28 +322,36 @@ const HowWeOperate = () => {
           <div className="relative">
             {/* Timeline line */}
             <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-green-200"></div>
-            
+
             {/* Process Steps */}
             <div className="space-y-12 md:space-y-2">
               {preparation.map((step, index) => (
-                <div 
+                <div
                   key={step.id}
                   className={`relative flex flex-col lg:flex-row items-center ${
-                    index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'
+                    index % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"
                   }`}
                 >
                   {/* Content */}
-                  <div className={`lg:w-1/2 ${index % 2 === 0 ? 'lg:pr-12' : 'lg:pl-12'}`}>
+                  <div
+                    className={`lg:w-1/2 ${
+                      index % 2 === 0 ? "lg:pr-12" : "lg:pl-12"
+                    }`}
+                  >
                     <div className="bg-green-500 rounded-xl shadow-lg p-6 md:p-8">
                       <div className="flex items-center gap-3 mb-4">
                         <div className="p-3 bg-white text-gray-700 rounded-lg">
-                          {React.createElement(Icons[step.icon], { className: "h-6 w-6" })}
+                          {React.createElement(Icons[step.icon], {
+                            className: "h-6 w-6",
+                          })}
                         </div>
                         <div>
                           <span className="text-sm font-semibold text-gray-700 uppercase">
                             Step {step.id}
                           </span>
-                          <h3 className="text-xl font-bold text-gray-700">{step.title}</h3>
+                          <h3 className="text-xl font-bold text-gray-700">
+                            {step.title}
+                          </h3>
                         </div>
                       </div>
                       <p className="text-gray-700 mb-4">{step.description}</p>
@@ -343,7 +375,9 @@ const HowWeOperate = () => {
                   {/* Timeline dot */}
                   <div className="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 z-10">
                     <div className="w-8 h-8 bg-green-600 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
-                      <span className="text-white font-bold text-sm">{step.id}</span>
+                      <span className="text-white font-bold text-sm">
+                        {step.id}
+                      </span>
                     </div>
                   </div>
 
@@ -351,9 +385,13 @@ const HowWeOperate = () => {
                   <div className="lg:hidden mt-4">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
-                        <span className="text-white text-xs font-bold">{step.id}</span>
+                        <span className="text-white text-xs font-bold">
+                          {step.id}
+                        </span>
                       </div>
-                      <span className="text-sm font-semibold text-gray-700">{step.step}</span>
+                      <span className="text-sm font-semibold text-gray-700">
+                        {step.step}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -377,14 +415,21 @@ const HowWeOperate = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {ordering.channels.map((channel) => (
-              <div key={channel.id} className="bg-gray-50 rounded-xl p-6 border border-gray-200 hover:border-green-300 transition-all hover:shadow-lg">
+              <div
+                key={channel.id}
+                className="bg-gray-50 rounded-xl p-6 border border-gray-200 hover:border-green-300 transition-all hover:shadow-lg"
+              >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-3 bg-green-100 text-green-700 rounded-lg">
-                    {React.createElement(Icons[channel.icon], { className: "h-6 w-6" })}
+                    {React.createElement(Icons[channel.icon], {
+                      className: "h-6 w-6",
+                    })}
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900">{channel.name}</h3>
+                  <h3 className="text-lg font-bold text-gray-900">
+                    {channel.name}
+                  </h3>
                 </div>
-                
+
                 <div className="space-y-3 mb-6">
                   {channel.process.map((processStep, idx) => (
                     <div key={idx} className="flex items-start gap-2">
@@ -413,11 +458,13 @@ const HowWeOperate = () => {
 
           {/* Quick Actions */}
           <div className="bg-gradient-to-r from-green-50 to-lime-50 rounded-2xl p-8 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Order?</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Ready to Order?
+            </h3>
             <div className="flex flex-wrap justify-center gap-4">
-              <a 
-                href="https://wa.me/233244384928" 
-                target="_blank" 
+              <a
+                href="https://wa.me/233244384928"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-semibold transition-all"
               >
@@ -431,8 +478,8 @@ const HowWeOperate = () => {
                 <Icons.ShoppingCart className="h-5 w-5" />
                 Online Store
               </Link>
-              <a 
-                href="tel:+233244384928" 
+              <a
+                href="tel:+233244384928"
                 className="inline-flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 px-6 py-3 rounded-full font-semibold transition-all"
               >
                 <Icons.Phone className="h-5 w-5" />
@@ -447,11 +494,12 @@ const HowWeOperate = () => {
       <section className="py-12 md:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            
             {/* Products Available */}
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Products Available</h2>
-              
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                Products Available
+              </h2>
+
               <div className="space-y-8">
                 <div>
                   <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -460,7 +508,10 @@ const HowWeOperate = () => {
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {products.fresh.map((product, idx) => (
-                      <div key={idx} className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+                      <div
+                        key={idx}
+                        className="bg-white rounded-lg p-4 shadow-sm border border-gray-200"
+                      >
                         <div className="flex items-center gap-2">
                           <Icons.CheckCircle className="h-5 w-5 text-green-500" />
                           <span className="text-gray-700">{product}</span>
@@ -469,7 +520,7 @@ const HowWeOperate = () => {
                     ))}
                   </div>
                 </div>
-                
+
                 <div>
                   <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                     <Icons.Package className="h-5 w-5 text-green-600" />
@@ -477,7 +528,10 @@ const HowWeOperate = () => {
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {products.packaged.map((product, idx) => (
-                      <div key={idx} className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+                      <div
+                        key={idx}
+                        className="bg-white rounded-lg p-4 shadow-sm border border-gray-200"
+                      >
                         <div className="flex items-center gap-2">
                           <Icons.CheckCircle className="h-5 w-5 text-green-500" />
                           <span className="text-gray-700">{product}</span>
@@ -491,21 +545,32 @@ const HowWeOperate = () => {
 
             {/* FAQ */}
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Frequently Asked Questions</h2>
-              
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                Frequently Asked Questions
+              </h2>
+
               <div className="space-y-4">
                 {faq.map((item, index) => (
-                  <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-200">
+                  <div
+                    key={index}
+                    className="bg-white rounded-xl shadow-sm border border-gray-200"
+                  >
                     <button
-                      onClick={() => setActiveFAQ(activeFAQ === index ? null : index)}
+                      onClick={() =>
+                        setActiveFAQ(activeFAQ === index ? null : index)
+                      }
                       className="w-full p-6 text-left flex justify-between items-center"
                     >
-                      <h3 className="text-lg font-semibold text-gray-900">{item.question}</h3>
-                      <Icons.ChevronDown className={`h-5 w-5 text-gray-500 transition-transform ${
-                        activeFAQ === index ? 'transform rotate-180' : ''
-                      }`} />
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {item.question}
+                      </h3>
+                      <Icons.ChevronDown
+                        className={`h-5 w-5 text-gray-500 transition-transform ${
+                          activeFAQ === index ? "transform rotate-180" : ""
+                        }`}
+                      />
                     </button>
-                    
+
                     {activeFAQ === index && (
                       <div className="px-6 pb-6">
                         <p className="text-gray-600">{item.answer}</p>
@@ -514,22 +579,25 @@ const HowWeOperate = () => {
                   </div>
                 ))}
               </div>
-              
-              
+
               {/* Contact Card */}
               <div className="mt-8 bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-8 text-white">
-                <h3 className="text-2xl font-bold mb-4">Still Have Questions?</h3>
-                <p className="mb-6 text-green-100">Our customer service team is here to help</p>
+                <h3 className="text-2xl font-bold mb-4">
+                  Still Have Questions?
+                </h3>
+                <p className="mb-6 text-green-100">
+                  Our customer service team is here to help
+                </p>
                 <div className="flex flex-wrap gap-4">
-                  <a 
-                    href="tel:+233597113385" 
+                  <a
+                    href="tel:+233597113385"
                     className="inline-flex items-center gap-2 bg-white text-green-700 hover:bg-gray-100 px-6 py-3 rounded-full font-semibold transition-all"
                   >
                     <Icons.Phone className="h-5 w-5" />
                     Call Support
                   </a>
-                  <Link 
-                    to="/contact" 
+                  <Link
+                    to="/contact"
                     className="inline-flex items-center gap-2 bg-green-800 hover:bg-green-900 text-white px-6 py-3 rounded-full font-semibold transition-all"
                   >
                     <Icons.Mail className="h-5 w-5" />
@@ -541,7 +609,6 @@ const HowWeOperate = () => {
           </div>
         </div>
       </section>
-
     </div>
   );
 };

@@ -40,72 +40,71 @@ const ContactPage = () => {
 
   const API_URL = import.meta.env.VITE_API_URL;
 
-
   /* ================= SUBMIT HANDLER ================= */
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const trimmedName = name.trim();
-  const trimmedEmail = email.trim();
-  const trimmedMessage = message.trim();
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    const trimmedMessage = message.trim();
 
-  // 1️⃣ Empty fields check
-  if (!trimmedName || !trimmedEmail || !trimmedMessage) {
-    toast.error("All fields are required");
-    return;
-  }
-
-  // 2️⃣ Name validation
-  if (trimmedName.length < 2) {
-    toast.error("Name must be at least 2 characters");
-    return;
-  }
-
-  // 3️⃣ Email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(trimmedEmail)) {
-    toast.error("Please enter a valid email address");
-    return;
-  }
-
-  // 4️⃣ Message validation
-  if (trimmedMessage.length < 10) {
-    toast.error("Message must be at least 10 characters");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const res = await fetch(`${API_URL}/contact`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: trimmedName,
-        email: trimmedEmail,
-        message: trimmedMessage,
-      }),
-    });
-
-    const data = await res.json();
-
-    // 5️⃣ Backend error handling
-    if (!res.ok) {
-      toast.error(data.message || "Failed to send message");
+    // 1️⃣ Empty fields check
+    if (!trimmedName || !trimmedEmail || !trimmedMessage) {
+      toast.error("All fields are required");
       return;
     }
 
-    toast.success(data.message || "Message sent successfully!");
+    // 2️⃣ Name validation
+    if (trimmedName.length < 2) {
+      toast.error("Name must be at least 2 characters");
+      return;
+    }
 
-    setName("");
-    setEmail("");
-    setMessage("");
-  } catch (error) {
-    toast.error("Network error. Please try again later.");
-  } finally {
-    setLoading(false);
-  }
-};
+    // 3️⃣ Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    // 4️⃣ Message validation
+    if (trimmedMessage.length < 10) {
+      toast.error("Message must be at least 10 characters");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch(`${API_URL}/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: trimmedName,
+          email: trimmedEmail,
+          message: trimmedMessage,
+        }),
+      });
+
+      const data = await res.json();
+
+      // 5️⃣ Backend error handling
+      if (!res.ok) {
+        toast.error(data.message || "Failed to send message");
+        return;
+      }
+
+      toast.success(data.message || "Message sent successfully!");
+
+      setName("");
+      setEmail("");
+      setMessage("");
+    } catch (error) {
+      toast.error("Network error. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-lime-50 to-white">
@@ -227,6 +226,41 @@ const ContactPage = () => {
           </form>
         </div>
       </section>
+      <div className="w-full bg-white rounded-2xl shadow-lg overflow-hidden">
+        {/* Map */}
+        <div className="w-full h-[350px]">
+          <iframe
+            title="NAYA Success Axis Farm Location"
+            src="https://www.google.com/maps?q=Adenta%20Housing%20Down%20Oyoko%20Clinic&output=embed"
+            className="w-full h-full border-0"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </div>
+
+        {/* Info Section */}
+        <div className="p-6 text-center">
+          <h3 className="text-xl font-bold text-gray-900 mb-2">
+            NAYA Success Axis – Farm Location
+          </h3>
+
+          <p className="text-gray-600 mb-4">
+            Adenta Housing Down, close to Oyoko Clinic
+          </p>
+
+          <p className="text-sm text-gray-700 mb-4">
+            PM <span className="font-semibold text-lime-700">NAYA</span> for
+            reservations and delivery
+          </p>
+
+          <a
+            href="tel:0244384928"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-lime-600 text-white font-semibold hover:bg-lime-700 transition-colors"
+          >
+            Call 024 438 4928
+          </a>
+        </div>
+      </div>
 
       <Footer />
     </div>

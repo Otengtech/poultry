@@ -52,13 +52,36 @@ const ProductsSection = () => {
     return list;
   }, [products, activeCategory, searchQuery]);
 
-  /* ================= ADD TO ORDERS ================= */
-  const handleAddToOrders = (product) => {
-    const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
-    localStorage.setItem(
-      "orders",
-      JSON.stringify([...existingOrders, product])
+  /* ================= ADD TO CART ================= */
+  const handleAddToCart = (product) => {
+    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+    
+    // Check if product already exists in cart
+    const existingProductIndex = existingCart.findIndex(
+      (item) => item._id === product._id
     );
+
+    if (existingProductIndex > -1) {
+      // Product already exists - update quantity
+      const updatedCart = [...existingCart];
+      updatedCart[existingProductIndex].quantity += 1;
+      updatedCart[existingProductIndex].totalPrice = 
+        updatedCart[existingProductIndex].quantity * parseFloat(product.price);
+      
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      toast.info(`Increased ${product.name} quantity in cart`);
+    } else {
+      // Add new product to cart with quantity 1
+      const productWithQuantity = {
+        ...product,
+        quantity: 1,
+        totalPrice: parseFloat(product.price)
+      };
+
+      const updatedCart = [...existingCart, productWithQuantity];
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      toast.success(`${product.name} added to cart!`);
+    }
 
     setOrderMessageProduct(product);
     setShowOrderMessage(true);
@@ -149,10 +172,10 @@ const ProductsSection = () => {
                   </div>
 
                   <button
-                    onClick={() => handleAddToOrders(product)}
+                    onClick={() => handleAddToCart(product)}
                     className="mt-4 w-full bg-lime-100 text-lime-600 py-2 rounded-xl font-semibold hover:bg-lime-200"
                   >
-                    Order Now
+                    Add to Cart
                   </button>
                 </div>
               </div>
@@ -166,78 +189,77 @@ const ProductsSection = () => {
       </div>
 
       {/* Product Modal */}
-{selectedProduct && (
-  <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-3">
-    <div className="bg-white rounded-2xl max-w-3xl w-full relative shadow-2xl overflow-hidden max-h-[95vh]">
-      
-      {/* Top Close Icon */}
-      <button
-        className="absolute top-3 right-3 z-10 bg-white rounded-full w-9 h-9 flex items-center justify-center text-gray-700 text-lg font-bold shadow"
-        onClick={() => setSelectedProduct(null)}
-        aria-label="Close modal"
-      >
-        ✕
-      </button>
-
-      <div className="grid md:grid-cols-2">
-        {/* Product Image */}
-        <div className="w-full h-56 md:h-full">
-          <img
-            src={selectedProduct.image}
-            alt={selectedProduct.name}
-            className="w-full h-full object-cover md:rounded-l-2xl"
-          />
-        </div>
-
-        {/* Product Details */}
-        <div className="p-6 flex flex-col justify-between overflow-y-auto">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold">
-              {selectedProduct.name}
-            </h2>
-
-            <p className="text-xl text-lime-600 font-bold mt-2">
-              GHS {selectedProduct.price}
-            </p>
-
-            {selectedProduct.size && (
-              <p className="text-gray-600 mt-2">
-                Size: {selectedProduct.size}
-              </p>
-            )}
-
-            <p className="text-gray-700 mt-4">
-              {selectedProduct.description}
-            </p>
-          </div>
-
-          {/* Buttons */}
-          <div className="mt-6 flex flex-col gap-3">
+      {selectedProduct && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-3">
+          <div className="bg-white rounded-2xl max-w-3xl w-full relative shadow-2xl overflow-hidden max-h-[95vh]">
+            
+            {/* Top Close Icon */}
             <button
-              onClick={() => handleAddToOrders(selectedProduct)}
-              className="w-full bg-lime-500 text-white py-3 rounded-xl font-semibold hover:bg-lime-400 transition"
-            >
-              Add to Orders
-            </button>
-
-            <button
+              className="absolute top-3 right-3 z-10 bg-white rounded-full w-9 h-9 flex items-center justify-center text-gray-700 text-lg font-bold shadow"
               onClick={() => setSelectedProduct(null)}
-              className="w-full border border-gray-300 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-100 transition"
+              aria-label="Close modal"
             >
-              Close
+              ✕
             </button>
+
+            <div className="grid md:grid-cols-2">
+              {/* Product Image */}
+              <div className="w-full h-56 md:h-full">
+                <img
+                  src={selectedProduct.image}
+                  alt={selectedProduct.name}
+                  className="w-full h-full object-cover md:rounded-l-2xl"
+                />
+              </div>
+
+              {/* Product Details */}
+              <div className="p-6 flex flex-col justify-between overflow-y-auto">
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-bold">
+                    {selectedProduct.name}
+                  </h2>
+
+                  <p className="text-xl text-lime-600 font-bold mt-2">
+                    GHS {selectedProduct.price}
+                  </p>
+
+                  {selectedProduct.size && (
+                    <p className="text-gray-600 mt-2">
+                      Size: {selectedProduct.size}
+                    </p>
+                  )}
+
+                  <p className="text-gray-700 mt-4">
+                    {selectedProduct.description}
+                  </p>
+                </div>
+
+                {/* Buttons */}
+                <div className="mt-6 flex flex-col gap-3">
+                  <button
+                    onClick={() => handleAddToCart(selectedProduct)}
+                    className="w-full bg-lime-500 text-white py-3 rounded-xl font-semibold hover:bg-lime-400 transition"
+                  >
+                    Add to Cart
+                  </button>
+
+                  <button
+                    onClick={() => setSelectedProduct(null)}
+                    className="w-full border border-gray-300 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-100 transition"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
-
-      {/* Order Message */}
+      {/* Cart Message */}
       {showOrderMessage && orderMessageProduct && (
         <div className="fixed bottom-8 right-8 bg-lime-500 text-white px-6 py-3 rounded-xl shadow-lg">
-          {orderMessageProduct.name} added to orders!
+          {orderMessageProduct.name} added to cart!
         </div>
       )}
 

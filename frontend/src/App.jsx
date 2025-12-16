@@ -19,7 +19,8 @@ const ReviewPage = lazy(() => import("./pages/ReviewPage"));
 const BlogPage = lazy(() => import("./pages/BlogPage"));
 const FAQPage = lazy(() => import("./pages/FAQPage"));
 const TeamPage = lazy(() => import("./pages/TeamPage"));
-const OrdersPage = lazy(() => import("./pages/OrdersPage"));
+const CartPage = lazy(() => import("./pages/CartPage"));
+const OrderPage = lazy(() => import("./pages/OrderPage"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const QualityPage = lazy(() => import("./pages/QualityPage"));
 
@@ -41,7 +42,8 @@ function App() {
           <Route path="/review" element={<ReviewPage />} />
           <Route path="/team" element={<TeamPage />} />
           <Route path="/faq" element={<FAQPage />} />
-          <Route path="/order" element={<OrdersPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/order" element={<OrderPage />} />
           <Route path="/quality" element={<QualityPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>

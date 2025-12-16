@@ -11,12 +11,13 @@ const ResponsiveNavbar = () => {
     { label: "Home", href: "/" },
     { label: "Blog", href: "/blog" },
     { label: "Products", href: "/products" },
-    { label: "Orders", href: "/order" },
+    { label: "Cart", href: "/cart" },
     { label: "Contact", href: "/contact" },
     { label: "About", href: "/about" },
   ];
 
   const pagesDropdownItems = [
+    { label: "Your Orders", href: "/order" },
     { label: "Qualities", href: "/quality" },
     { label: "Our Team", href: "/team" },
     { label: "Reviews", href: "/review" },
