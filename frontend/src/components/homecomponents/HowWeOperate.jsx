@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import {FaHome, FaCut, FaOpenBox, FaSnowFlakes, FaWhatsapp, FaPhone, FaStore, FaShoppingCart} from "react-icons/fa";
 import { Link } from "react-router-dom";
-import * as Icons from "lucide-react"
 
 /* =========================
    OPERATION DATA
@@ -27,7 +25,6 @@ const operationData = {
         "Weight and quality grading",
         "Antibiotic-free certification",
       ],
-      icon: "FaHome",
       time: "Day 1: Morning",
     },
     {
@@ -42,7 +39,6 @@ const operationData = {
         "Temperature-controlled environment",
         "Government inspection passed",
       ],
-      icon: "FaCut",
       time: "Day 1: Processing Day",
     },
     {
@@ -57,7 +53,6 @@ const operationData = {
         "Clear expiration dating",
         "Batch tracking numbers",
       ],
-      icon: "FaOpenBox",
       time: "Day 1: After Processing",
     },
     {
@@ -72,7 +67,6 @@ const operationData = {
         "First-in-first-out system",
         "Separate storage for different products",
       ],
-      icon: "FaSnowflake",
       time: "Until Delivery",
     },
   ],
@@ -84,7 +78,6 @@ const operationData = {
       {
         id: 1,
         name: "Website Orders",
-        icon: "FaWhatsapp",
         process: [
           "Browse products on our website",
           "Add items to cart",
@@ -101,7 +94,6 @@ const operationData = {
       {
         id: 2,
         name: "WhatsApp Orders",
-        icon: "FaPhone",
         process: [
           "Message us on WhatsApp (+233 24 438 4928)",
           "Send product list",
@@ -116,14 +108,13 @@ const operationData = {
       {
         id: 3,
         name: "Phone Orders",
-        icon: "FaShoppingCart",
         process: [
           "Call our hotline (024 438 4928 / 059 711 3385)",
           "Speak with our sales team",
           "Place your order",
           "Confirm delivery details",
           "Receive confirmation",
-          "Cah on delivery available",
+          "Cash on delivery available",
         ],
         deliveryTime: "Same day (order before 12 PM)",
         minOrder: "₵150 minimum",
@@ -131,7 +122,6 @@ const operationData = {
       {
         id: 4,
         name: "Walk-in Purchase",
-        icon: "FaStore",
         process: [
           "Visit our retail shops",
           "Select fresh products",
@@ -185,12 +175,7 @@ const operationData = {
       address: "Adenta Housing Down, Near Adenta Barrier, Accra",
       hours: "Mon-Sat: 7:00 AM - 8:00 PM | Sun: 8:00 AM - 6:00 PM",
       contact: "0302 XXX XXX | 0555 XXX XXX",
-      services: [
-        "Fresh Sales",
-        "Bulk Orders",
-        "Delivery Hub",
-        "Customer Service",
-      ],
+      services: ["Fresh Sales", "Bulk Orders", "Delivery Hub", "Customer Service"],
       coordinates: "5.7227° N, 0.1726° W",
     },
     {
@@ -208,12 +193,7 @@ const operationData = {
       address: "Madina Market, Section 3, Accra",
       hours: "Daily: 6:00 AM - 8:00 PM",
       contact: "0244 XXX XXX",
-      services: [
-        "Retail Sales",
-        "Eggs",
-        "Processed Chicken",
-        "Same Day Orders",
-      ],
+      services: ["Retail Sales", "Eggs", "Processed Chicken", "Same Day Orders"],
       coordinates: "5.6860° N, 0.1700° W",
     },
   ],
@@ -263,13 +243,54 @@ const operationData = {
   ],
 };
 
+// Import Lucide React icons directly
+import { 
+  ShoppingCart, 
+  ArrowDown, 
+  CheckCircle, 
+  Clock, 
+  MessageCircle, 
+  Phone, 
+  Mail, 
+  ChevronDown,
+  Sparkles,
+  Package,
+  Home,
+  Scissors,
+  Package2,
+  Snowflake,
+  ShoppingBag,
+  Store
+} from "lucide-react";
+
 /* =========================
    COMPONENT
 ========================= */
 const HowWeOperate = () => {
-  const { hero, preparation, ordering, products, faq } =
-    operationData;
+  const { hero, preparation, ordering, products, faq } = operationData;
   const [activeFAQ, setActiveFAQ] = useState(null);
+
+  // Function to get icon for preparation step
+  const getPreparationIcon = (stepId) => {
+    switch(stepId) {
+      case 1: return <Home className="h-6 w-6" />;
+      case 2: return <Scissors className="h-6 w-6" />;
+      case 3: return <Package2 className="h-6 w-6" />;
+      case 4: return <Snowflake className="h-6 w-6" />;
+      default: return <Home className="h-6 w-6" />;
+    }
+  };
+
+  // Function to get icon for ordering channel
+  const getOrderingIcon = (channelId) => {
+    switch(channelId) {
+      case 1: return <MessageCircle className="h-6 w-6" />;
+      case 2: return <Phone className="h-6 w-6" />;
+      case 3: return <ShoppingBag className="h-6 w-6" />;
+      case 4: return <Store className="h-6 w-6" />;
+      default: return <ShoppingCart className="h-6 w-6" />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -286,7 +307,7 @@ const HowWeOperate = () => {
                 to="/products"
                 className="inline-flex items-center gap-2 bg-lime-400 text-gray-900 hover:bg-lime-500 px-6 py-3 rounded-full font-semibold transition-all hover:scale-105"
               >
-                Order Now <Icons.ShoppingCart className="h-5 w-5" />
+                Order Now <ShoppingCart className="h-5 w-5" />
               </Link>
               <button
                 onClick={() => {
@@ -297,7 +318,7 @@ const HowWeOperate = () => {
                 }}
                 className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-6 py-3 rounded-full font-semibold transition-all border border-white/30"
               >
-                How to Order <Icons.ArrowDown className="h-5 w-5" />
+                How to Order <ArrowDown className="h-5 w-5" />
               </button>
             </div>
           </div>
@@ -341,9 +362,7 @@ const HowWeOperate = () => {
                     <div className="bg-green-500 rounded-xl shadow-lg p-6 md:p-8">
                       <div className="flex items-center gap-3 mb-4">
                         <div className="p-3 bg-white text-gray-700 rounded-lg">
-                          {React.createElement(Icons[step.icon], {
-                            className: "h-6 w-6",
-                          })}
+                          {getPreparationIcon(step.id)}
                         </div>
                         <div>
                           <span className="text-sm font-semibold text-gray-700 uppercase">
@@ -358,14 +377,14 @@ const HowWeOperate = () => {
                       <div className="space-y-2">
                         {step.details.map((detail, idx) => (
                           <div key={idx} className="flex items-start gap-2">
-                            <Icons.CheckCircle className="h-5 w-5 text-white mt-0.5 flex-shrink-0" />
+                            <CheckCircle className="h-5 w-5 text-white mt-0.5 flex-shrink-0" />
                             <span className="text-gray-50">{detail}</span>
                           </div>
                         ))}
                       </div>
                       <div className="mt-4 pt-4 border-t border-gray-50">
                         <div className="flex items-center gap-2 text-sm text-gray-50">
-                          <Icons.Clock className="h-4 w-4" />
+                          <Clock className="h-4 w-4" />
                           <span>{step.time}</span>
                         </div>
                       </div>
@@ -421,9 +440,7 @@ const HowWeOperate = () => {
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-3 bg-green-100 text-green-700 rounded-lg">
-                    {React.createElement(Icons[channel.icon], {
-                      className: "h-6 w-6",
-                    })}
+                    {getOrderingIcon(channel.id)}
                   </div>
                   <h3 className="text-lg font-bold text-gray-900">
                     {channel.name}
@@ -444,7 +461,7 @@ const HowWeOperate = () => {
                 <div className="pt-4 border-t border-gray-200">
                   <div className="flex justify-between items-center text-sm">
                     <div className="flex items-center gap-1 text-gray-600">
-                      <Icons.Clock className="h-4 w-4" />
+                      <Clock className="h-4 w-4" />
                       <span>{channel.deliveryTime}</span>
                     </div>
                     <div className="text-green-700 font-semibold">
@@ -468,21 +485,21 @@ const HowWeOperate = () => {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-semibold transition-all"
               >
-                <Icons.MessageCircle className="h-5 w-5" />
+                <MessageCircle className="h-5 w-5" />
                 WhatsApp Order
               </a>
               <Link
                 to="/products"
                 className="inline-flex items-center gap-2 bg-lime-400 hover:bg-lime-500 text-gray-900 px-6 py-3 rounded-full font-semibold transition-all"
               >
-                <Icons.ShoppingCart className="h-5 w-5" />
+                <ShoppingCart className="h-5 w-5" />
                 Online Store
               </Link>
               <a
                 href="tel:+233244384928"
                 className="inline-flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 px-6 py-3 rounded-full font-semibold transition-all"
               >
-                <Icons.Phone className="h-5 w-5" />
+                <Phone className="h-5 w-5" />
                 Call Now
               </a>
             </div>
@@ -503,7 +520,7 @@ const HowWeOperate = () => {
               <div className="space-y-8">
                 <div>
                   <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <Icons.Sparkles className="h-5 w-5 text-green-600" />
+                    <Sparkles className="h-5 w-5 text-green-600" />
                     Fresh Products
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -513,7 +530,7 @@ const HowWeOperate = () => {
                         className="bg-white rounded-lg p-4 shadow-sm border border-gray-200"
                       >
                         <div className="flex items-center gap-2">
-                          <Icons.CheckCircle className="h-5 w-5 text-green-500" />
+                          <CheckCircle className="h-5 w-5 text-green-500" />
                           <span className="text-gray-700">{product}</span>
                         </div>
                       </div>
@@ -523,7 +540,7 @@ const HowWeOperate = () => {
 
                 <div>
                   <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <Icons.Package className="h-5 w-5 text-green-600" />
+                    <Package className="h-5 w-5 text-green-600" />
                     Packaged Products
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -533,7 +550,7 @@ const HowWeOperate = () => {
                         className="bg-white rounded-lg p-4 shadow-sm border border-gray-200"
                       >
                         <div className="flex items-center gap-2">
-                          <Icons.CheckCircle className="h-5 w-5 text-green-500" />
+                          <CheckCircle className="h-5 w-5 text-green-500" />
                           <span className="text-gray-700">{product}</span>
                         </div>
                       </div>
@@ -564,7 +581,7 @@ const HowWeOperate = () => {
                       <h3 className="text-lg font-semibold text-gray-900">
                         {item.question}
                       </h3>
-                      <Icons.ChevronDown
+                      <ChevronDown
                         className={`h-5 w-5 text-gray-500 transition-transform ${
                           activeFAQ === index ? "transform rotate-180" : ""
                         }`}
@@ -593,14 +610,14 @@ const HowWeOperate = () => {
                     href="tel:+233597113385"
                     className="inline-flex items-center gap-2 bg-white text-green-700 hover:bg-gray-100 px-6 py-3 rounded-full font-semibold transition-all"
                   >
-                    <Icons.Phone className="h-5 w-5" />
+                    <Phone className="h-5 w-5" />
                     Call Support
                   </a>
                   <Link
                     to="/contact"
                     className="inline-flex items-center gap-2 bg-green-800 hover:bg-green-900 text-white px-6 py-3 rounded-full font-semibold transition-all"
                   >
-                    <Icons.Mail className="h-5 w-5" />
+                    <Mail className="h-5 w-5" />
                     Email Us
                   </Link>
                 </div>
