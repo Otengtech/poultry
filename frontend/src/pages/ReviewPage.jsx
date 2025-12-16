@@ -337,12 +337,10 @@ const ReviewPage = () => {
 
                   <div className="flex items-center gap-4">
                     <img
-                      src={featuredReview.image || "/assets/default-avatar.png"}
+                      src={featuredReview.avatar}
                       alt={featuredReview.name}
                       className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover border-2 border-white"
-                      onError={(e) => {
-                        e.target.src = "/assets/default-avatar.png";
-                      }}
+                      
                     />
                     <div className="min-w-0">
                       <h3 className="font-bold text-sm md:text-base truncate">
