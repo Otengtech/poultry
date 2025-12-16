@@ -215,7 +215,6 @@ const ReviewPage = () => {
       if (formData.image) {
         formDataToSend.append('image', formData.image);
       }
-
       // Submit review to API
       const response = await axios.post(
         `${API_URL}/Create-review`,
