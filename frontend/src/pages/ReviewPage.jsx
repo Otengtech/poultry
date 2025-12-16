@@ -434,12 +434,9 @@ const ReviewPage = () => {
                       </p>
                       <div className="flex items-center gap-3">
                         <img
-                          src={review.image}
+                          src={review.avatar}
                           alt={review.name}
                           className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 border-white"
-                          onError={(e) => {
-                            e.target.src = "/assets/default-avatar.png";
-                          }}
                         />
                         <div className="min-w-0">
                           <h4 className="font-medium text-sm md:text-base truncate">{review.name}</h4>
