@@ -236,7 +236,7 @@ const ReviewPage = () => {
           email: "",
           rating: 5,
           message: "",
-          avatar: null,
+          image: null,
         });
         setAvatarPreview(null);
         if (fileInputRef.current) {
@@ -361,7 +361,7 @@ const ReviewPage = () => {
 
               <div className="flex items-center gap-4">
                 <img
-                  src={featuredReview.avatar || "/assets/default-avatar.png"}
+                  src={featuredReview.image || "/assets/default-avatar.png"}
                   alt={featuredReview.name}
                   className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover border-2 border-white"
                   onError={(e) => {
@@ -434,7 +434,7 @@ const ReviewPage = () => {
                       </p>
                       <div className="flex items-center gap-3">
                         <img
-                          src={review.avatar || "/assets/default-avatar.png"}
+                          src={review.image || "/assets/default-avatar.png"}
                           alt={review.name}
                           className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 border-white"
                           onError={(e) => {
