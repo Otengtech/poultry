@@ -3,7 +3,7 @@ import Footer from "../components/homecomponents/Footer";
 import BannerImage from "../assets/order.jpg";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios"
+import axios from "axios";
 
 const OrderPage = () => {
   const [orders, setOrders] = useState([]);
