@@ -17,6 +17,7 @@ const ResponsiveNavbar = () => {
   ];
 
   const pagesDropdownItems = [
+    { label: "Qualities", href: "/quality" },
     { label: "Our Team", href: "/team" },
     { label: "Reviews", href: "/review" },
     { label: "Privacy", href: "/privacy" },
@@ -30,7 +31,7 @@ const ResponsiveNavbar = () => {
   ];
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav className="bg-white shadow-md sticky top-0 z-30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* NAVBAR MAIN ROW */}
         <div className="flex justify-between items-center h-16">

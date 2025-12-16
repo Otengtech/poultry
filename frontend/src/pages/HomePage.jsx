@@ -6,6 +6,7 @@ import OurTeam from '../components/homecomponents/OurTeam';
 import TestimonialSection from '../components/homecomponents/TestimonialsSection';
 import Footer from '../components/homecomponents/Footer';
 import LatestPoultry from "../components/LatestPoultry";
+import HowWeOperate from "../components/homecomponents/HowWeOperate";
 import Loader from "../components/Loader";
 
 const Home = () => {
@@ -15,6 +16,7 @@ const Home = () => {
       <HeroSection />
       <WhyChooseUsSection />
       <LatestPoultry />
+      <HowWeOperate />
       <OurTeam />
       <TestimonialSection />
       <Newsletter />

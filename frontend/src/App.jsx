@@ -13,14 +13,17 @@ import FAQPage from "./pages/FAQPage";
 import TeamPage from "./pages/TeamPage";
 import OrdersPage from "./pages/OrdersPage";
 import PrivacyPage from "./pages/PrivacyPage";
+import QualityPage from "./pages/QualityPage";
 import Loader from "./components/Loader";
 import TopButton from "./components/TopButton";
+import ChatAssistant from "./components/ChatAssistant";
 
 function App() {
 
   return (
     <>
       <Navbar />
+      <ChatAssistant />
         {/* <Loader /> */}
         <Routes>
           <Route path="/" element={<Home />} />
@@ -32,6 +35,7 @@ function App() {
           <Route path="/team" element={<TeamPage />} />
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/order" element={<OrdersPage />} />
+          <Route path="/quality" element={<QualityPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
       <TopButton />
