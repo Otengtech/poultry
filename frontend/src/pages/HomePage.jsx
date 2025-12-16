@@ -5,6 +5,7 @@ import Newsletter from '../components/homecomponents/Newsletter';
 import OurTeam from '../components/homecomponents/OurTeam';
 import TestimonialSection from '../components/homecomponents/TestimonialsSection';
 import Footer from '../components/homecomponents/Footer';
+import LatestPoultry from "../components/LatestPoultry";
 import Loader from "../components/Loader";
 
 const Home = () => {
@@ -13,8 +14,9 @@ const Home = () => {
     <div>
       <HeroSection />
       <WhyChooseUsSection />
-      <TestimonialSection />
+      <LatestPoultry />
       <OurTeam />
+      <TestimonialSection />
       <Newsletter />
       <Footer />
     </div>

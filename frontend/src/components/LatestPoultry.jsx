@@ -1,213 +1,94 @@
-import React, { useEffect, useRef } from "react";
-import drumsticks from "/assets/drumsticks.jpg";
-import feet from "/assets/feet.jpg";
-import thighs from "/assets/tighs.jpg";
-import wings from "/assets/wing.jpg";
-import egg from "/assets/egg.jpg";
-import breast from "/assets/breast.jpg";
+import { useEffect, useRef } from "react";
 
 const poultryProducts = [
-  {
-    id: 1,
-    name: "Drumsticks",
-    image: drumsticks,
-    comment: "Juicy and tender drumsticks"
-  },
-  {
-    id: 2,
-    name: "Feet",
-    image: feet,
-    comment: "Perfect for soups and stews"
-  },
-  {
-    id: 3,
-    name: "Thighs",
-    image: thighs,
-    comment: "Great for grilling or baking"
-  },
-  {
-    id: 4,
-    name: "Wings",
-    image: wings,
-    comment: "Crispy party wings"
-  },
-  {
-    id: 5,
-    name: "Eggs",
-    image: egg,
-    comment: "Fresh farm eggs"
-  },
-  {
-    id: 6,
-    name: "Breast",
-    image: breast,
-    comment: "Lean healthy protein"
-  }
+  { id: 1, name: "Drumsticks", image: "/assets/drumsticks.jpg", comment: "Juicy and tender drumsticks" },
+  { id: 2, name: "Feet", image: "/assets/feet.jpg", comment: "Perfect for soups and stews" },
+  { id: 3, name: "Thighs", image: "/assets/tighs.jpg", comment: "Great for grilling or baking" },
+  { id: 4, name: "Wings", image: "/assets/wing.jpg", comment: "Crispy party wings" },
+  { id: 5, name: "Eggs", image: "/assets/egg.jpg", comment: "Fresh farm eggs" },
+  { id: 6, name: "Breast", image: "/assets/breast.jpg", comment: "Lean healthy protein" }
 ];
 
-function LatestPoultry() {
+const LatestSneakers = () => {
   const scrollRef = useRef(null);
-  const animationRef = useRef(null);
+  const animationFrameId = useRef(null);
+  const widthRef = useRef(0);
   const isScrollingRef = useRef(true);
-  const isHoveringRef = useRef(false);
 
   useEffect(() => {
-    const container = scrollRef.current;
-    if (!container) return;
+    const el = scrollRef.current;
+    if (!el) return;
 
-    const scrollContent = () => {
-      if (!isScrollingRef.current || isHoveringRef.current) {
-        animationRef.current = requestAnimationFrame(scrollContent);
-        return;
+    const children = el.children;
+    const half = children.length / 2;
+
+    // Calculate width of one set (first half)
+    let width = 0;
+    for (let i = 0; i < half; i++) {
+      width += children[i].offsetWidth;
+    }
+    widthRef.current = width;
+
+    const scroll = () => {
+      if (!isScrollingRef.current || !el) return;
+
+      el.scrollLeft += 1.5;
+
+      if (el.scrollLeft >= widthRef.current) {
+        el.scrollLeft = 0;
       }
 
-      // Get current scroll position
-      const currentScroll = container.scrollLeft;
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      
-      // If at the end, smoothly reset to start
-      if (currentScroll >= maxScroll - 1) {
-        container.scrollLeft = 0;
-      } else {
-        container.scrollLeft += 1;
-      }
-
-      animationRef.current = requestAnimationFrame(scrollContent);
+      animationFrameId.current = requestAnimationFrame(scroll);
     };
 
-    animationRef.current = requestAnimationFrame(scrollContent);
+    animationFrameId.current = requestAnimationFrame(scroll);
 
     const handleMouseEnter = () => {
-      isHoveringRef.current = true;
+      isScrollingRef.current = false;
+      cancelAnimationFrame(animationFrameId.current);
     };
 
     const handleMouseLeave = () => {
-      isHoveringRef.current = false;
-    };
-
-    container.addEventListener("mouseenter", handleMouseEnter);
-    container.addEventListener("mouseleave", handleMouseLeave);
-
-    // Handle window resize
-    const handleResize = () => {
-      // Force a reflow to ensure proper scrolling
-      if (container) {
-        container.scrollLeft = 0;
+      if (!isScrollingRef.current) {
+        isScrollingRef.current = true;
+        animationFrameId.current = requestAnimationFrame(scroll);
       }
     };
 
-    window.addEventListener('resize', handleResize);
+    el.addEventListener("mouseenter", handleMouseEnter);
+    el.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      container.removeEventListener("mouseenter", handleMouseEnter);
-      container.removeEventListener("mouseleave", handleMouseLeave);
-      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationFrameId.current);
+      el.removeEventListener("mouseenter", handleMouseEnter);
+      el.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
 
   return (
-    <section className="py-12 bg-gradient-to-b from-lime-50 to-lime-100">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-            Our Poultry Products
-          </h2>
-        </div>
-
-        <div
-          ref={scrollRef}
-          className="flex gap-6 w-full overflow-x-auto no-scrollbar scroll-smooth py-4 px-2"
-          style={{ 
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none'
-          }}
-        >
-          {/* First set */}
-          {poultryProducts.map((item, index) => (
-            <div
-              key={`first-${item.id}-${index}`}
-              className="relative w-72 flex-shrink-0 rounded-2xl cursor-pointer overflow-hidden shadow-xl transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl group"
-            >
-              <div className="absolute inset-0 bg-black/50 z-10" />
-
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-48 object-contain transition-transform duration-700 group-hover:scale-110"
-              />
-
-              <div className="absolute inset-0 z-20 flex flex-col justify-end p-6">
-                <div className="transform transition-transform duration-500 group-hover:-translate-y-2">
-                  <h3 className="text-2xl font-bold text-white mb-2">
-                    {item.name}
-                  </h3>
-                  <p className="text-gray-100 text-sm mb-3 opacity-90">
-                    {item.comment}
-                  </p>
-
-                  <div className="flex items-center justify-between">
-                    <span className="inline-block px-3 py-1 bg-lime-600/90 text-white text-xs font-semibold rounded-full">
-                      Farm Fresh
-                    </span>
-                    <span className="text-white text-xs opacity-75">
-                      #{item.id}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="absolute top-4 right-4 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="w-2 h-2 bg-lime-400 rounded-full animate-pulse"></div>
-              </div>
-            </div>
-          ))}
-          
-          {/* Second set (duplicate for seamless scroll) */}
-          {poultryProducts.map((item, index) => (
-            <div
-              key={`second-${item.id}-${index}`}
-              className="relative w-72 flex-shrink-0 rounded-2xl cursor-pointer overflow-hidden shadow-xl transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl group"
-            >
-              <div className="absolute inset-0 bg-black/50 z-10" />
-
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-48 object-contain transition-transform duration-700 group-hover:scale-110"
-              />
-
-              <div className="absolute inset-0 z-20 flex flex-col justify-end p-6">
-                <div className="transform transition-transform duration-500 group-hover:-translate-y-2">
-                  <h3 className="text-2xl font-bold text-white mb-2">
-                    {item.name}
-                  </h3>
-                  <p className="text-gray-100 text-sm mb-3 opacity-90">
-                    {item.comment}
-                  </p>
-
-                  <div className="flex items-center justify-between">
-                    <span className="inline-block px-3 py-1 bg-lime-600/90 text-white text-xs font-semibold rounded-full">
-                      Farm Fresh
-                    </span>
-                    <span className="text-white text-xs opacity-75">
-                      #{item.id}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="absolute top-4 right-4 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="w-2 h-2 bg-lime-400 rounded-full animate-pulse"></div>
-              </div>
-            </div>
-          ))}
-        </div>
+    <section className="py-6">
+      <div
+        ref={scrollRef}
+        className="flex w-full overflow-x-auto no-scrollbar px-4"
+        style={{ scrollBehavior: "auto", scrollSnapType: "none" }}
+      >
+        {[...poultryProducts, ...poultryProducts].map((sneaker, index) => (
+          <div
+            key={`${sneaker.name}-${index}`}
+            className="w-72 flex-shrink-0 bg-white text-black p-4 mx-2 my-2 rounded-2xl transition-transform duration-300 transform hover:scale-105"
+          >
+            <img
+              src={sneaker.image}
+              alt={sneaker.name}
+              className="w-full h-36 object-contain rounded-lg mb-4"
+            />
+            <h3 className="text-lg font-bold text-center">{sneaker.name}</h3>
+            <p className="text-center text-gray-600">{sneaker.comment}</p>
+          </div>
+        ))}
       </div>
     </section>
   );
-}
+};
 
-export default LatestPoultry;
+export default LatestSneakers;

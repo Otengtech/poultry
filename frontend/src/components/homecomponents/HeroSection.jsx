@@ -58,7 +58,7 @@ const HeroSection = () => {
       }, 500);
     };
 
-    const interval = setInterval(rotate, 5000);
+    const interval = setInterval(rotate, 10000);
     return () => {
       clearInterval(interval);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -110,17 +110,23 @@ const HeroSection = () => {
             </p>
 
             {/* CTA Button */}
-            <div className="pt-4">
+            <div className="flex items-center justify-center pt-4 space-x-4">
               <Link to="/products">
-                <button className="inline-flex items-center gap-3 px-8 py-4 bg-lime-500 hover:bg-lime-600 text-black font-semibold rounded-full transition-all duration-300 hover:scale-105 active:scale-95">
-                  <span className="text-base md:text-lg">Discover Our Products</span>
+                <button className="inline-flex items-center gap-3 px-6 py-3 bg-lime-500 hover:bg-lime-400 text-black font-semibold rounded-full transition-all duration-300 hover:scale-105 active:scale-95">
+                  <span className="text-base md:text-md">Our Products</span>
+                  <ArrowRight className="w-5 h-5 md:w-6 md:h-6"/>
+                </button>
+              </Link>
+              <Link to="/about">
+                <button className="inline-flex items-center gap-3 px-6 py-3 bg-transparent text-lime-500 border hover:border-lime-400 hover:text-lime-400 border-lime-500 font-semibold rounded-full transition-all duration-300 hover:scale-105 active:scale-95">
+                  <span className="text-base md:text-md">About US</span>
                   <ArrowRight className="w-5 h-5 md:w-6 md:h-6" />
                 </button>
               </Link>
             </div>
 
             {/* Simple Pagination Dots */}
-            <div className="flex justify-center items-center gap-2 pt-8">
+            <div className="flex justify-center items-center gap-2 pt-4">
               {content.map((_, index) => (
                 <button
                   key={index}

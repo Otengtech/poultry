@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Star, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useScrollReveal } from "../../animation/useScrollReveal";
-import LatestPoultry from "../../components/LatestPoultry";
 import axios from "axios";
 
 const test = {
@@ -76,7 +75,7 @@ const TestimonialSection = () => {
   const current = testimonials[currentIndex] || {};
 
   return (
-    <section className="bg-lime-50 py-16 px-4 lg:px-16">
+    <section className="bg-lime-50 py-14 px-4 lg:px-16">
       <div className="max-w-7xl mx-auto">
         {/* Full-width header section */}
         <div
@@ -243,11 +242,6 @@ const TestimonialSection = () => {
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
-          </div>
-
-          {/* Latest Poultry Section */}
-          <div ref={rightRef} className="scroll-reveal opacity-0 translate-y-8 will-change-transform">
-            <LatestPoultry />
           </div>
         </div>
       </div>
