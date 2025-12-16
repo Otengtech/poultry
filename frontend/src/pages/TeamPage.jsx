@@ -6,6 +6,7 @@ import { useScrollReveal } from "../animation/useScrollReveal";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Footer from "../components/homecomponents/Footer";
 
 const OurTeam = () => {
   const [staff, setStaff] = useState([]);
@@ -180,6 +181,7 @@ const OurTeam = () => {
           ))}
         </div>
       </div>
+      <Footer />
     </section>
   );
 };

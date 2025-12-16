@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as Icons from 'lucide-react';
+import Footer from "../components/homecomponents/Footer";
 
 const QualitiesPage = () => {
   const [activeQuality, setActiveQuality] = useState(qualities[0]);
@@ -128,11 +129,11 @@ const QualitiesPage = () => {
                     }`}
                   >
                     <div className="flex items-start gap-4">
-                      <div className={`p-3 rounded-lg ${
+                      {/* <div className={`p-3 rounded-lg ${
                         isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
                       }`}>
                         {React.createElement(Icons[quality.icon], { className: "h-6 w-6" })}
-                      </div>
+                      </div> */}
                       <div className="flex-1">
                         <div className="flex justify-between items-start mb-2">
                           <h4 className={`font-bold text-lg ${
@@ -269,6 +270,7 @@ const QualitiesPage = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
@@ -282,7 +284,7 @@ const qualities = [
     icon: "Star",
     category: "product",
     categoryLabel: "Product Excellence",
-    image: "/images/quality-poultry.jpg",
+    image: "../assets/quality.jpg",
     stats: "100% Quality Check",
     features: ["Grade A Certified", "Nutritional Testing", "Freshness Guarantee"]
   },
@@ -293,7 +295,7 @@ const qualities = [
     icon: "Leaf",
     category: "process",
     categoryLabel: "Process Standards",
-    image: "/images/sustainable-farm.jpg",
+    image: "../assets/sustainable.jpg",
     stats: "Eco-Friendly Certified",
     features: ["Organic Feed", "Renewable Energy", "Waste Management"]
   },
@@ -304,7 +306,7 @@ const qualities = [
     icon: "ShieldCheck",
     category: "process",
     categoryLabel: "Process Standards",
-    image: "/images/safety-process.jpg",
+    image: "../assets/safety.jpg",
     stats: "HACCP Certified",
     features: ["Regular Audits", "Hygiene Standards", "Traceability"]
   },
@@ -315,7 +317,7 @@ const qualities = [
     icon: "Truck",
     category: "customer",
     categoryLabel: "Customer Focus",
-    image: "/images/fresh-delivery.jpg",
+    image: "../assets/fresh.jpg",
     stats: "24-Hour Fresh",
     features: ["Cold Chain", "Timely Delivery", "Freshness Seal"]
   },
@@ -326,7 +328,7 @@ const qualities = [
     icon: "Lightbulb",
     category: "innovation",
     categoryLabel: "Innovation",
-    image: "/images/modern-farm.jpg",
+    image: "../assets/innovation.jpg",
     stats: "Tech-Driven",
     features: ["Smart Monitoring", "Automation", "Data Analytics"]
   },
@@ -337,7 +339,7 @@ const qualities = [
     icon: "Heart",
     category: "customer",
     categoryLabel: "Customer Focus",
-    image: "/images/happy-customers.jpg",
+    image: "../assets/customer.jpg",
     stats: "98% Satisfaction",
     features: ["24/7 Support", "Easy Returns", "Feedback System"]
   },
@@ -348,7 +350,7 @@ const qualities = [
     icon: "HeartHandshake",
     category: "process",
     categoryLabel: "Process Standards",
-    image: "/images/animal-welfare.jpg",
+    image: "../assets/welfare.jpg",
     stats: "Welfare Certified",
     features: ["Free Range Options", "Veterinary Care", "Stress Reduction"]
   },
@@ -359,7 +361,7 @@ const qualities = [
     icon: "Apple",
     category: "product",
     categoryLabel: "Product Excellence",
-    image: "/images/nutritional-quality.jpg",
+    image: "../assets/nutrition.jpg",
     stats: "Rich in Nutrients",
     features: ["Vitamin Enriched", "Omega-3 Boosted", "Antibiotic Free"]
   },
@@ -370,7 +372,7 @@ const qualities = [
     icon: "Users",
     category: "customer",
     categoryLabel: "Customer Focus",
-    image: "/images/community-support.jpg",
+    image: "../assets/customer.jpg",
     stats: "Community Partner",
     features: ["Local Employment", "Farmer Training", "School Programs"]
   },
@@ -381,7 +383,7 @@ const qualities = [
     icon: "FlaskConical",
     category: "innovation",
     categoryLabel: "Innovation",
-    image: "/images/research-development.jpg",
+    image: "../assets/quality.jpg",
     stats: "R&D Focused",
     features: ["Breed Improvement", "Feed Research", "Process Innovation"]
   },
@@ -392,7 +394,7 @@ const qualities = [
     icon: "Eye",
     category: "customer",
     categoryLabel: "Customer Focus",
-    image: "/images/transparency.jpg",
+    image: "../assets/customer.jpg",
     stats: "Full Transparency",
     features: ["Farm Visits", "Pricing Breakdown", "Process Documentation"]
   },
@@ -403,7 +405,7 @@ const qualities = [
     icon: "TreePine",
     category: "process",
     categoryLabel: "Process Standards",
-    image: "/images/environmental-care.jpg",
+    image: "../assets/fresh.jpg",
     stats: "Carbon Neutral",
     features: ["Water Recycling", "Solar Power", "Biodegradable Packaging"]
   }
