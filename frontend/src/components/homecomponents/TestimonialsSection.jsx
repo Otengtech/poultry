@@ -235,7 +235,7 @@ const TestimonialSection = () => {
             {/* View all testimonials link */}
             <div className="mt-8 text-center">
               <Link
-                to="/testimonials"
+                to="/review"
                 className="inline-flex items-center gap-2 text-lime-700 hover:text-lime-800 font-medium transition-colors group"
               >
                 Read Reviews
