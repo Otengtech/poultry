@@ -1,32 +1,39 @@
+import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import Home from "./pages/HomePage";
 import Navbar from "./components/Navbar";
-import ProductsPage from "./pages/ProductsPage";
-import AboutPage from "./pages/AboutUsPage";
-import ContactPage from "./pages/ContactPage";
-import ReviewPage from "./pages/ReviewPage";
-import BlogPage from "./pages/BlogPage";
-import FAQPage from "./pages/FAQPage";
-import TeamPage from "./pages/TeamPage";
-import OrdersPage from "./pages/OrdersPage";
-import PrivacyPage from "./pages/PrivacyPage";
-import QualityPage from "./pages/QualityPage";
 import Loader from "./components/Loader";
 import TopButton from "./components/TopButton";
 import ChatAssistant from "./components/ChatAssistant";
 
-function App() {
+/* ✅ Load HOME normally (fastest) */
+import Home from "./pages/HomePage";
 
+/* ✅ Lazy-load all other pages */
+const ProductsPage = lazy(() => import("./pages/ProductsPage"));
+const AboutPage = lazy(() => import("./pages/AboutUsPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const ReviewPage = lazy(() => import("./pages/ReviewPage"));
+const BlogPage = lazy(() => import("./pages/BlogPage"));
+const FAQPage = lazy(() => import("./pages/FAQPage"));
+const TeamPage = lazy(() => import("./pages/TeamPage"));
+const OrdersPage = lazy(() => import("./pages/OrdersPage"));
+const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
+const QualityPage = lazy(() => import("./pages/QualityPage"));
+
+function App() {
   return (
     <>
       <Navbar />
       <ChatAssistant />
-        {/* <Loader /> */}
+
+      {/* ✅ Suspense shows Loader ONLY when lazy pages load */}
+      <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<Home />} />
+
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
@@ -38,14 +45,14 @@ function App() {
           <Route path="/quality" element={<QualityPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
+      </Suspense>
+
       <TopButton />
+
       <ToastContainer
         position="top-right"
         autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        rtl={false}
+        newestOnTop
         pauseOnHover
       />
     </>
