@@ -3,24 +3,26 @@ import Footer from "../components/homecomponents/Footer";
 import BannerImage from "../assets/order.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios"
+import axios from "axios";
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const navigate = useNavigate();
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [userInfo, setUserInfo] = useState({
     name: "",
     phone: "",
     email: "",
     address: "",
     deliveryType: "pickup",
-    deliveryDate: "",
     paymentMethod: "cash",
-    notes: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  /* ======================
+     LOAD CART
+  ====================== */
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCartItems(savedCart);
@@ -31,8 +33,11 @@ const CartPage = () => {
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
+  /* ======================
+     CART ACTIONS
+  ====================== */
   const handleDeleteItem = (index) => {
-    const updatedCart = cartItems.filter((_, idx) => idx !== index);
+    const updatedCart = cartItems.filter((_, i) => i !== index);
     updateLocalStorage(updatedCart);
     toast.success("Item removed from cart");
   };
@@ -41,7 +46,7 @@ const CartPage = () => {
     const updatedCart = [...cartItems];
     updatedCart[index].quantity += 1;
     updatedCart[index].totalPrice =
-      updatedCart[index].quantity * parseFloat(updatedCart[index].price);
+      updatedCart[index].quantity * Number(updatedCart[index].price);
     updateLocalStorage(updatedCart);
   };
 
@@ -50,164 +55,118 @@ const CartPage = () => {
     if (updatedCart[index].quantity > 1) {
       updatedCart[index].quantity -= 1;
       updatedCart[index].totalPrice =
-        updatedCart[index].quantity * parseFloat(updatedCart[index].price);
+        updatedCart[index].quantity * Number(updatedCart[index].price);
       updateLocalStorage(updatedCart);
     } else {
-      toast.info("Minimum quantity is 1. Click remove to delete item.");
+      toast.info("Minimum quantity is 1. Remove item instead.");
     }
   };
 
+  /* ======================
+     FORM
+  ====================== */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUserInfo((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setUserInfo((prev) => ({ ...prev, [name]: value }));
   };
 
+  const calculateTotal = () =>
+    cartItems.reduce((sum, item) => sum + Number(item.totalPrice || 0), 0);
+
+  /* ======================
+     CHECKOUT
+  ====================== */
   const handleCheckout = async () => {
-    // Validate required fields
     if (!userInfo.name || !userInfo.phone) {
-      toast.error("Please fill in all required fields");
+      toast.error("Name and phone are required");
+      return;
+    }
+
+    if (userInfo.deliveryType === "delivery" && !userInfo.address.trim()) {
+      toast.error("Delivery address is required");
       return;
     }
 
     if (cartItems.length === 0) {
-      toast.error("Your cart is empty");
-      return;
-    }
-
-    // If delivery type is 'delivery', address is required
-    if (userInfo.deliveryType === "delivery" && !userInfo.address.trim()) {
-      toast.error("Please provide delivery address");
+      toast.error("Cart is empty");
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      // Prepare order data
+      const items = cartItems.map((item, index) => ({
+        productId: item._id || `PROD-${index + 1}`,
+        name: item.name,
+        price: Number(item.price),
+        quantity: Number(item.quantity),
+        totalPrice: Number(item.totalPrice),
+        image: item.image || "",
+        category: item.category || "General",
+        ...(item.size && { size: item.size }),
+      }));
+
       const orderData = {
-        customerInfo: userInfo,
-        items: cartItems,
-        totalAmount: calculateTotal(),
-        status: "pending", // pending, confirmed, processing, delivered, cancelled
-        orderDate: new Date().toISOString(),
         orderNumber: `ORD-${Date.now()}-${Math.random()
           .toString(36)
-          .substr(2, 6)
+          .slice(2, 8)
           .toUpperCase()}`,
+
+        customerInfo: {
+          name: userInfo.name,
+          phone: userInfo.phone,
+          email: userInfo.email || "",
+          address: userInfo.address || "",
+          deliveryType: userInfo.deliveryType,
+          paymentMethod: userInfo.paymentMethod,
+        },
+
+        items,
+        totalAmount: calculateTotal(),
       };
 
-      // TODO: Replace with your actual API endpoint
       const API_URL = import.meta.env.VITE_API_URL;
-      try {
-        const response = await axios.post(`${API_URL}/create-order`, orderData, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
 
-        const result = response.data;
-      } catch (error) {
-        throw new Error(
-          error.response?.data?.message || "Failed to place order"
-        );
-      }
-
-      // Save order to localStorage for OrderPage (for demo, until backend is ready)
-      const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
-      localStorage.setItem(
-        "orders",
-        JSON.stringify([...existingOrders, orderData])
-      );
-
-      // Clear cart
-      localStorage.removeItem("cart");
-      setCartItems([]);
-
-      // Show success message
-      toast.success(
-        `Order placed successfully! Order #${orderData.orderNumber}`
-      );
-
-      // Reset form and close modal
-      setShowCheckoutModal(false);
-      setUserInfo({
-        name: "",
-        phone: "",
-        email: "",
-        address: "",
-        deliveryType: "pickup",
-        deliveryDate: "",
-        paymentMethod: "cash",
-        notes: "",
+      const response = await axios.post(`${API_URL}/order`, orderData, {
+        headers: { "Content-Type": "application/json" },
       });
 
-      // Redirect to orders page (optional)
+      if (!response.data?.success) {
+        throw new Error("Order failed");
+      }
+
+      // Backup locally
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
+      localStorage.setItem("orders", JSON.stringify([...orders, orderData]));
+
+      localStorage.removeItem("cart");
+      setCartItems([]);
+      setShowCheckoutModal(false);
+
+      toast.success(`Order placed! #${orderData.orderNumber}`);
       navigate("/order");
     } catch (error) {
-      console.error("Checkout error:", error);
-
-      // For demo purposes, simulate successful order when backend is not available
-      if (error.message.includes("Failed to fetch")) {
-        toast.warning("Backend not connected. Simulating order placement...");
-
-        // Save to localStorage for demo
-        const orderData = {
-          customerInfo: userInfo,
-          items: cartItems,
-          totalAmount: calculateTotal(),
-          status: "pending",
-          orderDate: new Date().toISOString(),
-          orderNumber: `ORD-${Date.now()}-${Math.random()
-            .toString(36)
-            .substr(2, 6)
-            .toUpperCase()}`,
-        };
-
-        const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
-        localStorage.setItem(
-          "orders",
-          JSON.stringify([...existingOrders, orderData])
-        );
-
-        // Clear cart
-        localStorage.removeItem("cart");
-        setCartItems([]);
-
-        toast.success(
-          `Order placed successfully! Order #${orderData.orderNumber}`
-        );
-        setShowCheckoutModal(false);
-        setUserInfo({
-          name: "",
-          phone: "",
-          email: "",
-          address: "",
-          deliveryType: "pickup",
-          deliveryDate: "",
-          paymentMethod: "cash",
-          notes: "",
-        });
-      } else {
-        toast.error("Failed to place order. Please try again.");
-      }
+      console.error(error);
+      toast.error("Failed to place order. Try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const calculateTotal = () => {
-    return cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
-  };
-
+  /* ======================
+     OPTIONS
+  ====================== */
   const deliveryOptions = [
     { value: "pickup", label: "Pickup from Farm" },
     { value: "delivery", label: "Home Delivery" },
   ];
 
-  const paymentOptions = [{ value: "cash", label: "Cash on Delivery" }];
+  const paymentOptions = [
+    { value: "cash", label: "Cash on Delivery" },
+    { value: "mobile_money", label: "Mobile Money" },
+    { value: "card", label: "Credit / Debit Card" },
+  ];
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
@@ -685,55 +644,23 @@ const CartPage = () => {
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Preferred Delivery Date
-                    </label>
-                    <input
-                      type="date"
-                      name="deliveryDate"
-                      value={userInfo.deliveryDate}
-                      onChange={handleInputChange}
-                      min={new Date().toISOString().split("T")[0]}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      disabled={isSubmitting}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Payment Method
-                    </label>
-                    <select
-                      name="paymentMethod"
-                      value={userInfo.paymentMethod}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      disabled={isSubmitting}
-                    >
-                      {paymentOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Additional Notes
+                    Payment Method
                   </label>
-                  <textarea
-                    name="notes"
-                    value={userInfo.notes}
+                  <select
+                    name="paymentMethod"
+                    value={userInfo.paymentMethod}
                     onChange={handleInputChange}
-                    rows="2"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Any special instructions or notes..."
                     disabled={isSubmitting}
-                  />
+                  >
+                    {paymentOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 

@@ -6,81 +6,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Global Font */
+/* =================================== */
+/* GLOBAL STYLES */
+/* =================================== */
 body {
   font-family: "Poppins", sans-serif;
   margin: 0;
   padding: 0;
-}
-
-.color {
-  background-color: #adff2f;
-}
-
-/* Mobile landscape fix */
-@media (max-height: 600px) and (orientation: landscape) {
-  .mobile-full-height {
-    height: 100vh;
-  }
-}
-
-/* Mobile padding */
-@media (max-width: 768px) {
-  .content-container {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-  }
-}
-
-/* ------------------------------ */
-/* Scroll-in-view animation (new) */
-/* ------------------------------ */
-
-.scroll-reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 600ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: opacity, transform;
-}
-
-.scroll-reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-  will-change: auto;
-}
-
-/* Hide scrollbar for all browsers */
-.custom-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
-}
-.custom-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.no-scrollbar {
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-
-/* Add smooth transitions for all animated elements */
-* {
-  backface-visibility: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Prevent layout shifts */
-.transform {
-  will-change: transform;
-}
-
-.opacity-100, .opacity-0 {
-  will-change: opacity;
 }
 
 /* Smooth scrolling */
@@ -88,33 +20,26 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Prevent GPU glitches */
-@media (prefers-reduced-motion: no-preference) {
-  .scale-105 {
-    animation: subtle-zoom 20s infinite alternate ease-in-out;
-  }
-}
-
-@keyframes subtle-zoom {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1.05);
-  }
-}
-
-/* Add to your global CSS */
 * {
   scroll-behavior: smooth;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth image scaling */
-img {
-  transition: transform 0.7s ease;
+/* =================================== */
+/* UTILITY CLASSES */
+/* =================================== */
+.color {
+  background-color: #adff2f;
 }
 
-/* Better hover states */
+.gradient-text {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .hover-lift {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -124,13 +49,9 @@ img {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-/* Gradient text for highlights */
-.gradient-text {
-  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
+/* =================================== */
+/* SCROLLBAR STYLES */
+/* =================================== */
 /* Custom scrollbar for modern browsers */
 ::-webkit-scrollbar {
   width: 3px;
@@ -147,60 +68,101 @@ img {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #22c55e;
-}@keyframes slideInFromRight {
-          0% {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          100% {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        
-        @keyframes slideInFromLeft {
-          0% {
-            transform: translateX(-100%);
-            opacity: 0;
-          }
-          100% {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-
-        @keyframes news-scroll {
-            from {
-              transform: translateY(0);
-            }
-            to {
-              transform: translateY(-50%);
-            }
-          }
-
-          .animate-news-scroll {
-            animation: news-scroll 20s linear infinite;
-          }
-
-          .pause-animation {
-            animation-play-state: paused;
-          }
-          /* Smooth scroll behavior */
-* {
-  scroll-behavior: smooth;
 }
 
-/* Custom scrollbar for news feed */
+/* Hide scrollbar classes */
+.custom-scrollbar::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.custom-scrollbar,
+.no-scrollbar,
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+/* =================================== */
+/* ANIMATIONS */
+/* =================================== */
+/* Scroll reveal animation */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 600ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* Smooth scrolling animation */
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Slide animations */
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Ping animation */
+@keyframes ping-slow {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* News scroll animation */
+@keyframes news-scroll {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
 @keyframes smooth-scroll {
   from {
     transform: translateY(0);
@@ -210,49 +172,82 @@ img {
   }
 }
 
+/* Subtle zoom animation */
+@keyframes subtle-zoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+/* Animation utility classes */
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+.animate-ping-slow {
+  animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-news-scroll {
+  animation: news-scroll 20s linear infinite;
+}
+
 .animate-smooth-scroll {
   animation: smooth-scroll 30s linear infinite;
 }
 
+.pause-animation {
+  animation-play-state: paused;
+}
+
+/* =================================== */
+/* MEDIA QUERIES */
+/* =================================== */
+/* Mobile landscape fix */
+@media (max-height: 600px) and (orientation: landscape) {
+  .mobile-full-height {
+    height: 100vh;
+  }
+}
+
+/* Mobile padding */
+@media (max-width: 768px) {
+  .content-container {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+
+/* Reduce motion preference */
+@media (prefers-reduced-motion: no-preference) {
+  .scale-105 {
+    animation: subtle-zoom 20s infinite alternate ease-in-out;
+  }
+}
+
+/* =================================== */
+/* COMPONENT STYLES */
+/* =================================== */
+/* Smooth image scaling */
+img {
+  transition: transform 0.7s ease;
+}
+
+/* Group hover effects */
 .group:hover .animate-smooth-scroll {
   animation-play-state: paused;
 }
 
-
-        @keyframes ping-slow {
-          75%, 100% {
-            transform: scale(2);
-            opacity: 0;
-          }
-        }
-        .animate-ping-slow {
-          animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-        }
-        
-        @keyframes slide-up {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-slide-up {
-          animation: slide-up 0.3s ease-out;
-        }
-        
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-in {
-          animation: fade-in 0.2s ease-out;
-        }
+/* Will-change optimization */
+.transform,
+.opacity-100,
+.opacity-0 {
+  will-change: transform, opacity;
+}
