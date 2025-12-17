@@ -155,7 +155,7 @@ app.post('/order', async (req, res) => {
         price: parseFloat(item.price),
         quantity: parseInt(item.quantity),
         totalPrice: parseFloat(item.totalPrice) || (parseFloat(item.price) * parseInt(item.quantity)),
-        images: item.image, // Direct Cloudinary URL
+        images: item.image ? [item.image] : [], // Direct Cloudinary URL
         category: item.category || 'General',
       })),
     });
