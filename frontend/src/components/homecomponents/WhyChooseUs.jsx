@@ -21,7 +21,7 @@ import happyCustomers from "../../assets/customer.jpg";
 const whyChooseUs = {
   title: "Quality, innovation and food safety.",
   text1:
-    "NAYA Success Axis is an Agribusiness that started as a backyard poultry farm in 2018. It was registered as a fulltime business in April 2019 at the Registrar General Department. It currently has 2 branches in Accra – Adenta and Aburi - Mariakrom in the Eastern Region.",
+    "NAYA SUCCESS AXIS is an Agribusiness that started as a backyard poultry farm in 2017. It was registered as a fulltime business in April 2019 at the Registrar General Department. It currently has 2 branches in Accra – Adenta and Aburi - Mariakrom in the Eastern Region.",
   products: [
     {
       id: "1",

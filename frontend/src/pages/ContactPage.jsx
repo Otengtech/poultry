@@ -20,7 +20,7 @@ const contactPage = {
     deliveryInfo: "Delivery options available",
   },
   contacts: {
-    phoneNumbers: ["024 438 4928", "059 711 3385"],
+    phoneNumbers: ["024 438 4928", "059 711 3385", "+233 24 497 2219"],
     email: "nayasuccessaxis@gmail.com",
     facebook: "Naya Success Axis Farms",
     instagram: "nayasuccessaxisfarms",

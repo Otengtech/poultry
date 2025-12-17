@@ -15,7 +15,7 @@ const data = {
     since: "Since 2017",
     title: "This Is Our Story",
     paragraphs: [
-      "NAYA Axis FOODS is an Agribusiness that started as a backyard poultry farm in 2017. It was registered as a fulltime business in April 2019 at the Registrar General Department. It Currently has 2 branches in Accra – Adenta and Aburi - Mariakrom in the Eastern Region. NAYA Success Axis aims to be one of the poultry giants in Ghana and the subregion.",
+      "NAYA SUCCESS AXIS is an Agribusiness that started as a backyard poultry farm in 2017. It was registered as a fulltime business in April 2019 at the Registrar General Department. It Currently has 2 branches in Accra – Adenta and Aburi - Mariakrom in the Eastern Region. NAYA SUCCESS AXIS aims to be one of the poultry giants in Ghana and the subregion.",
       "The core business is Poultry farming & processing to increase the shelf-life of chicken and add variety to locally produced chicken. The business employs Four(4) fulltime staff and Four(4) other part-time and casual staff. We have over Thirty(30) others working indirectly along our value chain operations.",
     ],
   },

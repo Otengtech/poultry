@@ -96,7 +96,7 @@ const CartPage = () => {
         price: parseFloat(item.price),
         quantity: item.quantity,
         totalPrice: parseFloat(item.totalPrice) || (parseFloat(item.price) * item.quantity),
-        images: item.image, // Already a Cloudinary URL
+        images: item.image ? [item.image] : [], // Already a Cloudinary URL
         category: item.category || "General",
       }));
 
