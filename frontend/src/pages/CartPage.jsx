@@ -105,10 +105,6 @@ const CartPage = () => {
       }));
 
       const orderData = {
-        orderNumber: `ORD-${Date.now()}-${Math.random()
-          .toString(36)
-          .slice(2, 8)
-          .toUpperCase()}`,
 
         customerInfo: {
           name: userInfo.name,
@@ -120,7 +116,6 @@ const CartPage = () => {
         },
 
         items,
-        totalAmount: calculateTotal(),
       };
 
       const API_URL = import.meta.env.VITE_API_URL;
