@@ -96,7 +96,7 @@ const CartPage = () => {
 
     try {
       const items = cartItems.map((item, index) => ({
-        productId: item._id || `PROD-${index + 1}`,
+        productId: String(item._id || item.id || `PROD-${Date.now()}-${index}`),
         name: item.name,
         price: Number(item.price),
         quantity: Number(item.quantity),
@@ -163,7 +163,7 @@ const CartPage = () => {
 
   const paymentOptions = [
     { value: "cash", label: "Cash on Delivery" },
-    { value: "mobile_money", label: "Mobile Money" },
+    { value: "mobile money", label: "Mobile Money" },
     { value: "card", label: "Credit / Debit Card" },
   ];
 
