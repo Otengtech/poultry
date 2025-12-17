@@ -154,7 +154,7 @@ app.post("/order", async (req, res) => {
 
     /* ---------- FORWARD TO FRIEND API ---------- */
     const response = await axios.post(
-      process.env.FRIEND_ORDER_API, // 👈 your friend’s endpoint
+      `${process.env.FRIEND_ORDER_API}/order`, // 👈 your friend’s endpoint
       payload,
       {
         headers: {
