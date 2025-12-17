@@ -96,7 +96,7 @@ const CartPage = () => {
         price: parseFloat(item.price),
         quantity: item.quantity,
         totalPrice: parseFloat(item.totalPrice) || (parseFloat(item.price) * item.quantity),
-        image: item.image, // Already a Cloudinary URL
+        images: item.image, // Already a Cloudinary URL
         category: item.category || "General",
       }));
 
@@ -626,6 +626,7 @@ const CartPage = () => {
                     <input
                       type="text"
                       name="name"
+                      placeholder="Name"
                       value={userInfo.name}
                       onChange={handleInputChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -641,6 +642,7 @@ const CartPage = () => {
                     <input
                       type="tel"
                       name="phone"
+                      placeholder="Phone"
                       value={userInfo.phone}
                       onChange={handleInputChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -656,6 +658,7 @@ const CartPage = () => {
                     <input
                       type="email"
                       name="email"
+                      placeholder="Email Address"
                       value={userInfo.email}
                       onChange={handleInputChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -683,7 +686,22 @@ const CartPage = () => {
                   </div>
                 </div>
 
-                {userInfo.deliveryType === "delivery" && (
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Address
+                    </label>
+                    <input
+                      type="text"
+                      name="address"
+                      value={userInfo.address}
+                      onChange={handleInputChange}
+                      placeholder="Address"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                {/* {userInfo.deliveryType === "delivery" && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Delivery Address <span className="text-red-500">*</span>
@@ -698,7 +716,8 @@ const CartPage = () => {
                       disabled={isSubmitting}
                     />
                   </div>
-                )}
+                )} */}
+
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">

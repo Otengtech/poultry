@@ -82,7 +82,7 @@ const OurTeam = () => {
         ================================ */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {staff.map((member, index) => (
-            <div key={index} ref={cardRefs} className="scroll-reveal">
+            <div key={index} className="">
               {/* CARD DESIGN 1: MODERN PROFILE CARD */}
               <div className="group relative bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500">
                 {/* Background Pattern */}
@@ -119,7 +119,7 @@ const OurTeam = () => {
                     <p className="text-sm font-semibold text-lime-600 mb-3">
                       {member.title}
                     </p>
-                    <p className="text-sm text-gray-600 mb-6 line-clamp-2">
+                    <p className="text-sm text-gray-600 text-left mb-6">
                       {member.bio || "Expert in poultry management and animal welfare"}
                     </p>
                   </div>

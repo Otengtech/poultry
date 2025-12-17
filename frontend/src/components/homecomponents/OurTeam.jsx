@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Mail, Phone, MapPin } from "lucide-react";
-import { FaFacebookF, FaInstagram, FaWhatsapp, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaWhatsapp,
+  FaTwitter,
+  FaLinkedinIn,
+} from "react-icons/fa";
 import { useScrollReveal } from "../../animation/useScrollReveal";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -49,7 +55,8 @@ const OurTeam = () => {
             {/* DESCRIPTION */}
             <div ref={textRef} className="scroll-reveal mt-8 space-y-6">
               <p className="text-lg lg:text-xl text-gray-600 leading-relaxed text-center lg:text-left">
-                Our team works really hard to keep this wonderful company going to produce and meet consumers' needs.
+                Our team works really hard to keep this wonderful company going
+                to produce and meet consumers' needs.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
                 <Link
@@ -85,105 +92,92 @@ const OurTeam = () => {
         {/* ===============================
             NEW TEAM CARDS DESIGN
         ================================ */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {staff.map((member, index) => (
-            <div key={index} ref={cardRefs} className="scroll-reveal">
-              {/* CARD DESIGN 1: MODERN PROFILE CARD */}
-              <div className="group relative bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500">
-                {/* Background Pattern */}
-                <div className="absolute inset-0 bg-gradient-to-br from-lime-50/50 to-emerald-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                {/* Image Container */}
-                <div className="relative h-72 overflow-hidden">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
-                    onError={(e) => {
-                      e.target.src = "https://via.placeholder.com/400x400";
-                    }}
-                  />
-                  
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-                  
-                  {/* Position Badge */}
-                  <div className="absolute top-4 left-4">
-                    <span className="px-4 py-2 text-xs font-bold text-white bg-lime-600/90 backdrop-blur-sm rounded-full">
-                      {member.position}
-                    </span>
-                  </div>
-                </div>
+        <div className="relative">
+          {/* Horizontal Scroll Container */}
+          <div className="flex space-x-8 pb-4 overflow-x-auto scrollbar-hide">
+            {staff.slice(0, 3).map((member, index) => (
+              <div key={index} className="flex-shrink-0 w-[320px]">
+                {/* CARD DESIGN 1: MODERN PROFILE CARD */}
+                <div className="group relative bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 h-full">
+                  {/* Background Pattern */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-lime-50/50 to-emerald-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                {/* Content Area */}
-                <div className="relative p-6">
-                  <div className="text-center">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      {member.name}
-                    </h3>
-                    <p className="text-sm font-semibold text-lime-600 mb-3">
-                      {member.title}
-                    </p>
-                    <p className="text-sm text-gray-600 mb-6 line-clamp-2">
-                      {member.description || "Expert in poultry management and animal welfare"}
-                    </p>
-                  </div>
+                  {/* Image Container */}
+                  <div className="relative h-72 overflow-hidden">
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
+                      onError={(e) => {
+                        e.target.src = "https://via.placeholder.com/400x400";
+                      }}
+                    />
 
-                  {/* Contact Info - Hidden by default, shows on hover */}
-                  {/* <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="space-y-3 border-t pt-4">
-                      {member.email && (
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <Mail className="w-4 h-4 text-lime-600" />
-                          <span className="truncate">{member.email}</span>
-                        </div>
-                      )}
-                      {member.phone && (
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <Phone className="w-4 h-4 text-lime-600" />
-                          <span>{member.phone}</span>
-                        </div>
-                      )}
-                      {member.location && (
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <MapPin className="w-4 h-4 text-lime-600" />
-                          <span className="truncate">{member.location}</span>
-                        </div>
-                      )}
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+
+                    {/* Position Badge */}
+                    <div className="absolute top-4 left-4">
+                      <span className="px-4 py-2 text-xs font-bold text-white bg-lime-600/90 backdrop-blur-sm rounded-full">
+                        {member.position}
+                      </span>
                     </div>
-                  </div> */}
-
-                  {/* Social Icons - Always visible */}
-                  <div className="flex justify-center gap-3 mt-6 pt-4 border-t">
-                    <a
-                      href="#"
-                      className="p-2.5 bg-gray-100 text-gray-700 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-110"
-                      aria-label="Facebook"
-                    >
-                      <FaFacebookF className="w-4 h-4" />
-                    </a>
-                    <a
-                      href="#"
-                      className="p-2.5 bg-gray-100 text-gray-700 rounded-full hover:bg-pink-600 hover:text-white transition-all duration-300 hover:scale-110"
-                      aria-label="Instagram"
-                    >
-                      <FaInstagram className="w-4 h-4" />
-                    </a>
-                    <a
-                      href="#"
-                      className="p-2.5 bg-gray-100 text-gray-700 rounded-full hover:bg-green-600 hover:text-white transition-all duration-300 hover:scale-110"
-                      aria-label="WhatsApp"
-                    >
-                      <FaWhatsapp className="w-4 h-4" />
-                    </a>
                   </div>
-                </div>
 
-                {/* Corner Decoration */}
-                <div className="absolute top-0 right-0 w-16 h-16 bg-lime-500/10 rounded-bl-full transform translate-x-8 -translate-y-8 group-hover:bg-lime-500/20 transition-colors duration-500" />
+                  {/* Content Area */}
+                  <div className="relative p-6">
+                    <div className="text-center">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        {member.name}
+                      </h3>
+                      <p className="text-sm font-semibold text-lime-600 mb-3">
+                        {member.title}
+                      </p>
+                      <p className="text-sm text-gray-600 mb-6 line-clamp-2 text-">
+                        {member.description ||
+                          "Expert in poultry management and animal welfare"}
+                      </p>
+                    </div>
+
+                    {/* Social Icons - Always visible */}
+                    <div className="flex justify-center gap-3 mt-6 pt-4 border-t">
+                      <a
+                        href="#"
+                        className="p-2.5 bg-gray-100 text-gray-700 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-110"
+                        aria-label="Facebook"
+                      >
+                        <FaFacebookF className="w-4 h-4" />
+                      </a>
+                      <a
+                        href="#"
+                        className="p-2.5 bg-gray-100 text-gray-700 rounded-full hover:bg-pink-600 hover:text-white transition-all duration-300 hover:scale-110"
+                        aria-label="Instagram"
+                      >
+                        <FaInstagram className="w-4 h-4" />
+                      </a>
+                      <a
+                        href="#"
+                        className="p-2.5 bg-gray-100 text-gray-700 rounded-full hover:bg-green-600 hover:text-white transition-all duration-300 hover:scale-110"
+                        aria-label="WhatsApp"
+                      >
+                        <FaWhatsapp className="w-4 h-4" />
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Corner Decoration */}
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-lime-500/10 rounded-bl-full transform translate-x-8 -translate-y-8 group-hover:bg-lime-500/20 transition-colors duration-500" />
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          {/* Scroll Indicators */}
+          <div className="flex justify-center items-center gap-2 mt-6">
+            <div className="w-3 h-3 rounded-full bg-lime-600"></div>
+            <div className="w-3 h-3 rounded-full bg-gray-300"></div>
+            <div className="w-3 h-3 rounded-full bg-gray-300"></div>
+          </div>
         </div>
       </div>
     </section>
