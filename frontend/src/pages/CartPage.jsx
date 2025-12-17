@@ -101,9 +101,7 @@ const CartPage = () => {
         price: Number(item.price),
         quantity: Number(item.quantity),
         totalPrice: Number(item.totalPrice),
-        image: item.image || "",
         category: item.category || "General",
-        ...(item.size && { size: item.size }),
       }));
 
       const orderData = {
