@@ -101,75 +101,91 @@ app.post("/create-review", upload.single("image"), async (req, res) => {
 /* =======================
    CREATE ORDER (FORWARD TO FRIEND API)
 ======================= */
-app.post("/order", async (req, res) => {
+// Create order route - No image upload needed
+app.post('/order', async (req, res) => {
   try {
-    const { customerInfo, items, totalAmount, orderNumber } = req.body;
+    const {
+      customerInfo,
+      items,
+      totalAmount,
+      orderNumber,
+      status = 'pending'
+    } = req.body;
 
-    /* ---------- BASIC VALIDATION ---------- */
-    if (!customerInfo?.name || !customerInfo?.phone) {
+    console.log("Received order data:", req.body); // For debugging
+
+    // Validate required fields
+    if (!customerInfo || !customerInfo.name || !customerInfo.phone) {
       return res.status(400).json({
         success: false,
-        message: "Customer name and phone are required",
+        message: "Customer name and phone are required"
       });
     }
 
-    if (!Array.isArray(items) || items.length === 0) {
+    if (!items || items.length === 0) {
       return res.status(400).json({
         success: false,
-        message: "Order must contain at least one item",
+        message: "Order must contain at least one item"
       });
     }
 
-    /* ---------- ENSURE REQUIRED SCHEMA ---------- */
-    const payload = {
+    // Validate items structure
+    for (const item of items) {
+      if (!item.name || !item.price || !item.quantity || !item.image) {
+        return res.status(400).json({
+          success: false,
+          message: "Each item must have name, price, quantity, and image"
+        });
+      }
+    }
 
+    // Create new order
+    const newOrder = new Order({
       customerInfo: {
         name: customerInfo.name,
         phone: customerInfo.phone,
-        email: customerInfo.email || "",
-        address: customerInfo.address || "",
-        deliveryType: customerInfo.deliveryType || "pickup",
-        deliveryDate: customerInfo.deliveryDate || null,
-        paymentMethod: customerInfo.paymentMethod || "cash",
+        email: customerInfo.email || '',
+        address: customerInfo.address || '',
+        deliveryType: customerInfo.deliveryType || 'pickup',
+        paymentMethod: customerInfo.paymentMethod || 'cash'
       },
-
-      items: items.map((item) => ({
+      items: items.map(item => ({
         productId: item.productId,
         name: item.name,
-        price: Number(item.price),
-        quantity: Number(item.quantity),
-        totalPrice: Number(item.totalPrice),
-        images: item.image || "",
-        category: item.category || "",
+        price: parseFloat(item.price),
+        quantity: parseInt(item.quantity),
+        totalPrice: parseFloat(item.totalPrice) || (parseFloat(item.price) * parseInt(item.quantity)),
+        image: item.image, // Direct Cloudinary URL
+        category: item.category || 'General',
       })),
+    });
 
-      totalAmount: Number(totalAmount),
-    };
+    // Save order to database
+    const savedOrder = await newOrder.save();
 
-    /* ---------- FORWARD TO FRIEND API ---------- */
-    const response = await axios.post(
-      `${process.env.FRIEND_ORDER_API}/order`, // 👈 your friend’s endpoint
-      payload,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer`, // if required
-        },
-        timeout: 10000,
-      }
-    );
+    console.log("Order saved successfully:", savedOrder.orderNumber);
 
     res.status(201).json({
       success: true,
-      message: "Order forwarded successfully",
-      data: response.data,
+      message: "Order created successfully",
+      order: savedOrder
     });
-  } catch (error) {
-    console.error("Order forward error:", error.response?.data || error.message);
 
+  } catch (error) {
+    console.error("Error creating order:", error);
+    
+    // Handle duplicate order number
+    if (error.code === 11000 || error.message.includes('duplicate key')) {
+      return res.status(400).json({
+        success: false,
+        message: "Order number already exists. Please try again."
+      });
+    }
+    
     res.status(500).json({
       success: false,
-      message: "Failed to forward order",
+      message: "Failed to create order",
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 });

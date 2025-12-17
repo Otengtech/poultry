@@ -9,8 +9,6 @@ const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const navigate = useNavigate();
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [userInfo, setUserInfo] = useState({
     name: "",
     phone: "",
@@ -19,10 +17,8 @@ const CartPage = () => {
     deliveryType: "pickup",
     paymentMethod: "cash",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  /* ======================
-     LOAD CART
-  ====================== */
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCartItems(savedCart);
@@ -33,11 +29,8 @@ const CartPage = () => {
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  /* ======================
-     CART ACTIONS
-  ====================== */
   const handleDeleteItem = (index) => {
-    const updatedCart = cartItems.filter((_, i) => i !== index);
+    const updatedCart = cartItems.filter((_, idx) => idx !== index);
     updateLocalStorage(updatedCart);
     toast.success("Item removed from cart");
   };
@@ -46,7 +39,7 @@ const CartPage = () => {
     const updatedCart = [...cartItems];
     updatedCart[index].quantity += 1;
     updatedCart[index].totalPrice =
-      updatedCart[index].quantity * Number(updatedCart[index].price);
+      updatedCart[index].quantity * parseFloat(updatedCart[index].price);
     updateLocalStorage(updatedCart);
   };
 
@@ -55,101 +48,165 @@ const CartPage = () => {
     if (updatedCart[index].quantity > 1) {
       updatedCart[index].quantity -= 1;
       updatedCart[index].totalPrice =
-        updatedCart[index].quantity * Number(updatedCart[index].price);
+        updatedCart[index].quantity * parseFloat(updatedCart[index].price);
       updateLocalStorage(updatedCart);
     } else {
-      toast.info("Minimum quantity is 1. Remove item instead.");
+      toast.info("Minimum quantity is 1. Click remove to delete item.");
     }
   };
 
-  /* ======================
-     FORM
-  ====================== */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUserInfo((prev) => ({ ...prev, [name]: value }));
+    setUserInfo((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const calculateTotal = () =>
-    cartItems.reduce((sum, item) => sum + Number(item.totalPrice || 0), 0);
-
-  /* ======================
-     CHECKOUT
-  ====================== */
   const handleCheckout = async () => {
+    // Validate required fields
     if (!userInfo.name || !userInfo.phone) {
-      toast.error("Name and phone are required");
-      return;
-    }
-
-    if (userInfo.deliveryType === "delivery" && !userInfo.address.trim()) {
-      toast.error("Delivery address is required");
+      toast.error("Please fill in all required fields");
       return;
     }
 
     if (cartItems.length === 0) {
-      toast.error("Cart is empty");
+      toast.error("Your cart is empty");
+      return;
+    }
+
+    // If delivery type is 'delivery', address is required
+    if (userInfo.deliveryType === "delivery" && !userInfo.address.trim()) {
+      toast.error("Please provide delivery address");
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      const items = cartItems.map((item, index) => ({
-        productId: String(item._id || item.id || `PROD-${Date.now()}-${index}`),
+      // Prepare items with existing Cloudinary URLs
+      const formattedItems = cartItems.map((item, index) => ({
+        productId: item._id || `PROD${(index + 1).toString().padStart(3, "0")}`,
         name: item.name,
-        price: Number(item.price),
-        quantity: Number(item.quantity),
-        totalPrice: Number(item.totalPrice),
-        images: item.image || "",
+        price: parseFloat(item.price),
+        quantity: item.quantity,
+        totalPrice: parseFloat(item.totalPrice) || (parseFloat(item.price) * item.quantity),
+        image: item.image, // Already a Cloudinary URL
         category: item.category || "General",
       }));
 
+      // Prepare order data matching the API schema
       const orderData = {
-
         customerInfo: {
-          name: userInfo.name,
-          phone: userInfo.phone,
-          email: userInfo.email || "",
-          address: userInfo.address || "",
+          name: userInfo.name.trim(),
+          phone: userInfo.phone.trim(),
+          email: userInfo.email?.trim() || "",
+          address: userInfo.address?.trim() || "",
           deliveryType: userInfo.deliveryType,
           paymentMethod: userInfo.paymentMethod,
         },
-
-        items,
+        items: formattedItems,
       };
 
+      console.log("Sending order data:", orderData); // For debugging
+
+      // Send to your API
       const API_URL = import.meta.env.VITE_API_URL;
+      
+      try {
+        const response = await axios.post(`${API_URL}/order`, orderData, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-      const response = await axios.post(`${API_URL}/order`, orderData, {
-        headers: { "Content-Type": "application/json" },
-      });
+        if (response.data.success) {
+          // Save order to localStorage for backup
+          const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
+          localStorage.setItem(
+            "orders",
+            JSON.stringify([...existingOrders, orderData])
+          );
 
-      if (!response.data?.success) {
-        throw new Error("Order failed");
+          // Clear cart
+          localStorage.removeItem("cart");
+          setCartItems([]);
+
+          // Show success message
+          toast.success(
+            `Order placed successfully! Order #${orderData.orderNumber}`
+          );
+
+          // Reset form and close modal
+          setShowCheckoutModal(false);
+          setUserInfo({
+            name: "",
+            phone: "",
+            email: "",
+            address: "",
+            deliveryType: "pickup",
+            paymentMethod: "cash",
+          });
+
+          // Redirect to orders page
+          navigate("/order");
+        } else {
+          throw new Error(response.data.message || "Failed to place order");
+        }
+      } catch (error) {
+        // Check if it's a network error or backend not available
+        if (error.code === 'ERR_NETWORK' || !error.response) {
+          // Fallback: Save to localStorage if API fails
+          toast.warning("Backend not connected. Saving order locally...");
+          
+          const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
+          localStorage.setItem(
+            "orders",
+            JSON.stringify([...existingOrders, orderData])
+          );
+
+          // Clear cart
+          localStorage.removeItem("cart");
+          setCartItems([]);
+
+          toast.success(
+            `Order saved locally! Order #${orderData.orderNumber}`
+          );
+          setShowCheckoutModal(false);
+          setUserInfo({
+            name: "",
+            phone: "",
+            email: "",
+            address: "",
+            deliveryType: "pickup",
+            paymentMethod: "cash",
+          });
+          navigate("/order");
+        } else if (error.response) {
+          // Server responded with error
+          const errorMsg = error.response.data?.message || "Server error occurred";
+          throw new Error(errorMsg);
+        } else {
+          throw error;
+        }
       }
-
-      // Backup locally
-      const orders = JSON.parse(localStorage.getItem("orders")) || [];
-      localStorage.setItem("orders", JSON.stringify([...orders, orderData]));
-
-      localStorage.removeItem("cart");
-      setCartItems([]);
-      setShowCheckoutModal(false);
-
-      toast.success(`Order placed! #${orderData.orderNumber}`);
-      navigate("/order");
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to place order. Try again.");
+      console.error("Checkout error:", error);
+      toast.error(
+        error.message || "Failed to place order. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  /* ======================
-     OPTIONS
-  ====================== */
+  const calculateTotal = () => {
+    return cartItems.reduce((sum, item) => {
+      const total = parseFloat(item.totalPrice) || (parseFloat(item.price) * item.quantity);
+      return sum + total;
+    }, 0);
+  };
+
   const deliveryOptions = [
     { value: "pickup", label: "Pickup from Farm" },
     { value: "delivery", label: "Home Delivery" },
@@ -158,9 +215,8 @@ const CartPage = () => {
   const paymentOptions = [
     { value: "cash", label: "Cash on Delivery" },
     { value: "mobile money", label: "Mobile Money" },
-    { value: "card", label: "Credit / Debit Card" },
+    { value: "card", label: "Credit/Debit Card" },
   ];
-
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
