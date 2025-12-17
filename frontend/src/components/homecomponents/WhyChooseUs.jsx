@@ -224,7 +224,7 @@ const AboutSection = () => {
                     to="/quality"
                     className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 border border-white/20"
                   >
-                    Discover More <Icons.ArrowRight className="h-5 w-5" />
+                    Qualities Page <Icons.ArrowRight className="h-5 w-5" />
                   </Link>
                 </div>
               </div>

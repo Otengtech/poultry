@@ -28,7 +28,7 @@ const ResponsiveNavbar = () => {
   const socialLinks = [
     { icon: <Facebook size={20} />, label: "Facebook", href: "https://www.facebook.com/NayaSuccessAxis/" },
     { icon: <Instagram size={20} />, label: "WhatsApp", href: "https://www.instagram.com/nayasuccessaxisfarms/" },
-    { icon: <Youtube size={20} />, label: "TikTok", href: "https://youtu.be/huUjY541_jo?si=4b3kuwjj77b7Ttl6" },
+    { icon: <Youtube size={20} />, label: "Youtube", href: "https://youtu.be/huUjY541_jo?si=4b3kuwjj77b7Ttl6" },
   ];
 
   return (

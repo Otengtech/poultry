@@ -162,41 +162,195 @@ const quickQuestions = [
   "What payment methods do you accept?",
 ];
 
+// Helper notification messages - More engaging messages
+const notificationMessages = [
+  "🧠 Need help? I can answer your questions instantly!",
+  "🤔 Confused? Ask me about products, delivery, or ordering!",
+  "🛒 Planning to order? I can help you choose the right products!",
+  "📍 Looking for our branches? I know all our locations!",
+  "💡 Want cooking tips? Ask me about preparing chicken!",
+  "⏰ Need delivery info? I know our schedules and areas!",
+  "💰 Questions about pricing? I have all the details!",
+  "🌿 Curious about quality? Ask me about our certifications!",
+  "🎯 Need specific help? I'm here to assist you!",
+  "🚚 Delivery questions? I know all about our delivery network!",
+];
+
+// More frequent notification messages
+const frequentNotifications = [
+  "👋 Hi there! Need help with anything?",
+  "💬 I can help you with any questions!",
+  "🆘 Need assistance? I'm here to help!",
+  "❓ Got questions? Ask me anything!",
+];
+
+// Helper to get a random notification
+const getRandomNotification = (isFrequent = false) => {
+  const messages = isFrequent ? frequentNotifications : notificationMessages;
+  return messages[Math.floor(Math.random() * messages.length)];
+};
+
 const ChatAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
-  const messagesEndRef = useRef(null);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationText, setNotificationText] = useState("");
+  const [notificationPosition, setNotificationPosition] = useState({ x: 0, y: 0 });
+  const [isPulsing, setIsPulsing] = useState(false);
+  const [userActivity, setUserActivity] = useState({
+    timeOnPage: 0,
+    lastInteraction: Date.now(),
+    scrollDepth: 0,
+    hasInteractedWithChat: false,
+    lastNotificationTime: 0,
+  });
 
-  // Load messages from localStorage on component mount
+  const messagesEndRef = useRef(null);
+  const notificationTimeoutRef = useRef(null);
+  const activityIntervalRef = useRef(null);
+  const notificationIntervalRef = useRef(null);
+  const chatButtonRef = useRef(null);
+
+  // Track user activity
   useEffect(() => {
-    const savedMessages = localStorage.getItem("naya_chat_messages");
-    if (savedMessages) {
-      try {
-        const parsedMessages = JSON.parse(savedMessages);
-        // Convert string dates back to Date objects
-        const messagesWithDates = parsedMessages.map((msg) => ({
-          ...msg,
-          timestamp: new Date(msg.timestamp),
-        }));
-        setMessages(messagesWithDates);
-      } catch (error) {
-        console.error("Error loading chat messages:", error);
-        initializeWithGreeting();
-      }
-    } else {
-      initializeWithGreeting();
-    }
+    const updateActivity = () => {
+      setUserActivity(prev => ({
+        ...prev,
+        timeOnPage: prev.timeOnPage + 1,
+        lastInteraction: Date.now(),
+      }));
+    };
+
+    const handleScroll = () => {
+      const scrollDepth = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+      setUserActivity(prev => ({
+        ...prev,
+        scrollDepth: Math.max(prev.scrollDepth, scrollDepth),
+      }));
+    };
+
+    activityIntervalRef.current = setInterval(updateActivity, 1000);
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      clearInterval(activityIntervalRef.current);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
-  // Save messages to localStorage whenever they change
-  useEffect(() => {
-    if (messages.length > 0) {
-      localStorage.setItem("naya_chat_messages", JSON.stringify(messages));
+  // Trigger a notification
+  const triggerNotification = (force = false) => {
+    if (isOpen || showNotification) return;
+
+    // Check if enough time has passed since last notification
+    const timeSinceLastNotification = Date.now() - userActivity.lastNotificationTime;
+    const minNotificationInterval = force ? 1000 : 30000; // 30 seconds minimum between notifications
+    
+    if (timeSinceLastNotification < minNotificationInterval && !force) {
+      return;
     }
-  }, [messages]);
+
+    // Clear any existing timeout
+    if (notificationTimeoutRef.current) {
+      clearTimeout(notificationTimeoutRef.current);
+    }
+
+    // Set notification text (use frequent notifications if force triggered)
+    setNotificationText(getRandomNotification(force));
+    
+    // Calculate position (near the chat button)
+    if (chatButtonRef.current) {
+      const buttonRect = chatButtonRef.current.getBoundingClientRect();
+      setNotificationPosition({
+        x: window.innerWidth < 640 ? buttonRect.left - 140 : buttonRect.left - 180,
+        y: buttonRect.top - 100,
+      });
+    } else {
+      // Default position if button not found
+      setNotificationPosition({
+        x: window.innerWidth - 300,
+        y: window.innerHeight - 200,
+      });
+    }
+
+    // Show notification
+    setShowNotification(true);
+    setIsPulsing(true);
+    
+    // Update last notification time
+    setUserActivity(prev => ({ ...prev, lastNotificationTime: Date.now() }));
+
+    // Auto-hide after 7 seconds
+    notificationTimeoutRef.current = setTimeout(() => {
+      setShowNotification(false);
+      setIsPulsing(false);
+    }, 7000);
+  };
+
+  // Main notification interval - ALWAYS RUNS WHEN CHAT IS CLOSED
+  useEffect(() => {
+    if (isOpen) {
+      // Clear interval when chat is open
+      if (notificationIntervalRef.current) {
+        clearInterval(notificationIntervalRef.current);
+      }
+      return;
+    }
+
+    // Set up notification interval when chat is closed
+    notificationIntervalRef.current = setInterval(() => {
+      const now = Date.now();
+      const timeSinceLastNotification = now - userActivity.lastNotificationTime;
+      const idleTime = (now - userActivity.lastInteraction) / 1000;
+      
+      // Conditions for showing notification:
+      // 1. At least 30 seconds since last notification
+      // 2. User is idle for more than 5 seconds OR scroll depth > 0.3
+      // 3. Random chance (50% when conditions met)
+      if (
+        timeSinceLastNotification >= 30000 && 
+        (idleTime > 5 || userActivity.scrollDepth > 0.3) &&
+        Math.random() > 0.5
+      ) {
+        triggerNotification();
+      }
+    }, 10000); // Check every 10 seconds
+
+    return () => {
+      if (notificationIntervalRef.current) {
+        clearInterval(notificationIntervalRef.current);
+      }
+    };
+  }, [isOpen, userActivity]);
+
+  // Trigger initial notification after page load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isOpen && !userActivity.hasInteractedWithChat) {
+        triggerNotification(true);
+      }
+    }, 8000); // Show first notification after 8 seconds
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Trigger notification on scroll to certain points
+  useEffect(() => {
+    const scrollPoints = [0.25, 0.5, 0.75];
+    const currentScrollPoint = scrollPoints.find(point => 
+      Math.abs(userActivity.scrollDepth - point) < 0.05
+    );
+    
+    if (currentScrollPoint && !isOpen) {
+      const timeSinceLastNotification = Date.now() - userActivity.lastNotificationTime;
+      if (timeSinceLastNotification > 15000) { // 15 seconds minimum for scroll-triggered
+        triggerNotification();
+      }
+    }
+  }, [userActivity.scrollDepth, isOpen]);
 
   // Initialize with greeting if no saved messages
   const initializeWithGreeting = () => {
@@ -223,10 +377,44 @@ const ChatAssistant = () => {
     ]);
   };
 
+  // Load messages from localStorage on component mount
+  useEffect(() => {
+    const savedMessages = localStorage.getItem("naya_chat_messages");
+    if (savedMessages) {
+      try {
+        const parsedMessages = JSON.parse(savedMessages);
+        const messagesWithDates = parsedMessages.map((msg) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp),
+        }));
+        setMessages(messagesWithDates);
+      } catch (error) {
+        console.error("Error loading chat messages:", error);
+        initializeWithGreeting();
+      }
+    } else {
+      initializeWithGreeting();
+    }
+  }, []);
+
+  // Save messages to localStorage whenever they change
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem("naya_chat_messages", JSON.stringify(messages));
+    }
+  }, [messages]);
+
   // Scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Handle notification click
+  const handleNotificationClick = () => {
+    setShowNotification(false);
+    setIsOpen(true);
+    setUserActivity(prev => ({ ...prev, hasInteractedWithChat: true }));
+  };
 
   // AI Response Logic
   const getAIResponse = (userMessage) => {
@@ -280,6 +468,9 @@ const ChatAssistant = () => {
   const handleSendMessage = (text = input) => {
     if (!text.trim()) return;
 
+    // Update user activity
+    setUserActivity(prev => ({ ...prev, hasInteractedWithChat: true }));
+
     // Add user message
     const userMessage = {
       text,
@@ -290,6 +481,9 @@ const ChatAssistant = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsTyping(true);
+
+    // Hide any active notification
+    setShowNotification(false);
 
     // Simulate AI thinking
     setTimeout(() => {
@@ -344,60 +538,155 @@ const ChatAssistant = () => {
     URL.revokeObjectURL(url);
   };
 
+  const handleChatToggle = () => {
+    setIsOpen(!isOpen);
+    setUserActivity(prev => ({ ...prev, hasInteractedWithChat: true }));
+    
+    // Hide any active notification
+    setShowNotification(false);
+  };
+
+  // Manually trigger notification (for testing)
+  const triggerTestNotification = () => {
+    triggerNotification(true);
+  };
+
   return (
     <>
-      {/* Chat Widget Button */}
+      {/* Animated Notification Bubble */}
+      {showNotification && (
+        <div
+          className="fixed z-[60] cursor-pointer"
+          style={{
+            left: `${notificationPosition.x}px`,
+            top: `${notificationPosition.y}px`,
+          }}
+          onClick={handleNotificationClick}
+        >
+          <div className="relative">
+            {/* Pulsing effect around the notification */}
+            {isPulsing && (
+              <>
+                <div className="absolute -inset-2">
+                  <div className="absolute inset-0 rounded-full bg-green-400 opacity-20 animate-ping"></div>
+                </div>
+                <div className="absolute -inset-3">
+                  <div className="absolute inset-0 rounded-full bg-green-300 opacity-10 animate-ping animation-delay-300"></div>
+                </div>
+              </>
+            )}
+            
+            {/* Notification card */}
+            <div className="bg-gradient-to-br from-white to-green-50 rounded-xl shadow-2xl border-2 border-green-300 p-4 w-64 transform transition-all duration-300 hover:scale-105 animate-fade-in">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-md">
+                    <Icons.Brain className="h-5 w-5 text-white" />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-bold text-green-800 bg-gradient-to-r from-green-100 to-emerald-100 px-2 py-0.5 rounded-full border border-green-200">
+                      NAYA AI Assistant
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowNotification(false);
+                      }}
+                      className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full p-1"
+                    >
+                      <Icons.X className="h-3 w-3" />
+                    </button>
+                  </div>
+                  <p className="text-sm text-gray-800 font-semibold mb-2">
+                    {notificationText}
+                  </p>
+                  <div className="flex items-center justify-between mt-3">
+                    <span className="text-xs font-medium text-green-700 animate-pulse">
+                      Click here to chat! →
+                    </span>
+                    <div className="flex gap-1">
+                      <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-bounce" />
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-bounce delay-100" />
+                      <div className="w-1.5 h-1.5 bg-green-600 rounded-full animate-bounce delay-200" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Chat Widget Button with enhanced animations */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110"
+        ref={chatButtonRef}
+        onClick={handleChatToggle}
+        className="fixed bottom-6 right-6 z-50 chat-button bg-gradient-to-br from-green-600 via-green-500 to-green-700 hover:from-green-700 hover:via-green-600 hover:to-green-800 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-110 active:scale-95 group"
         aria-label="Open AI Chat Assistant"
       >
         {isOpen ? (
-          <Icons.X className="h-6 w-6" />
+          <>
+            <Icons.X className="h-6 w-6 transition-transform duration-300 rotate-0 group-hover:rotate-90" />
+          </>
         ) : (
           <>
+            {/* Always show notification indicator when chat is closed */}
+            <div className="absolute -top-1 -right-1">
+              <div className="relative">
+                <div className="absolute -inset-1 bg-red-500 rounded-full animate-ping opacity-75"></div>
+                <div className="relative bg-gradient-to-br from-red-500 to-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold shadow-md">
+                  💬
+                </div>
+              </div>
+            </div>
+            
             <Icons.MessageSquare className="h-6 w-6" />
-            {messages.length > 2 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {Math.min(messages.length, 9)}
-              </span>
-            )}
+            
+            {/* Continuous wave animation when chat is closed */}
+            <div className="absolute inset-0 rounded-full border-2 border-green-400 animate-ping-slow opacity-75"></div>
+            <div className="absolute inset-0 rounded-full border-2 border-green-300 animate-ping-slow animation-delay-1000 opacity-50"></div>
           </>
         )}
       </button>
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-10 right-6 z-40 w-[500px] max-w-[calc(100vw-3rem)]">
-          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col h-[600px]">
-            {/* Header with Settings Menu */}
-            <div className="bg-gradient-to-r from-green-600 to-green-700 p-4 text-white relative">
+        <div className="fixed bottom-20 right-4 md:right-6 z-40 
+                        w-[95vw] sm:w-[380px] md:w-[420px] lg:w-[460px]
+                        max-w-full animate-slide-up">
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden scrollbar-hide flex flex-col h-[520px]">
+            
+            {/* Header */}
+            <div className="bg-gradient-to-r from-green-600 to-green-700 p-4 text-white">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-white/20 rounded-full">
                     <Icons.Brain className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg">NAYA AI Assistant</h3>
-                    <p className="text-green-100 text-sm">
+                    <h3 className="font-bold text-base">
+                      NAYA AI Assistant
+                    </h3>
+                    <p className="text-green-100 text-xs">
                       Online • {messages.length} messages
                     </p>
                   </div>
                 </div>
+
                 <div className="flex items-center gap-1">
-                  {/* Settings Dropdown */}
+                  {/* Settings */}
                   <div className="relative">
                     <button
                       onClick={() => setShowClearConfirm(!showClearConfirm)}
                       className="p-2 hover:bg-white/20 rounded-full transition-colors"
-                      aria-label="Chat settings"
                     >
                       <Icons.MoreVertical className="h-5 w-5" />
                     </button>
 
-                    {/* Settings Dropdown Menu */}
                     {showClearConfirm && (
-                      <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+                      <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50 animate-fade-in">
                         <button
                           onClick={handleExportChat}
                           className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
@@ -415,19 +704,13 @@ const ChatAssistant = () => {
                           <Icons.Trash2 className="h-4 w-4" />
                           Clear Chat History
                         </button>
-                        <div className="border-t border-gray-200 mt-2 pt-2 px-4">
-                          <p className="text-xs text-gray-500">
-                            Chat is saved locally in your browser
-                          </p>
-                        </div>
                       </div>
                     )}
                   </div>
 
                   <button
-                    onClick={() => setIsOpen(false)}
+                    onClick={handleChatToggle}
                     className="p-2 hover:bg-white/20 rounded-full transition-colors"
-                    aria-label="Close chat"
                   >
                     <Icons.X className="h-5 w-5" />
                   </button>
@@ -435,18 +718,34 @@ const ChatAssistant = () => {
               </div>
             </div>
 
-            {/* Messages Container */}
-            <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 scrollbar-hide bg-gradient-to-b from-gray-50 to-white">
               {messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-gray-500">
-                  <Icons.MessageSquare className="h-12 w-12 mb-4 opacity-50" />
-                  <p className="text-lg font-medium">No messages yet</p>
-                  <p className="text-sm mt-1">
-                    Start a conversation with NAYA AI
+                  <div className="relative mb-4">
+                    <Icons.MessageSquare className="h-12 w-12 opacity-50" />
+                    <div className="absolute -inset-2 bg-gradient-to-r from-green-400/20 to-blue-400/20 rounded-full blur-sm"></div>
+                  </div>
+                  <p className="text-sm font-medium">Start a conversation</p>
+                  <p className="text-xs mt-1 text-gray-400">
+                    Ask me anything about NAYA Poultry
                   </p>
+                  
+                  {/* Quick suggestions */}
+                  <div className="mt-4 grid grid-cols-2 gap-2 w-full max-w-xs">
+                    {quickQuestions.slice(0, 4).map((q, i) => (
+                      <button
+                        key={i}
+                        onClick={() => handleQuickQuestion(q)}
+                        className="text-xs bg-white border border-gray-200 rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-50 hover:border-green-300 transition-all hover:scale-105"
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {messages.map((msg) => (
                     <div
                       key={msg.id}
@@ -455,32 +754,31 @@ const ChatAssistant = () => {
                       }`}
                     >
                       <div
-                        className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                        className={`max-w-[85%] rounded-2xl px-4 py-3 ${
                           msg.isBot
-                            ? "bg-white border border-gray-200 rounded-tl-none"
-                            : "bg-green-600 text-white rounded-tr-none"
-                        }`}
+                            ? "bg-white border border-gray-200 rounded-tl-none shadow-sm"
+                            : "bg-gradient-to-r from-green-500 to-green-600 text-white rounded-tr-none shadow-md"
+                        } transform transition-transform duration-200 hover:scale-[1.02]`}
                       >
                         <p className="text-sm">{msg.text}</p>
-                        {msg.suggestions && msg.suggestions.length > 0 && (
-                          <div className="mt-3 flex flex-wrap gap-2">
+
+                        {/* Suggestions for bot messages */}
+                        {msg.isBot && msg.suggestions && msg.suggestions.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-3">
                             {msg.suggestions.map((suggestion, idx) => (
                               <button
                                 key={idx}
                                 onClick={() => handleSuggestion(suggestion)}
-                                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                                  msg.isBot
-                                    ? "bg-green-50 text-green-700 hover:bg-green-100"
-                                    : "bg-green-700 hover:bg-green-800"
-                                }`}
+                                className="text-xs bg-green-50 text-green-700 px-2 py-1 rounded-full hover:bg-green-100 transition-colors"
                               >
                                 {suggestion}
                               </button>
                             ))}
                           </div>
                         )}
+
                         <p
-                          className={`text-xs mt-2 ${
+                          className={`text-[10px] mt-2 ${
                             msg.isBot ? "text-gray-400" : "text-green-200"
                           }`}
                         >
@@ -495,20 +793,14 @@ const ChatAssistant = () => {
 
                   {isTyping && (
                     <div className="flex justify-start">
-                      <div className="bg-white border border-gray-200 rounded-2xl rounded-tl-none px-4 py-3">
-                        <div className="flex items-center gap-1">
-                          <div
-                            className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                            style={{ animationDelay: "0ms" }}
-                          ></div>
-                          <div
-                            className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                            style={{ animationDelay: "150ms" }}
-                          ></div>
-                          <div
-                            className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                            style={{ animationDelay: "300ms" }}
-                          ></div>
+                      <div className="bg-white border border-gray-200 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm">
+                        <div className="flex items-center gap-2">
+                          <div className="flex gap-1">
+                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150" />
+                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-300" />
+                          </div>
+                          <span className="text-xs text-gray-500">NAYA AI is typing...</span>
                         </div>
                       </div>
                     </div>
@@ -519,83 +811,54 @@ const ChatAssistant = () => {
               )}
             </div>
 
-            {/* Quick Questions */}
-            <div className="border-t border-gray-200 p-4 bg-white">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs text-gray-500 font-medium">
-                  Quick questions:
-                </p>
-                {messages.length > 5 && (
-                  <button
-                    onClick={handleClearChat}
-                    className="text-xs text-red-500 hover:text-red-600 flex items-center gap-1"
-                  >
-                    <Icons.Trash2 className="h-3 w-3" />
-                    Clear all
-                  </button>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {quickQuestions.slice(0, 3).map((question, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleQuickQuestion(question)}
-                    className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-xs font-medium transition-colors"
-                  >
-                    {question}
-                  </button>
-                ))}
-              </div>
-            </div>
+            {/* Input with quick questions */}
+            <div className="border-t border-gray-200 bg-white">
+              {/* Quick questions */}
+              {!isTyping && messages.length > 0 && (
+                <div className="px-3 pt-3 overflow-x-auto scrollbar-hide">
+                  <div className="flex gap-2 pb-2">
+                    {quickQuestions.map((q, i) => (
+                      <button
+                        key={i}
+                        onClick={() => handleQuickQuestion(q)}
+                        className="flex-shrink-0 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-full transition-colors whitespace-nowrap"
+                      >
+                        {q.length > 25 ? q.substring(0, 25) + "..." : q}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-            {/* Input Area */}
-            <div className="border-t border-gray-200 p-4 bg-white">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                  placeholder="Ask about products, delivery, ordering..."
-                  className="flex-1 border border-gray-300 rounded-full px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                />
-                <button
-                  onClick={() => handleSendMessage()}
-                  disabled={!input.trim()}
-                  className={`p-3 rounded-full transition-colors ${
-                    input.trim()
-                      ? "bg-green-600 hover:bg-green-700 text-white"
-                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  }`}
-                  aria-label="Send message"
-                >
-                  <Icons.Send className="h-5 w-5" />
-                </button>
-              </div>
-
-              {/* Contact Links */}
-              <div className="flex justify-center gap-4 mt-4 pt-4 border-t border-gray-100">
-                <a
-                  href="https://wa.me/233597113385"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-green-600 hover:text-green-700 text-sm"
-                >
-                  <Icons.MessageCircle className="h-4 w-4" />
-                  WhatsApp
-                </a>
-                <a
-                  href="tel:+233597113385"
-                  className="flex items-center gap-2 text-green-600 hover:text-green-700 text-sm"
-                >
-                  <Icons.Phone className="h-4 w-4" />
-                  Call Us
-                </a>
+              {/* Input area */}
+              <div className="p-3">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+                    placeholder="Ask me anything about NAYA..."
+                    className="flex-1 border border-gray-300 rounded-full px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+                  />
+                  <button
+                    onClick={handleSendMessage}
+                    disabled={!input.trim()}
+                    className={`p-3 rounded-full transition-all ${
+                      input.trim()
+                        ? "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-md hover:shadow-lg"
+                        : "bg-gray-200 text-gray-400"
+                    }`}
+                  >
+                    <Icons.Send className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       )}
+
     </>
   );
 };

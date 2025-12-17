@@ -75,12 +75,12 @@ const LatestSneakers = () => {
         {[...poultryProducts, ...poultryProducts].map((sneaker, index) => (
           <div
             key={`${sneaker.name}-${index}`}
-            className="w-72 flex-shrink-0 bg-white text-black p-4 mx-2 my-2 rounded-2xl transition-transform duration-300 transform hover:scale-105"
+            className="w-72 flex-shrink-0 bg-white text-black p-4 my-2 transition-transform duration-300 transform hover:scale-105"
           >
             <img
               src={sneaker.image}
               alt={sneaker.name}
-              className="w-full h-36 object-contain rounded-lg mb-4"
+              className="w-full h-36 object-cover rounded-lgs mb-4"
             />
             <h3 className="text-lg font-bold text-center">{sneaker.name}</h3>
             <p className="text-center text-gray-600">{sneaker.comment}</p>

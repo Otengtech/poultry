@@ -122,14 +122,6 @@ const BlogCarouselSection = () => {
               <p className="text-gray-600 mb-6 line-clamp-3">
                 {blog.description}
               </p>
-
-              <Link
-                to={`/blog/${blog.id}`}
-                className="inline-flex items-center text-lime-600 font-semibold hover:text-lime-700 group"
-              >
-                Read More
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
             </div>
           </div>
         ))}

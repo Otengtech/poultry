@@ -82,9 +82,7 @@ const operationData = {
           "Browse products on our website",
           "Add items to cart",
           "Fill in checkout form",
-          "Submit checkout form",
           "Only Cash on delivery for now",
-          "Our team is working on other payment methods",
           "View order in my orders page",
           "Receive order confirmation",
         ],
@@ -459,7 +457,7 @@ const HowWeOperate = () => {
                 </div>
 
                 <div className="pt-4 border-t border-gray-200">
-                  <div className="flex justify-between items-center text-sm">
+                  <div className="flex flex-col justify-between items-center text-sm">
                     <div className="flex items-center gap-1 text-gray-600">
                       <Clock className="h-4 w-4" />
                       <span>{channel.deliveryTime}</span>
