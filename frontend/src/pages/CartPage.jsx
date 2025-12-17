@@ -66,7 +66,12 @@ const CartPage = () => {
   const handleCheckout = async () => {
     // Validate required fields
     if (!userInfo.name || !userInfo.phone) {
-      toast.error("Please fill in all required fields");
+      toast.error("Please fill in name and phoone fields");
+      return;
+    }
+
+    if (!userInfo.address){
+      toast.error("Please fill in address field");
       return;
     }
 
@@ -152,6 +157,7 @@ const CartPage = () => {
           navigate("/order");
         } else {
           throw new Error(response.data.message || "Failed to place order");
+          console.log(orderData)
         }
       } catch (error) {
         // Check if it's a network error or backend not available
