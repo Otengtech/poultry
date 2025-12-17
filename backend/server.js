@@ -122,12 +122,6 @@ app.post("/order", async (req, res) => {
 
     /* ---------- ENSURE REQUIRED SCHEMA ---------- */
     const payload = {
-      orderNumber:
-        orderNumber ||
-        `ORD-${Date.now()}-${Math.random()
-          .toString(36)
-          .substring(2, 8)
-          .toUpperCase()}`,
 
       customerInfo: {
         name: customerInfo.name,
@@ -145,7 +139,7 @@ app.post("/order", async (req, res) => {
         price: Number(item.price),
         quantity: Number(item.quantity),
         totalPrice: Number(item.totalPrice),
-        image: item.image || "",
+        images: item.image || "",
         category: item.category || "",
       })),
 
