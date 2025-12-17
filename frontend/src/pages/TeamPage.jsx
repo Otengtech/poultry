@@ -120,7 +120,7 @@ const OurTeam = () => {
                       {member.title}
                     </p>
                     <p className="text-sm text-gray-600 mb-6 line-clamp-2">
-                      {member.description || "Expert in poultry management and animal welfare"}
+                      {member.bio || "Expert in poultry management and animal welfare"}
                     </p>
                   </div>
 
