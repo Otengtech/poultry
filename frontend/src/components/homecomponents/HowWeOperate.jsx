@@ -496,6 +496,8 @@ const HowWeOperate = () => {
               </Link>
               <a
                 href="tel:+233244384928"
+                target="_blank" 
+                  rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 px-6 py-3 rounded-full font-semibold transition-all"
               >
                 <Phone className="h-5 w-5" />
@@ -607,18 +609,22 @@ const HowWeOperate = () => {
                 <div className="flex flex-wrap gap-4">
                   <a
                     href="tel:+233597113385"
+                    target="_blank" 
+                  rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-white text-green-700 hover:bg-gray-100 px-6 py-3 rounded-full font-semibold transition-all"
                   >
                     <Phone className="h-5 w-5" />
                     Call Support
                   </a>
-                  <Link
-                    to="/contact"
+                  <a
+                     href="nayasuccessaxis@gmail.com"
+                    target="_blank" 
+                  rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-green-800 hover:bg-green-900 text-white px-6 py-3 rounded-full font-semibold transition-all"
                   >
                     <Mail className="h-5 w-5" />
                     Email Us
-                  </Link>
+                  </a>
                 </div>
               </div>
             </div>

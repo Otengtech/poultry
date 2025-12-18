@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Search, Menu, X, ChevronDown, Facebook, Instagram, Youtube } from "lucide-react";
 import { NavLink, Link } from "react-router-dom";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo.jpg";
 
 const ResponsiveNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,7 +39,7 @@ const ResponsiveNavbar = () => {
           <div className="flex items-center">
             {/* Logo */}
             <Link to="/" className="text-xl font-bold text-lime-400 transition-colors">
-              <img src={logo} alt="logo" className="w-16 h-16" />
+              <img src={logo} alt="logo" className="w-14 h-14" />
             </Link>
           </div>
 
@@ -90,6 +90,8 @@ const ResponsiveNavbar = () => {
               <Link
                 key={item.label}
                 to={item.href}
+                target="_blank" 
+                  rel="noopener noreferrer"
                 className="text-gray-700 hover:text-green-600 px-4 py-2 text-sm font-medium transition duration-200 hover:scale-105"
               >
                 {item.icon}

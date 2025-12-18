@@ -15,12 +15,12 @@ const OrderPage = () => {
     try {
       setLoading(true);
 
-      const response = await axios.get(`${API_URL}/get-order`);
+      const response = await axios.get(`${API_URL}/orders`);
 
       // Assuming backend returns data in different formats
       // Try different possible response structures
       let ordersData = [];
-      
+
       if (Array.isArray(response.data)) {
         ordersData = response.data;
       } else if (response.data.data && Array.isArray(response.data.data)) {
@@ -35,12 +35,9 @@ const OrderPage = () => {
       }
 
       setOrders(ordersData);
-
     } catch (error) {
       console.error("Error fetching orders:", error);
-      toast.error(
-        error.response?.data?.message || "Failed to load orders"
-      );
+      toast.error(error.response?.data?.message || "Failed to load orders");
       setOrders([]);
     } finally {
       setLoading(false);
@@ -51,22 +48,19 @@ const OrderPage = () => {
     fetchOrders();
   }, []);
 
-  // Calculate total amount safely
-  const calculateTotalOrdersAmount = () => {
-    if (!orders || !Array.isArray(orders) || orders.length === 0) return 0;
-    
-    return orders.reduce((total, order) => {
-      const amount = order?.totalAmount || 0;
-      return total + (typeof amount === 'number' ? amount : parseFloat(amount) || 0);
-    }, 0);
-  };
+  const calculateTotalAmount = (items = []) =>
+  items.reduce(
+    (sum, item) =>
+      sum + (Number(item.price) || 0) * (Number(item.quantity) || 0),
+    0
+  );
 
   // Get count of active orders (not delivered or cancelled)
   const getActiveOrdersCount = () => {
     if (!orders || !Array.isArray(orders) || orders.length === 0) return 0;
-    
-    return orders.filter(order => {
-      const status = (order?.status || '').toLowerCase();
+
+    return orders.filter((order) => {
+      const status = (order?.status || "").toLowerCase();
       return !["delivered", "cancelled"].includes(status);
     }).length;
   };
@@ -74,7 +68,7 @@ const OrderPage = () => {
   // Get most recent order date
   const getRecentOrderDate = () => {
     if (!orders || !Array.isArray(orders) || orders.length === 0) return "N/A";
-    
+
     try {
       // Sort orders by date (newest first)
       const sortedOrders = [...orders].sort((a, b) => {
@@ -82,15 +76,15 @@ const OrderPage = () => {
         const dateB = new Date(b?.createdAt || b?.orderDate || 0);
         return dateB - dateA;
       });
-      
+
       const recentOrder = sortedOrders[0];
       const orderDate = recentOrder?.createdAt || recentOrder?.orderDate;
-      
+
       if (orderDate) {
-        return new Date(orderDate).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
+        return new Date(orderDate).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
         });
       }
       return "N/A";
@@ -102,7 +96,7 @@ const OrderPage = () => {
   // Get status color based on order status
   const getStatusColor = (status) => {
     if (!status) return "bg-gray-100 text-gray-800";
-    
+
     const statusLower = status.toLowerCase();
     switch (statusLower) {
       case "pending":
@@ -126,17 +120,74 @@ const OrderPage = () => {
     return status.charAt(0).toUpperCase() + status.slice(1);
   };
 
+  const handleCancelOrder = async (orderNumber, orderId) => {
+    if (!window.confirm("Are you sure you want to cancel this order?")) {
+      return;
+    }
+
+    try {
+      const API_URL = import.meta.env.VITE_API_URL;
+
+      // First, update locally for immediate feedback
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.orderNumber === orderNumber
+            ? { ...order, status: "cancelled" }
+            : order
+        )
+      );
+
+      // Send DELETE request to API
+      const response = await axios.delete(
+        `${API_URL}/orders/${orderId || orderNumber}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Order cancelled successfully");
+
+        // Also update localStorage if you're storing there
+        const localOrders = JSON.parse(localStorage.getItem("orders")) || [];
+        const updatedLocalOrders = localOrders.map((order) =>
+          order.orderNumber === orderNumber
+            ? { ...order, status: "cancelled" }
+            : order
+        );
+        localStorage.setItem("orders", JSON.stringify(updatedLocalOrders));
+      } else {
+        throw new Error(response.data.message || "Failed to cancel order");
+      }
+    } catch (error) {
+      console.error("Cancel order error:", error);
+
+      // Revert local change if API call fails
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.orderNumber === orderNumber
+            ? { ...order, status: status } // revert to original status
+            : order
+        )
+      );
+
+      toast.error(error.message || "Failed to cancel order. Please try again.");
+    }
+  };
+
   // Format date for display
   const formatDate = (dateString) => {
     if (!dateString) return "Date not available";
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
       });
     } catch {
       return "Invalid date";
@@ -170,7 +221,7 @@ const OrderPage = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/80 to-purple-700/80"></div>
         </div>
-        
+
         <div className="relative z-10 container mx-auto px-4 py-16 md:py-24">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
@@ -182,26 +233,42 @@ const OrderPage = () => {
             <div className="flex flex-wrap gap-4">
               <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
                 <span className="text-white font-medium">
-                  {orders?.length || 0} {orders?.length === 1 ? 'Order' : 'Orders'}
+                  {orders?.length || 0}{" "}
+                  {orders?.length === 1 ? "Order" : "Orders"}
                 </span>
               </div>
-              <Link 
+              <Link
                 to="/cart"
                 className="inline-flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
                 </svg>
                 <span>View Cart</span>
               </Link>
             </div>
           </div>
         </div>
-        
+
         {/* Decorative elements */}
         <div className="absolute bottom-0 left-0 right-0">
-          <svg className="w-full h-16 text-gray-50" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 120L1440 0V120H0Z" fill="currentColor"/>
+          <svg
+            className="w-full h-16 text-gray-50"
+            viewBox="0 0 1440 120"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M0 120L1440 0V120H0Z" fill="currentColor" />
           </svg>
         </div>
       </div>
@@ -216,8 +283,19 @@ const OrderPage = () => {
           <div className="max-w-2xl mx-auto">
             <div className="bg-white rounded-3xl shadow-xl p-12 text-center transform hover:scale-[1.02] transition-transform duration-300">
               <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full mb-6">
-                <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                <svg
+                  className="w-12 h-12 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                  />
                 </svg>
               </div>
               <h3 className="text-3xl font-bold text-gray-800 mb-3">
@@ -227,10 +305,16 @@ const OrderPage = () => {
                 You haven't placed any orders yet. Start shopping!
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/products" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
+                <Link
+                  to="/products"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl"
+                >
                   Browse Products
                 </Link>
-                <Link to="/cart" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
+                <Link
+                  to="/cart"
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl"
+                >
                   Go to Cart
                 </Link>
               </div>
@@ -243,12 +327,8 @@ const OrderPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="text-center p-4">
                   <p className="text-sm text-gray-500">Total Orders</p>
-                  <p className="text-3xl font-bold text-gray-800">{orders.length}</p>
-                </div>
-                <div className="text-center p-4">
-                  <p className="text-sm text-gray-500">Total Amount</p>
-                  <p className="text-3xl font-bold text-lime-600">
-                    GHS {calculateTotalOrdersAmount().toFixed(2)}
+                  <p className="text-3xl font-bold text-gray-800">
+                    {orders.length}
                   </p>
                 </div>
                 <div className="text-center p-4">
@@ -272,121 +352,241 @@ const OrderPage = () => {
                 // Safe extraction of order data using helper functions
                 const customerInfo = getCustomerInfo(order);
                 const orderItems = getOrderItems(order);
-                const totalAmount = order.totalAmount || 0;
+                const totalAmount = calculateTotalAmount(orderItems);
                 const orderDate = order.createdAt || order.orderDate;
                 const orderNumber = getOrderNumber(order, index);
                 const status = order.status || "pending";
-                
+
                 return (
                   <div
                     key={order._id || index}
-                    className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300"
+                    className="bg-white rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300"
                   >
-                    <div className="p-6">
-                      {/* Order Header */}
-                      <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-                        <div>
-                          <div className="flex items-center space-x-3">
-                            <h3 className="text-xl font-bold text-gray-800">
-                              Order #{orderNumber}
-                            </h3>
-                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(status)}`}>
-                              {getOrderStatusText(status)}
+                    {/* Order Header - Compact */}
+                    <div className="p-4 border-b border-gray-100 bg-lime-100">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div className="flex flex-col">
+                            <div className="flex items-center gap-2">
+                              {/* <span className="text-lg font-bold text-gray-800">
+                                #{orderNumber.split("-").pop() || orderNumber}
+                              </span> */}
+                              <span
+                                className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(
+                                  status
+                                )}`}
+                              >
+                                {getOrderStatusText(status)}
+                              </span>
+                            </div>
+                            <span className="text-xs text-gray-500">
+                              {orderDate
+                                ? formatDate(orderDate)
+                                : "Date not available"}
                             </span>
                           </div>
-                          <p className="text-gray-500 text-sm mt-1">
-                            {orderDate ? (
-                              `Placed on ${formatDate(orderDate)}`
-                            ) : (
-                              "Order date not available"
-                            )}
-                          </p>
                         </div>
-                        
-                        <div className="mt-3 md:mt-0">
-                          <span className="text-2xl font-bold text-lime-600">
+
+                        <div className="flex items-center gap-4">
+                          <span className="text-xl font-bold text-lime-600">
                             GHS {Number(totalAmount).toFixed(2)}
                           </span>
+                          <button
+                            onClick={() =>
+                              handleCancelOrder(orderNumber, order._id)
+                            }
+                            disabled={
+                              status === "cancelled" || status === "delivered"
+                            }
+                            className="px-6 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed rounded-full transition-colors duration-200"
+                          >
+                            {status === "cancelled"
+                              ? "Cancelled"
+                              : "Cancel Order"}
+                          </button>
                         </div>
                       </div>
+                    </div>
 
-                      {/* Order Details */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    {/* Main Content - Compact Grid */}
+                    <div className="p-4 md:mx-8">
+                      {/* Customer & Delivery Info - Side by side */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        {/* Customer Info */}
                         <div>
-                          <h4 className="font-semibold text-gray-700 mb-2">Customer Details</h4>
-                          <p className="text-gray-600">{customerInfo.name || "Not specified"}</p>
-                          <p className="text-gray-600">{customerInfo.phone || "Not specified"}</p>
-                          {customerInfo.email && (
-                            <p className="text-gray-600">{customerInfo.email}</p>
-                          )}
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-semibold text-gray-700 mb-2">Delivery Info</h4>
-                          <p className="text-gray-600">
-                            {customerInfo.deliveryType === 'delivery' 
-                              ? `Delivery to: ${customerInfo.address || "Address not specified"}` 
-                              : 'Pickup from Farm'}
-                          </p>
-                          <p className="text-gray-600">
-                            Payment: {(customerInfo.paymentMethod || "cash").replace('_', ' ')}
-                          </p>
-                          {customerInfo.deliveryDate && (
-                            <p className="text-gray-600">
-                              Preferred: {new Date(customerInfo.deliveryDate).toLocaleDateString()}
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center gap-2">
+                            <svg
+                              className="w-4 h-4 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                              />
+                            </svg>
+                            <h4 className="text-sm font-semibold text-gray-700">
+                              Customer
+                            </h4>
+                          </div>
+                          <div className="ml-6 space-y-1">
+                            <p className="text-sm text-gray-800 font-semibold">
+                              Name: <span className="text-gray-500 font-medium">{customerInfo.name || "Not specified"}</span>
                             </p>
-                          )}
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-semibold text-gray-700 mb-2">Order Summary</h4>
-                          <p className="text-gray-600">
-                            {orderItems.length} item{orderItems.length !== 1 ? 's' : ''}
-                          </p>
-                          <p className="text-gray-600">
-                            Total quantity: {orderItems.reduce((sum, item) => sum + (item.quantity || 0), 0)}
-                          </p>
-                          {order.notes && (
-                            <p className="text-gray-600 text-sm mt-2">
-                              <span className="font-medium">Notes:</span> {order.notes}
+                            <p className="text-sm text-gray-800 font-semibold">
+                              Phone: <span className="text-gray-500 font-medium">{customerInfo.phone || "Not specified"}</span>
                             </p>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Order Items Preview */}
-                      {orderItems.length > 0 && (
-                        <div className="mb-6">
-                          <h4 className="font-semibold text-gray-700 mb-3">Order Items</h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {orderItems.map((item, idx) => (
-                              <div key={idx} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                                {item.image && (
-                                  <img
-                                    src={item.image}
-                                    alt={item.name || "Product"}
-                                    className="w-16 h-16 object-cover rounded"
-                                  />
-                                )}
-                                <div className="flex-1">
-                                  <p className="font-medium text-gray-800">{item.name || "Unnamed Product"}</p>
-                                  <p className="text-sm text-gray-600">
-                                    Qty: {item.quantity || 0} × GHS {item.price || 0}
-                                  </p>
-                                  <p className="text-sm text-gray-600">
-                                    Total: GHS {Number((item.quantity || 0) * (item.price || 0)).toFixed(2)}
-                                  </p>
-                                  {item.category && (
-                                    <span className="inline-block mt-1 px-2 py-1 bg-gray-200 text-gray-700 text-xs rounded">
-                                      {item.category}
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            ))}
+                            {customerInfo.email && (
+                              <p className="text-sm text-gray-800 font-semibold truncate">
+                                Email: <span className="text-gray-500 font-medium">{customerInfo.email}</span>
+                              </p>
+                            )}
                           </div>
                         </div>
-                      )}
+
+                        {/* Delivery Info */}
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <svg
+                              className="w-4 h-4 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
+                            </svg>
+                            <h4 className="text-sm font-semibold text-gray-700">
+                              Delivery
+                            </h4>
+                          </div>
+                          <div className="ml-6 space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span
+                                className={`px-2 py-1 text-xs rounded-full ${
+                                  customerInfo.deliveryType === "delivery"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-gray-100 text-gray-800"
+                                }`}
+                              >
+                                {customerInfo.deliveryType === "delivery"
+                                  ? "Delivery"
+                                  : "Pickup"}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {customerInfo.paymentMethod
+                                  ? customerInfo.paymentMethod.replace("_", " ")
+                                  : "Cash"}
+                              </span>
+                            </div>
+                            {customerInfo.deliveryType === "delivery" &&
+                              customerInfo.address && (
+                                <p className="text-sm text-gray-800 font-semibold line-clamp-2">
+                                  Customer's Address: <span className="text-gray-500 font-medium">{customerInfo.address}</span>
+                                </p>
+                              )}
+                          </div>
+                        </div>
+                        </div>
+
+                        {/* Order Items - Horizontal Scroll */}
+                      <div className="mb-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <svg
+                            className="w-4 h-4 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                            />
+                          </svg>
+                          <h4 className="text-sm font-semibold text-gray-700">
+                            Items ({orderItems.length}) • Total Qty:{" "}
+                            {orderItems.reduce(
+                              (sum, item) => sum + (item.quantity || 0),
+                              0
+                            )}
+                          </h4>
+                        </div>
+
+                        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin cursor-pointer scrollbar-track-gray-100">
+                          {orderItems.map((item, idx) => {
+                            const imageSrc =
+                              Array.isArray(item.images) &&
+                              item.images.length > 0
+                                ? item.images[0]
+                                : "https://via.placeholder.com/200x150?text=Product";
+
+                            return (
+                              <div
+                                key={idx}
+                                className="flex-shrink-0 w-48 border border-gray-200 rounded-lg overflow-hidden bg-white hover:shadow-md transition-shadow"
+                              >
+                                {/* Image with overlay */}
+                                <div className="relative h-32 overflow-hidden bg-gray-100">
+                                  <img
+                                    src={imageSrc}
+                                    alt={item.name || "Product"}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      e.currentTarget.src =
+                                        "https://via.placeholder.com/200x150?text=Product";
+                                    }}
+                                  />
+
+                                  <div className="absolute top-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                                    {item.category || "Product"}
+                                  </div>
+
+                                  <div className="absolute top-2 right-2 bg-lime-600 text-white text-xs px-2 py-1 rounded font-bold">
+                                    {item.quantity || 0}×
+                                  </div>
+                                </div>
+
+                                {/* Item Details */}
+                                <div className="p-3">
+                                  <p className="text-sm font-medium text-gray-800 truncate mb-1">
+                                    {item.name || "Unnamed Product"}
+                                  </p>
+
+                                  <div className="flex justify-between items-center">
+                                    <div className="text-xs text-gray-600">
+                                      GHS {item.price || 0} each
+                                    </div>
+
+                                    <div className="text-sm font-bold text-lime-600">
+                                      GHS{" "}
+                                      {Number(
+                                        (item.quantity || 0) * (item.price || 0)
+                                      ).toFixed(2)}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      </div>
                     </div>
                   </div>
                 );

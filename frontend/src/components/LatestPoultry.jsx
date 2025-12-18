@@ -67,6 +67,9 @@ const LatestSneakers = () => {
 
   return (
     <section className="py-6">
+      <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-6">
+        Our Top Products
+      </div>
       <div
         ref={scrollRef}
         className="flex w-full overflow-x-auto no-scrollbar px-4"

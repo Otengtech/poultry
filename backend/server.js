@@ -24,7 +24,6 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow server-to-server, Postman, Vercel
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
@@ -32,13 +31,12 @@ app.use(
       }
 
       console.error("Blocked by CORS:", origin);
-      return callback(null, true); // <-- IMPORTANT
+      return callback(null, true); // allow anyway (as requested)
     },
-    methods: ["GET", "POST", "OPTIONS"],
+    methods: ["GET", "POST", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
 
 app.options("*", cors());
 
@@ -60,7 +58,13 @@ const upload = multer({
 });
 
 /* =======================
-   CREATE REVIEW (IMAGE UPLOAD)
+   FRIEND API BASE URL
+======================= */
+const FRIEND_API_BASE_URL = process.env.FRIEND_API_BASE_URL;
+// example: https://friend-api.vercel.app
+
+/* =======================
+   CREATE REVIEW
 ======================= */
 app.post("/create-review", upload.single("image"), async (req, res) => {
   try {
@@ -101,91 +105,77 @@ app.post("/create-review", upload.single("image"), async (req, res) => {
 /* =======================
    CREATE ORDER (FORWARD TO FRIEND API)
 ======================= */
-// Create order route - No image upload needed
-app.post('/order', async (req, res) => {
+app.post("/order", async (req, res) => {
   try {
-    const {
-      customerInfo,
-      items,
-      totalAmount,
-      orderNumber,
-      status = 'pending'
-    } = req.body;
-
-    console.log("Received order data:", req.body); // For debugging
-
-    // Validate required fields
-    if (!customerInfo || !customerInfo.name || !customerInfo.phone) {
-      return res.status(400).json({
-        success: false,
-        message: "Customer name and phone are required"
-      });
-    }
-
-    if (!items || items.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Order must contain at least one item"
-      });
-    }
-
-    // Validate items structure
-    for (const item of items) {
-      if (!item.name || !item.price || !item.quantity || !item.image) {
-        return res.status(400).json({
-          success: false,
-          message: "Each item must have name, price, quantity, and image"
-        });
+    const response = await axios.post(
+      `${FRIEND_API_BASE_URL}/order`,
+      req.body,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-    }
-
-    // Create new order
-    const newOrder = new Order({
-      customerInfo: {
-        name: customerInfo.name,
-        phone: customerInfo.phone,
-        email: customerInfo.email || '',
-        address: customerInfo.address || '',
-        deliveryType: customerInfo.deliveryType || 'pickup',
-        paymentMethod: customerInfo.paymentMethod || 'cash'
-      },
-      items: items.map(item => ({
-        productId: item.productId,
-        name: item.name,
-        price: parseFloat(item.price),
-        quantity: parseInt(item.quantity),
-        totalPrice: parseFloat(item.totalPrice) || (parseFloat(item.price) * parseInt(item.quantity)),
-        images: item.image ? [item.image] : [], // Direct Cloudinary URL
-        category: item.category || 'General',
-      })),
-    });
-
-    // Save order to database
-    const savedOrder = await newOrder.save();
-
-    console.log("Order saved successfully:", savedOrder.orderNumber);
+    );
 
     res.status(201).json({
       success: true,
-      message: "Order created successfully",
-      order: savedOrder
+      message: "Order forwarded successfully",
+      data: response.data,
     });
-
   } catch (error) {
-    console.error("Error creating order:", error);
-    
-    // Handle duplicate order number
-    if (error.code === 11000 || error.message.includes('duplicate key')) {
-      return res.status(400).json({
-        success: false,
-        message: "Order number already exists. Please try again."
-      });
-    }
-    
-    res.status(500).json({
+    console.error("Order forward error:", error?.response?.data || error.message);
+
+    res.status(error.response?.status || 500).json({
       success: false,
       message: "Failed to create order",
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: error.response?.data || error.message,
+    });
+  }
+});
+
+/* =======================
+   FETCH ALL ORDERS (PROXY)
+======================= */
+app.get("/orders", async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${FRIEND_API_BASE_URL}/orders`
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Fetch orders error:", error?.response?.data || error.message);
+
+    res.status(error.response?.status || 500).json({
+      success: false,
+      message: "Failed to fetch orders",
+    });
+  }
+});
+
+/* =======================
+   DELETE ORDER (PROXY)
+======================= */
+app.delete("/orders/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const response = await axios.delete(
+      `${FRIEND_API_BASE_URL}/orders/${id}`
+    );
+
+    res.json({
+      success: true,
+      message: "Order deleted successfully",
+      data: response.data,
+    });
+  } catch (error) {
+    console.error("Delete order error:", error?.response?.data || error.message);
+
+    res.status(error.response?.status || 500).json({
+      success: false,
+      message: "Failed to delete order",
+      error: error.response?.data || error.message,
     });
   }
 });

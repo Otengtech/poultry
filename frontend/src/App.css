@@ -54,7 +54,7 @@ html {
 /* =================================== */
 /* Custom scrollbar for modern browsers */
 ::-webkit-scrollbar {
-  width: 3px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -250,4 +250,19 @@ img {
 .opacity-100,
 .opacity-0 {
   will-change: transform, opacity;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 8px; /* Changed from 6px to 3px */
+  cursor: grab;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 1.5px; /* Adjust radius proportionally */
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 1.5px; /* Adjust radius proportionally */
 }
