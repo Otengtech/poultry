@@ -74,7 +74,7 @@ const SupplyPage = () => {
             {eventTypes.map((client, index) => (
               <div
                 key={index}
-                className="bg-white rounded-xl p-5 text-center shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 group"
+                className="bg-white rounded-xl p-5 text-center overflow-x-auto scrollbar-hide shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 group"
               >
                 {/* Icon with count badge */}
                 <div className="relative mb-4">

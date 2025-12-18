@@ -243,52 +243,101 @@ const ChatAssistant = () => {
 
   // Trigger a notification
   const triggerNotification = (force = false) => {
-    if (isOpen || showNotification) return;
+  if (isOpen || showNotification) return;
 
-    // Check if enough time has passed since last notification
-    const timeSinceLastNotification = Date.now() - userActivity.lastNotificationTime;
-    const minNotificationInterval = force ? 1000 : 30000; // 30 seconds minimum between notifications
+  // Check if enough time has passed since last notification
+  const timeSinceLastNotification = Date.now() - userActivity.lastNotificationTime;
+  const minNotificationInterval = force ? 1000 : 30000; // 30 seconds minimum between notifications
+  
+  if (timeSinceLastNotification < minNotificationInterval && !force) {
+    return;
+  }
+
+  // Clear any existing timeout
+  if (notificationTimeoutRef.current) {
+    clearTimeout(notificationTimeoutRef.current);
+  }
+
+  // Set notification text (use frequent notifications if force triggered)
+  setNotificationText(getRandomNotification(force));
+  
+  // Calculate position (positioned higher up)
+  const calculatePosition = () => {
+    const notificationWidth = 256; // w-64 = 256px
+    const notificationHeight = 120; // Approximate height
     
-    if (timeSinceLastNotification < minNotificationInterval && !force) {
-      return;
-    }
-
-    // Clear any existing timeout
-    if (notificationTimeoutRef.current) {
-      clearTimeout(notificationTimeoutRef.current);
-    }
-
-    // Set notification text (use frequent notifications if force triggered)
-    setNotificationText(getRandomNotification(force));
-    
-    // Calculate position (near the chat button)
     if (chatButtonRef.current) {
       const buttonRect = chatButtonRef.current.getBoundingClientRect();
-      setNotificationPosition({
-        x: window.innerWidth < 640 ? buttonRect.left - 140 : buttonRect.left - 180,
-        y: buttonRect.top - 100,
-      });
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      
+      let x, y;
+      
+      // Check screen size
+      if (viewportWidth < 640) {
+        // Mobile - Position above the chat button with more space
+        x = Math.max(10, buttonRect.left - (notificationWidth / 2) + (buttonRect.width / 2));
+        y = Math.max(10, buttonRect.top - notificationHeight - 40); // Increased from 20 to 40
+        
+        // If not enough space above, position below
+        if (y < 30) { // Increased threshold from 50 to 30
+          y = buttonRect.bottom + 30; // Increased from 20 to 30
+        }
+      } else {
+        // Desktop - Try top side first (positioned higher)
+        if (buttonRect.top > notificationHeight + 60) { // More space needed above
+          // Enough space above - position higher
+          x = Math.max(40, buttonRect.left - (notificationWidth / 2) + (buttonRect.width / 2));
+          y = buttonRect.top - notificationHeight - 50; // Position 50px above button instead of 20
+        } else if (viewportHeight - buttonRect.bottom > notificationHeight + 60) {
+          // Enough space below - but we want it higher, so position above with less space
+          x = Math.max(40, buttonRect.left - (notificationWidth / 2) + (buttonRect.width / 2));
+          y = Math.max(40, buttonRect.top - notificationHeight - 30);
+        } else if (buttonRect.left > notificationWidth + 40) {
+          // Enough space on left - position higher than button
+          x = buttonRect.left - notificationWidth - 20;
+          y = Math.max(40, buttonRect.top - 40); // Position 40px higher than button top
+        } else if (viewportWidth - buttonRect.right > notificationWidth + 40) {
+          // Enough space on right - position higher than button
+          x = buttonRect.right + 20;
+          y = Math.max(40, buttonRect.top - 40); // Position 40px higher than button top
+        } else {
+          // Not enough space anywhere specific, position higher in viewport
+          x = Math.max(40, buttonRect.left - (notificationWidth / 2) + (buttonRect.width / 2));
+          y = Math.max(40, viewportHeight * 0.2); // Position at 20% of viewport height
+        }
+      }
+      
+      // Ensure it stays within viewport bounds
+      x = Math.max(10, Math.min(x, viewportWidth - notificationWidth - 10));
+      y = Math.max(20, Math.min(y, viewportHeight - notificationHeight - 20));
+      
+      return { x, y };
     } else {
-      // Default position if button not found
-      setNotificationPosition({
+      // Default position if button not found - position higher
+      return {
         x: window.innerWidth - 300,
-        y: window.innerHeight - 200,
-      });
+        y: 100, // Changed from bottom to near top (100px from top)
+      };
     }
-
-    // Show notification
-    setShowNotification(true);
-    setIsPulsing(true);
-    
-    // Update last notification time
-    setUserActivity(prev => ({ ...prev, lastNotificationTime: Date.now() }));
-
-    // Auto-hide after 7 seconds
-    notificationTimeoutRef.current = setTimeout(() => {
-      setShowNotification(false);
-      setIsPulsing(false);
-    }, 7000);
   };
+  
+  const position = calculatePosition();
+  setNotificationPosition(position);
+
+  // Show notification
+  setShowNotification(true);
+  setIsPulsing(true);
+  
+  // Update last notification time
+  setUserActivity(prev => ({ ...prev, lastNotificationTime: Date.now() }));
+
+  // Auto-hide after 7 seconds
+  notificationTimeoutRef.current = setTimeout(() => {
+    setShowNotification(false);
+    setIsPulsing(false);
+  }, 7000);
+};
 
   // Main notification interval - ALWAYS RUNS WHEN CHAT IS CLOSED
   useEffect(() => {
