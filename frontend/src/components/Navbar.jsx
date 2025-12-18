@@ -21,7 +21,10 @@ const ResponsiveNavbar = () => {
     { label: "Home", href: "/" },
     { label: "Products", href: "/products" },
     { label: "Blog", href: "/blog" },
+<<<<<<< HEAD
     { label: "Event", href: "/event" },
+=======
+>>>>>>> 426bf429e0dad65fa47183711d36228b6744f081
     { label: "Contact", href: "/contact" },
     { label: "About", href: "/about" },
   ];
