@@ -31,12 +31,11 @@ const OurTeam = () => {
 
   const titleRef = useScrollReveal();
   const textRef = useScrollReveal();
-  const cardRefs = useScrollReveal();
 
   return (
     <section className="py-16 lg:py-24 bg-gradient-to-b from-white to-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        {/* ===============================
+        {/* ==============================
             TOP CONTENT
         ================================ */}
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start mb-16">
