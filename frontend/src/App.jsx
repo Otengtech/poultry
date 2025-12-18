@@ -24,6 +24,7 @@ const CartPage = lazy(() => import("./pages/CartPage"));
 const OrderPage = lazy(() => import("./pages/OrderPage"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const QualityPage = lazy(() => import("./pages/QualityPage"));
+const SupplyPage = lazy(() => import("./pages/SupplyPage"));
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/order" element={<OrderPage />} />
           <Route path="/quality" element={<QualityPage />} />
+          <Route path="/event" element={<SupplyPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
       </Suspense>

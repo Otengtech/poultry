@@ -147,7 +147,8 @@ html {
 
 /* Ping animation */
 @keyframes ping-slow {
-  75%, 100% {
+  75%,
+  100% {
     transform: scale(2);
     opacity: 0;
   }
@@ -265,4 +266,75 @@ img {
 .scrollbar-thin::-webkit-scrollbar-thumb {
   background: #c1c1c1;
   border-radius: 1.5px; /* Adjust radius proportionally */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .chat-button {
+    right: 16px;
+    bottom: 16px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .chat-button {
+    right: 24px;
+    bottom: 24px;
+  }
+}
+
+@media (min-width: 769px) {
+  .chat-button {
+    right: 32px;
+    bottom: 32px;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
 }

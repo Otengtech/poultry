@@ -5,6 +5,7 @@ import Newsletter from '../components/homecomponents/Newsletter';
 import OurTeam from '../components/homecomponents/OurTeam';
 import TestimonialSection from '../components/homecomponents/TestimonialsSection';
 import Footer from '../components/homecomponents/Footer';
+import Supply from '../components/homecomponents/Supply';
 import LatestPoultry from "../components/LatestPoultry";
 import HowWeOperate from "../components/homecomponents/HowWeOperate";
 import Loader from "../components/Loader";
@@ -17,6 +18,7 @@ const Home = () => {
       <WhyChooseUsSection />
       <LatestPoultry />
       <HowWeOperate />
+      <Supply />
       <OurTeam />
       <TestimonialSection />
       <Newsletter />

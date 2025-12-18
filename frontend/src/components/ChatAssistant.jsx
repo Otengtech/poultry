@@ -243,52 +243,93 @@ const ChatAssistant = () => {
 
   // Trigger a notification
   const triggerNotification = (force = false) => {
-    if (isOpen || showNotification) return;
+  if (isOpen || showNotification) return;
 
-    // Check if enough time has passed since last notification
-    const timeSinceLastNotification = Date.now() - userActivity.lastNotificationTime;
-    const minNotificationInterval = force ? 1000 : 30000; // 30 seconds minimum between notifications
+  // Check if enough time has passed since last notification
+  const timeSinceLastNotification = Date.now() - userActivity.lastNotificationTime;
+  const minNotificationInterval = force ? 1000 : 30000; // 30 seconds minimum between notifications
+  
+  if (timeSinceLastNotification < minNotificationInterval && !force) {
+    return;
+  }
+
+  // Clear any existing timeout
+  if (notificationTimeoutRef.current) {
+    clearTimeout(notificationTimeoutRef.current);
+  }
+
+  // Set notification text (use frequent notifications if force triggered)
+  setNotificationText(getRandomNotification(force));
+  
+  // Calculate position (improved positioning)
+  const calculatePosition = () => {
+    const notificationWidth = 256; // w-64 = 256px
+    const notificationHeight = 120; // Approximate height
     
-    if (timeSinceLastNotification < minNotificationInterval && !force) {
-      return;
-    }
-
-    // Clear any existing timeout
-    if (notificationTimeoutRef.current) {
-      clearTimeout(notificationTimeoutRef.current);
-    }
-
-    // Set notification text (use frequent notifications if force triggered)
-    setNotificationText(getRandomNotification(force));
-    
-    // Calculate position (near the chat button)
     if (chatButtonRef.current) {
       const buttonRect = chatButtonRef.current.getBoundingClientRect();
-      setNotificationPosition({
-        x: window.innerWidth < 640 ? buttonRect.left - 140 : buttonRect.left - 180,
-        y: buttonRect.top - 100,
-      });
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      
+      let x, y;
+      
+      // Check screen size
+      if (viewportWidth < 640) {
+        // Mobile - Position above the chat button
+        x = Math.max(10, buttonRect.left - (notificationWidth / 2) + (buttonRect.width / 2));
+        y = Math.max(10, buttonRect.top - notificationHeight - 20);
+        
+        // If not enough space above, position below
+        if (y < 50) {
+          y = buttonRect.bottom + 20;
+        }
+      } else {
+        // Desktop - Try left side first
+        if (buttonRect.left > notificationWidth + 40) {
+          // Enough space on left
+          x = buttonRect.left - notificationWidth - 20;
+          y = buttonRect.top;
+        } else if (viewportWidth - buttonRect.right > notificationWidth + 40) {
+          // Enough space on right
+          x = buttonRect.right + 20;
+          y = buttonRect.top;
+        } else {
+          // Not enough space on sides, position above
+          x = Math.max(20, buttonRect.left - (notificationWidth / 2) + (buttonRect.width / 2));
+          y = Math.max(20, buttonRect.top - notificationHeight - 20);
+        }
+      }
+      
+      // Ensure it stays within viewport bounds
+      x = Math.max(10, Math.min(x, viewportWidth - notificationWidth - 10));
+      y = Math.max(10, Math.min(y, viewportHeight - notificationHeight - 10));
+      
+      return { x, y };
     } else {
       // Default position if button not found
-      setNotificationPosition({
+      return {
         x: window.innerWidth - 300,
-        y: window.innerHeight - 200,
-      });
+        y: window.innerHeight - 20,
+      };
     }
-
-    // Show notification
-    setShowNotification(true);
-    setIsPulsing(true);
-    
-    // Update last notification time
-    setUserActivity(prev => ({ ...prev, lastNotificationTime: Date.now() }));
-
-    // Auto-hide after 7 seconds
-    notificationTimeoutRef.current = setTimeout(() => {
-      setShowNotification(false);
-      setIsPulsing(false);
-    }, 7000);
   };
+  
+  const position = calculatePosition();
+  setNotificationPosition(position);
+
+  // Show notification
+  setShowNotification(true);
+  setIsPulsing(true);
+  
+  // Update last notification time
+  setUserActivity(prev => ({ ...prev, lastNotificationTime: Date.now() }));
+
+  // Auto-hide after 7 seconds
+  notificationTimeoutRef.current = setTimeout(() => {
+    setShowNotification(false);
+    setIsPulsing(false);
+  }, 7000);
+};
 
   // Main notification interval - ALWAYS RUNS WHEN CHAT IS CLOSED
   useEffect(() => {
