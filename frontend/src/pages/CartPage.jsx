@@ -4,11 +4,14 @@ import BannerImage from "../assets/order.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useCart } from "../context/cartContext"; // ADD THIS IMPORT
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const navigate = useNavigate();
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const { updateCartState } = useCart(); // ADD THIS LINE
+
   const [userInfo, setUserInfo] = useState({
     name: "",
     phone: "",
@@ -27,6 +30,7 @@ const CartPage = () => {
   const updateLocalStorage = (updatedCart) => {
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    updateCartState(); // ADD THIS LINE - Updates navbar cart count
   };
 
   const handleDeleteItem = (index) => {
@@ -55,14 +59,6 @@ const CartPage = () => {
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserInfo((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
   const handleCheckout = async () => {
     // Validate required fields
     if (!userInfo.name || !userInfo.phone) {
@@ -70,7 +66,7 @@ const CartPage = () => {
       return;
     }
 
-    if (!userInfo.address){
+    if (!userInfo.address) {
       toast.error("Please fill in address field");
       return;
     }
@@ -95,7 +91,8 @@ const CartPage = () => {
         name: item.name,
         price: parseFloat(item.price),
         quantity: item.quantity,
-        totalPrice: parseFloat(item.totalPrice) || (parseFloat(item.price) * item.quantity),
+        totalPrice:
+          parseFloat(item.totalPrice) || parseFloat(item.price) * item.quantity,
         images: item.image ? [item.image] : [], // Already a Cloudinary URL
         category: item.category || "General",
       }));
@@ -117,7 +114,7 @@ const CartPage = () => {
 
       // Send to your API
       const API_URL = import.meta.env.VITE_API_URL;
-      
+
       try {
         const response = await axios.post(`${API_URL}/order`, orderData, {
           headers: {
@@ -127,7 +124,8 @@ const CartPage = () => {
 
         if (response.data.success) {
           // Save order to localStorage for backup
-          const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
+          const existingOrders =
+            JSON.parse(localStorage.getItem("orders")) || [];
           localStorage.setItem(
             "orders",
             JSON.stringify([...existingOrders, orderData])
@@ -157,15 +155,15 @@ const CartPage = () => {
           navigate("/order");
         } else {
           throw new Error(response.data.message || "Failed to place order");
-          console.log(orderData)
         }
       } catch (error) {
         // Check if it's a network error or backend not available
-        if (error.code === 'ERR_NETWORK' || !error.response) {
+        if (error.code === "ERR_NETWORK" || !error.response) {
           // Fallback: Save to localStorage if API fails
           toast.warning("Backend not connected. Saving order locally...");
-          
-          const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
+
+          const existingOrders =
+            JSON.parse(localStorage.getItem("orders")) || [];
           localStorage.setItem(
             "orders",
             JSON.stringify([...existingOrders, orderData])
@@ -175,9 +173,7 @@ const CartPage = () => {
           localStorage.removeItem("cart");
           setCartItems([]);
 
-          toast.success(
-            `Order saved locally! Order #${orderData.orderNumber}`
-          );
+          toast.success(`Order saved locally! Order #${orderData.orderNumber}`);
           setShowCheckoutModal(false);
           setUserInfo({
             name: "",
@@ -190,7 +186,8 @@ const CartPage = () => {
           navigate("/order");
         } else if (error.response) {
           // Server responded with error
-          const errorMsg = error.response.data?.message || "Server error occurred";
+          const errorMsg =
+            error.response.data?.message || "Server error occurred";
           throw new Error(errorMsg);
         } else {
           throw error;
@@ -198,9 +195,7 @@ const CartPage = () => {
       }
     } catch (error) {
       console.error("Checkout error:", error);
-      toast.error(
-        error.message || "Failed to place order. Please try again."
-      );
+      toast.error(error.message || "Failed to place order. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -208,7 +203,8 @@ const CartPage = () => {
 
   const calculateTotal = () => {
     return cartItems.reduce((sum, item) => {
-      const total = parseFloat(item.totalPrice) || (parseFloat(item.price) * item.quantity);
+      const total =
+        parseFloat(item.totalPrice) || parseFloat(item.price) * item.quantity;
       return sum + total;
     }, 0);
   };
@@ -375,6 +371,7 @@ const CartPage = () => {
                     onClick={() => {
                       localStorage.removeItem("cart");
                       setCartItems([]);
+                      updateCartState(); // ADD THIS LINE
                       toast.success("Cart cleared successfully");
                     }}
                     className="mt-2 text-red-600 hover:text-red-800 font-medium"
@@ -687,19 +684,19 @@ const CartPage = () => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Address
-                    </label>
-                    <input
-                      type="text"
-                      name="address"
-                      value={userInfo.address}
-                      onChange={handleInputChange}
-                      placeholder="Address"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      disabled={isSubmitting}
-                    />
-                  </div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Address
+                  </label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={userInfo.address}
+                    onChange={handleInputChange}
+                    placeholder="Address"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    disabled={isSubmitting}
+                  />
+                </div>
 
                 {/* {userInfo.deliveryType === "delivery" && (
                   <div>
@@ -717,7 +714,6 @@ const CartPage = () => {
                     />
                   </div>
                 )} */}
-
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">

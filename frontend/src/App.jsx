@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import Loader from "./components/Loader";
 import TopButton from "./components/TopButton";
 import ChatAssistant from "./components/ChatAssistant";
+import { CartProvider } from './context/cartContext'; // ADD THIS IMPORT
 
 /* ✅ Load HOME normally (fastest) */
 import Home from "./pages/HomePage";
@@ -27,6 +28,7 @@ const QualityPage = lazy(() => import("./pages/QualityPage"));
 function App() {
   return (
     <>
+    <CartProvider>
       <Navbar />
       <ChatAssistant />
 
@@ -48,6 +50,7 @@ function App() {
           <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
       </Suspense>
+      
 
       <TopButton />
 
@@ -57,6 +60,7 @@ function App() {
         newestOnTop
         pauseOnHover
       />
+      </CartProvider>
     </>
   );
 }

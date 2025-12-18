@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import Footer from "../components/homecomponents/Footer";
 import bannerVideo from "../video/video.mp4";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast } from "react-toastify";''
 
 const ProductsSection = () => {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -53,7 +53,7 @@ const ProductsSection = () => {
   }, [products, activeCategory, searchQuery]);
 
   /* ================= ADD TO CART ================= */
-  const handleAddToCart = (product) => {
+   const handleAddToCart = (product) => {
     const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
     
     // Check if product already exists in cart
@@ -82,6 +82,8 @@ const ProductsSection = () => {
       localStorage.setItem("cart", JSON.stringify(updatedCart));
       toast.success(`${product.name} added to cart!`);
     }
+
+    updateCartState(); // ADD THIS LINE - This updates the cart count in navbar
 
     setOrderMessageProduct(product);
     setShowOrderMessage(true);

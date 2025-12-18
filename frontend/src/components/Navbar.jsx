@@ -1,11 +1,21 @@
-import React, { useState } from "react";
-import { Search, Menu, X, ChevronDown, Facebook, Instagram, Youtube } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import {
+  Search,
+  Menu,
+  X,
+  ChevronDown,
+  Facebook,
+  Instagram,
+  Youtube,
+} from "lucide-react";
 import { NavLink, Link } from "react-router-dom";
 import logo from "../assets/logo.jpg";
+import { useCart } from "../context/cartContext"; // Import the hook
 
 const ResponsiveNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPagesOpen, setIsPagesOpen] = useState(false);
+    const { cartCount } = useCart();
 
   const navItems = [
     { label: "Home", href: "/" },
@@ -26,9 +36,21 @@ const ResponsiveNavbar = () => {
   ];
 
   const socialLinks = [
-    { icon: <Facebook size={20} />, label: "Facebook", href: "https://www.facebook.com/NayaSuccessAxis/" },
-    { icon: <Instagram size={20} />, label: "WhatsApp", href: "https://www.instagram.com/nayasuccessaxisfarms/" },
-    { icon: <Youtube size={20} />, label: "Youtube", href: "https://youtu.be/huUjY541_jo?si=4b3kuwjj77b7Ttl6" },
+    {
+      icon: <Facebook size={20} />,
+      label: "Facebook",
+      href: "https://www.facebook.com/NayaSuccessAxis/",
+    },
+    {
+      icon: <Instagram size={20} />,
+      label: "WhatsApp",
+      href: "https://www.instagram.com/nayasuccessaxisfarms/",
+    },
+    {
+      icon: <Youtube size={20} />,
+      label: "Youtube",
+      href: "https://youtu.be/huUjY541_jo?si=4b3kuwjj77b7Ttl6",
+    },
   ];
 
   return (
@@ -38,7 +60,10 @@ const ResponsiveNavbar = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             {/* Logo */}
-            <Link to="/" className="text-xl font-bold text-lime-400 transition-colors">
+            <Link
+              to="/"
+              className="text-xl font-bold text-lime-400 transition-colors"
+            >
               <img src={logo} alt="logo" className="w-14 h-14" />
             </Link>
           </div>
@@ -51,7 +76,9 @@ const ResponsiveNavbar = () => {
                 to={item.href}
                 className={({ isActive }) =>
                   `px-4 py-2 text-sm font-medium transition duration-200 hover:scale-105 ${
-                    isActive ? "text-lime-400" : "text-gray-700 hover:text-lime-500"
+                    isActive
+                      ? "text-lime-400"
+                      : "text-gray-700 hover:text-lime-500"
                   }`
                 }
               >
@@ -83,6 +110,33 @@ const ResponsiveNavbar = () => {
                 ))}
               </div>
             </div>
+
+            {/* Cart */}
+            <Link
+              to="/cart"
+              className="relative hidden md:inline-flex items-center p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <svg
+                className="w-6 h-6 text-gray-700"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
+              </svg>
+
+              {/* Cart Count Badge - Only shows when there are items */}
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-bold text-white bg-red-600 rounded-full">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
+            </Link>
           </div>
 
           <div className="hidden lg:flex items-center space-x-1">
@@ -90,8 +144,8 @@ const ResponsiveNavbar = () => {
               <Link
                 key={item.label}
                 to={item.href}
-                target="_blank" 
-                  rel="noopener noreferrer"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-700 hover:text-green-600 px-4 py-2 text-sm font-medium transition duration-200 hover:scale-105"
               >
                 {item.icon}
@@ -100,12 +154,40 @@ const ResponsiveNavbar = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden p-2 rounded-md text-gray-700 hover:text-green-600 hover:bg-gray-100 transition"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div>
+            {/* Cart */}
+            <Link
+              to="/cart"
+              className="relative mr-4 lg:hidden inline-flex items-center p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <svg
+                className="w-6 h-6 text-gray-700"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
+              </svg>
+
+              {/* Cart Count Badge - Only shows when there are items */}
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-bold text-white bg-red-600 rounded-full">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
+            </Link>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2 rounded-md text-gray-700 hover:text-green-600 hover:bg-gray-100 transition"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* MOBILE MENU OVERLAY */}
@@ -130,10 +212,17 @@ const ResponsiveNavbar = () => {
           >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b">
-              <Link to="/" onClick={() => setIsMenuOpen(false)} className="text-xl font-bold text-green-400">
+              <Link
+                to="/"
+                onClick={() => setIsMenuOpen(false)}
+                className="text-xl font-bold text-green-400"
+              >
                 <img src={logo} alt="logo" className="w-16 h-16" />
               </Link>
-              <button onClick={() => setIsMenuOpen(false)} className="p-2 rounded-md text-gray-700 hover:text-green-600">
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="p-2 rounded-md text-gray-700 hover:text-green-600"
+              >
                 <X size={24} />
               </button>
             </div>
@@ -165,12 +254,19 @@ const ResponsiveNavbar = () => {
                     className="w-full flex items-center justify-between text-gray-700 hover:text-green-600 hover:bg-green-50 px-4 py-3 rounded-md text-base font-medium transition-colors"
                   >
                     Pages
-                    <ChevronDown size={20} className={`transition-transform duration-300 ${isPagesOpen ? "rotate-180" : ""}`} />
+                    <ChevronDown
+                      size={20}
+                      className={`transition-transform duration-300 ${
+                        isPagesOpen ? "rotate-180" : ""
+                      }`}
+                    />
                   </button>
 
                   <div
                     className={`overflow-hidden transition-all duration-300 ${
-                      isPagesOpen ? "max-h-60 opacity-100 mt-1" : "max-h-0 opacity-0"
+                      isPagesOpen
+                        ? "max-h-60 opacity-100 mt-1"
+                        : "max-h-0 opacity-0"
                     }`}
                   >
                     {pagesDropdownItems.map((item) => (
