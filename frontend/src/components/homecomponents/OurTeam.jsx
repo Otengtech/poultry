@@ -125,7 +125,7 @@ const OurTeam = () => {
             {member.title}
           </p>
           <p className="text-xs text-gray-600 mb-4 line-clamp-2">
-            {member.description || "Expert in poultry management"}
+            {member.bio}
           </p>
         </div>
 
