@@ -4,13 +4,13 @@ import BannerImage from "../assets/order.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useCart } from '../context/cartContext'; // Import
+import { useCart } from "../context/cartContext"; // Import
 
 const CartPage = () => {
   const { cartItems, updateCart } = useCart(); // CHANGE HERE - Get cartItems and updateCart from context
   const navigate = useNavigate();
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
-  
+
   const [userInfo, setUserInfo] = useState({
     name: "",
     phone: "",
@@ -63,14 +63,34 @@ const CartPage = () => {
     }));
   };
 
+  const phoneRegex = /^\d{10}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const nameRegex = /^[A-Za-z\s'-]{2,50}$/;
+
   const handleCheckout = async () => {
     // Validate required fields
     if (!userInfo.name || !userInfo.phone) {
       toast.error("Please fill in name and phone fields");
       return;
     }
+    if (phoneRegex.test(userInfo.phone) === false) {
+      toast.error("Please enter a valid phone number");
+      return;
+    }
+    if (nameRegex.test(userInfo.name) === false) {
+      toast.error(
+        "Please enter a valid name (letters, spaces, hyphens, apostrophes only)"
+      );
+      return false;
+    }
 
-    if (!userInfo.address){
+    // Validate email
+    if (emailRegex.test(userInfo.email) === false) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    if (!userInfo.address) {
       toast.error("Please fill in address field");
       return;
     }
@@ -89,7 +109,8 @@ const CartPage = () => {
         name: item.name,
         price: parseFloat(item.price),
         quantity: item.quantity,
-        totalPrice: parseFloat(item.totalPrice) || (parseFloat(item.price) * item.quantity),
+        totalPrice:
+          parseFloat(item.totalPrice) || parseFloat(item.price) * item.quantity,
         images: item.image ? [item.image] : [],
         category: item.category || "General",
       }));
@@ -111,7 +132,7 @@ const CartPage = () => {
 
       // Send to your API
       const API_URL = import.meta.env.VITE_API_URL;
-      
+
       try {
         const response = await axios.post(`${API_URL}/order`, orderData, {
           headers: {
@@ -121,7 +142,8 @@ const CartPage = () => {
 
         if (response.data.success) {
           // Save order to localStorage for backup
-          const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
+          const existingOrders =
+            JSON.parse(localStorage.getItem("orders")) || [];
           localStorage.setItem(
             "orders",
             JSON.stringify([...existingOrders, orderData])
@@ -151,11 +173,12 @@ const CartPage = () => {
         }
       } catch (error) {
         // Check if it's a network error or backend not available
-        if (error.code === 'ERR_NETWORK' || !error.response) {
+        if (error.code === "ERR_NETWORK" || !error.response) {
           // Fallback: Save to localStorage if API fails
           toast.warning("Backend not connected. Saving order locally...");
-          
-          const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
+
+          const existingOrders =
+            JSON.parse(localStorage.getItem("orders")) || [];
           localStorage.setItem(
             "orders",
             JSON.stringify([...existingOrders, orderData])
@@ -177,7 +200,8 @@ const CartPage = () => {
           navigate("/order");
         } else if (error.response) {
           // Server responded with error
-          const errorMsg = error.response.data?.message || "Server error occurred";
+          const errorMsg =
+            error.response.data?.message || "Server error occurred";
           throw new Error(errorMsg);
         } else {
           throw error;
@@ -185,9 +209,7 @@ const CartPage = () => {
       }
     } catch (error) {
       console.error("Checkout error:", error);
-      toast.error(
-        error.message || "Failed to place order. Please try again."
-      );
+      toast.error(error.message || "Failed to place order. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -195,7 +217,8 @@ const CartPage = () => {
 
   const calculateTotal = () => {
     return cartItems.reduce((sum, item) => {
-      const total = parseFloat(item.totalPrice) || (parseFloat(item.price) * item.quantity);
+      const total =
+        parseFloat(item.totalPrice) || parseFloat(item.price) * item.quantity;
       return sum + total;
     }, 0);
   };
@@ -361,8 +384,7 @@ const CartPage = () => {
                   <button
                     onClick={() => {
                       localStorage.removeItem("cart");
-                      setCartItems([]);
-      updateCart([]); // CHANGE THIS LINE
+                      updateCart([]); // CHANGE THIS LINE
                       toast.success("Cart cleared successfully");
                     }}
                     className="mt-2 text-red-600 hover:text-red-800 font-medium"
@@ -538,7 +560,7 @@ const CartPage = () => {
                     items in cart
                   </p>
                 </div>
-                <div className="flex space-x-4 mt-4 md:mt-0">
+                <div className="flex flex-col md:flex-row space-x-4 mt-4 md:mt-0">
                   <Link
                     to="/products"
                     className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
