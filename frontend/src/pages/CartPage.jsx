@@ -4,14 +4,13 @@ import BannerImage from "../assets/order.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useCart } from "../context/cartContext"; // ADD THIS IMPORT
+import { useCart } from '../context/cartContext'; // Import
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const { cartItems, updateCart } = useCart(); // CHANGE HERE - Get cartItems and updateCart from context
   const navigate = useNavigate();
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
-  const { updateCartState } = useCart(); // ADD THIS LINE
-
+  
   const [userInfo, setUserInfo] = useState({
     name: "",
     phone: "",
@@ -22,20 +21,17 @@ const CartPage = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCartItems(savedCart);
-  }, []);
+  // REMOVE this useEffect - we don't need it anymore
+  // useEffect(() => {
+  //   const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+  //   setCartItems(savedCart);
+  // }, []);
 
-  const updateLocalStorage = (updatedCart) => {
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    updateCartState(); // ADD THIS LINE - Updates navbar cart count
-  };
+  // REMOVE updateLocalStorage function - use updateCart instead
 
   const handleDeleteItem = (index) => {
     const updatedCart = cartItems.filter((_, idx) => idx !== index);
-    updateLocalStorage(updatedCart);
+    updateCart(updatedCart); // CHANGE THIS LINE
     toast.success("Item removed from cart");
   };
 
@@ -44,7 +40,7 @@ const CartPage = () => {
     updatedCart[index].quantity += 1;
     updatedCart[index].totalPrice =
       updatedCart[index].quantity * parseFloat(updatedCart[index].price);
-    updateLocalStorage(updatedCart);
+    updateCart(updatedCart); // CHANGE THIS LINE
   };
 
   const handleDecrement = (index) => {
@@ -53,32 +49,34 @@ const CartPage = () => {
       updatedCart[index].quantity -= 1;
       updatedCart[index].totalPrice =
         updatedCart[index].quantity * parseFloat(updatedCart[index].price);
-      updateLocalStorage(updatedCart);
+      updateCart(updatedCart); // CHANGE THIS LINE
     } else {
       toast.info("Minimum quantity is 1. Click remove to delete item.");
     }
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserInfo((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleCheckout = async () => {
     // Validate required fields
     if (!userInfo.name || !userInfo.phone) {
-      toast.error("Please fill in name and phoone fields");
+      toast.error("Please fill in name and phone fields");
       return;
     }
 
-    if (!userInfo.address) {
+    if (!userInfo.address){
       toast.error("Please fill in address field");
       return;
     }
 
     if (cartItems.length === 0) {
       toast.error("Your cart is empty");
-      return;
-    }
-
-    // If delivery type is 'delivery', address is required
-    if (userInfo.deliveryType === "delivery" && !userInfo.address.trim()) {
-      toast.error("Please provide delivery address");
       return;
     }
 
@@ -91,9 +89,8 @@ const CartPage = () => {
         name: item.name,
         price: parseFloat(item.price),
         quantity: item.quantity,
-        totalPrice:
-          parseFloat(item.totalPrice) || parseFloat(item.price) * item.quantity,
-        images: item.image ? [item.image] : [], // Already a Cloudinary URL
+        totalPrice: parseFloat(item.totalPrice) || (parseFloat(item.price) * item.quantity),
+        images: item.image ? [item.image] : [],
         category: item.category || "General",
       }));
 
@@ -110,11 +107,11 @@ const CartPage = () => {
         items: formattedItems,
       };
 
-      console.log("Sending order data:", orderData); // For debugging
+      console.log("Sending order data:", orderData);
 
       // Send to your API
       const API_URL = import.meta.env.VITE_API_URL;
-
+      
       try {
         const response = await axios.post(`${API_URL}/order`, orderData, {
           headers: {
@@ -124,21 +121,17 @@ const CartPage = () => {
 
         if (response.data.success) {
           // Save order to localStorage for backup
-          const existingOrders =
-            JSON.parse(localStorage.getItem("orders")) || [];
+          const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
           localStorage.setItem(
             "orders",
             JSON.stringify([...existingOrders, orderData])
           );
 
-          // Clear cart
-          localStorage.removeItem("cart");
-          setCartItems([]);
+          // Clear cart using updateCart
+          updateCart([]); // CHANGE THIS LINE - This will clear cart and update navbar
 
           // Show success message
-          toast.success(
-            `Order placed successfully! Order #${orderData.orderNumber}`
-          );
+          toast.success(`Order placed successfully!`);
 
           // Reset form and close modal
           setShowCheckoutModal(false);
@@ -158,22 +151,20 @@ const CartPage = () => {
         }
       } catch (error) {
         // Check if it's a network error or backend not available
-        if (error.code === "ERR_NETWORK" || !error.response) {
+        if (error.code === 'ERR_NETWORK' || !error.response) {
           // Fallback: Save to localStorage if API fails
           toast.warning("Backend not connected. Saving order locally...");
-
-          const existingOrders =
-            JSON.parse(localStorage.getItem("orders")) || [];
+          
+          const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
           localStorage.setItem(
             "orders",
             JSON.stringify([...existingOrders, orderData])
           );
 
-          // Clear cart
-          localStorage.removeItem("cart");
-          setCartItems([]);
+          // Clear cart using updateCart
+          updateCart([]); // CHANGE THIS LINE - This will clear cart and update navbar
 
-          toast.success(`Order saved locally! Order #${orderData.orderNumber}`);
+          toast.success(`Order saved locally!`);
           setShowCheckoutModal(false);
           setUserInfo({
             name: "",
@@ -186,8 +177,7 @@ const CartPage = () => {
           navigate("/order");
         } else if (error.response) {
           // Server responded with error
-          const errorMsg =
-            error.response.data?.message || "Server error occurred";
+          const errorMsg = error.response.data?.message || "Server error occurred";
           throw new Error(errorMsg);
         } else {
           throw error;
@@ -195,7 +185,9 @@ const CartPage = () => {
       }
     } catch (error) {
       console.error("Checkout error:", error);
-      toast.error(error.message || "Failed to place order. Please try again.");
+      toast.error(
+        error.message || "Failed to place order. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -203,8 +195,7 @@ const CartPage = () => {
 
   const calculateTotal = () => {
     return cartItems.reduce((sum, item) => {
-      const total =
-        parseFloat(item.totalPrice) || parseFloat(item.price) * item.quantity;
+      const total = parseFloat(item.totalPrice) || (parseFloat(item.price) * item.quantity);
       return sum + total;
     }, 0);
   };
@@ -371,7 +362,7 @@ const CartPage = () => {
                     onClick={() => {
                       localStorage.removeItem("cart");
                       setCartItems([]);
-                      updateCartState(); // ADD THIS LINE
+      updateCart([]); // CHANGE THIS LINE
                       toast.success("Cart cleared successfully");
                     }}
                     className="mt-2 text-red-600 hover:text-red-800 font-medium"

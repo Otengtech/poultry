@@ -6,15 +6,26 @@ export const CartProvider = ({ children }) => {
   const [cartCount, setCartCount] = useState(0);
   const [cartItems, setCartItems] = useState([]);
 
-  // Function to update cart state from localStorage
   const updateCartState = () => {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-    setCartCount(totalItems);
-    setCartItems(cart);
+    try {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+      setCartCount(totalItems);
+      setCartItems(cart);
+    } catch (error) {
+      console.error('Error reading cart from localStorage:', error);
+      setCartCount(0);
+      setCartItems([]);
+    }
   };
 
-  // Listen for storage changes (cross-tab sync)
+  // Function to update cart and trigger re-render
+  const updateCart = (updatedCart) => {
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    updateCartState(); // This updates both count and items
+    window.dispatchEvent(new StorageEvent('storage', { key: 'cart' })); // For cross-tab sync
+  };
+
   useEffect(() => {
     updateCartState();
     
@@ -29,7 +40,12 @@ export const CartProvider = ({ children }) => {
   }, []);
 
   return (
-    <CartContext.Provider value={{ cartCount, updateCartState }}>
+    <CartContext.Provider value={{ 
+      cartCount, 
+      cartItems,
+      updateCartState,
+      updateCart 
+    }}>
       {children}
     </CartContext.Provider>
   );

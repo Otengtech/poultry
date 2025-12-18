@@ -2,7 +2,9 @@ import React, { useState, useMemo, useEffect } from "react";
 import Footer from "../components/homecomponents/Footer";
 import bannerVideo from "../video/video.mp4";
 import axios from "axios";
-import { toast } from "react-toastify";''
+import { toast } from "react-toastify";
+import { useCart } from '../context/cartContext';
+
 
 const ProductsSection = () => {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -11,6 +13,8 @@ const ProductsSection = () => {
   const [showOrderMessage, setShowOrderMessage] = useState(false);
   const [orderMessageProduct, setOrderMessageProduct] = useState(null);
   const [products, setProducts] = useState([]);
+    const { updateCart } = useCart(); // CHANGE THIS LINE
+
 
   const productCategories = [
     { id: "all", name: "All" },
@@ -53,7 +57,7 @@ const ProductsSection = () => {
   }, [products, activeCategory, searchQuery]);
 
   /* ================= ADD TO CART ================= */
-   const handleAddToCart = (product) => {
+  const handleAddToCart = (product) => {
     const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
     
     // Check if product already exists in cart
@@ -68,7 +72,7 @@ const ProductsSection = () => {
       updatedCart[existingProductIndex].totalPrice = 
         updatedCart[existingProductIndex].quantity * parseFloat(product.price);
       
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      updateCart(updatedCart); // CHANGE THIS LINE
       toast.info(`Increased ${product.name} quantity in cart`);
     } else {
       // Add new product to cart with quantity 1
@@ -79,11 +83,9 @@ const ProductsSection = () => {
       };
 
       const updatedCart = [...existingCart, productWithQuantity];
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      updateCart(updatedCart); // CHANGE THIS LINE
       toast.success(`${product.name} added to cart!`);
     }
-
-    updateCartState(); // ADD THIS LINE - This updates the cart count in navbar
 
     setOrderMessageProduct(product);
     setShowOrderMessage(true);
@@ -93,6 +95,7 @@ const ProductsSection = () => {
       setOrderMessageProduct(null);
     }, 2000);
   };
+
 
   return (
     <div className="min-h-screen relative">
