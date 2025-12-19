@@ -152,7 +152,7 @@ const AboutSection = () => {
           className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 backdrop-blur-sm"
           onClick={handleBackdropClick}
         >
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden animate-modal-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-hide animate-modal-fade-in">
             {/* Modal Header */}
             <div className="relative p-6 border-b border-gray-200">
               <button
