@@ -563,7 +563,7 @@ const CartPage = () => {
                 <div className="flex flex-col md:flex-row space-x-4 mt-4 md:mt-0">
                   <Link
                     to="/products"
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 mb-4 md:mb-0 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
                   >
                     Continue Shopping
                   </Link>
