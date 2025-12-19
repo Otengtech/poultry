@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useScrollReveal } from "../../animation/useScrollReveal";
 
 /* =========================
    OPERATION DATA
@@ -462,9 +461,6 @@ const HowWeOperate = () => {
                     <div className="flex items-center gap-1 text-gray-600">
                       <Clock className="h-4 w-4" />
                       <span>{channel.deliveryTime}</span>
-                    </div>
-                    <div className="text-green-700 font-semibold">
-                      {channel.minOrder}
                     </div>
                   </div>
                 </div>

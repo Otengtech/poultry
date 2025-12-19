@@ -59,7 +59,7 @@ const OurTeam = () => {
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
                 <Link
-                  to="/team"
+                  to="/about"
                   className="inline-flex items-center px-8 py-4 bg-lime-400 text-gray-800 font-semibold rounded-full shadow-lg hover:shadow-xl transition-all group"
                 >
                   View Full Team

@@ -15,21 +15,19 @@ import { useCart } from "../context/cartContext"; // Import the hook
 const ResponsiveNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPagesOpen, setIsPagesOpen] = useState(false);
-    const { cartCount } = useCart();
+  const { cartCount } = useCart();
 
   const navItems = [
     { label: "Home", href: "/" },
     { label: "Products", href: "/products" },
     { label: "Blog", href: "/blog" },
-    { label: "Event", href: "/event" },
     { label: "Contact", href: "/contact" },
     { label: "About", href: "/about" },
   ];
-
+  
   const pagesDropdownItems = [
-    { label: "My Orders", href: "/order" },
-    { label: "Qualities", href: "/quality" },
-    { label: "Our Team", href: "/team" },
+    { label: "My Orders", href: "/orders" },
+    { label: "Event", href: "/event" },
     { label: "Reviews", href: "/review" },
     { label: "Privacy", href: "/privacy" },
     { label: "FAQ", href: "/faq" },

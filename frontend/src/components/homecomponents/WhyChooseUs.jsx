@@ -220,12 +220,6 @@ const AboutSection = () => {
                   <p className="text-gray-200 mb-6 max-w-lg">
                     {activeQuality.description}
                   </p>
-                  <Link
-                    to="/quality"
-                    className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 border border-white/20"
-                  >
-                    Qualities Page <Icons.ArrowRight className="h-5 w-5" />
-                  </Link>
                 </div>
               </div>
             </div>

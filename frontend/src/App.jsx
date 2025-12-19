@@ -19,11 +19,9 @@ const ContactPage = lazy(() => import("./pages/ContactPage"));
 const ReviewPage = lazy(() => import("./pages/ReviewPage"));
 const BlogPage = lazy(() => import("./pages/BlogPage"));
 const FAQPage = lazy(() => import("./pages/FAQPage"));
-const TeamPage = lazy(() => import("./pages/TeamPage"));
 const CartPage = lazy(() => import("./pages/CartPage"));
 const OrderPage = lazy(() => import("./pages/OrderPage"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
-const QualityPage = lazy(() => import("./pages/QualityPage"));
 const SupplyPage = lazy(() => import("./pages/SupplyPage"));
 
 function App() {
@@ -43,11 +41,9 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/review" element={<ReviewPage />} />
-          <Route path="/team" element={<TeamPage />} />
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/cart" element={<CartPage />} />
-          <Route path="/order" element={<OrderPage />} />
-          <Route path="/quality" element={<QualityPage />} />
+          <Route path="/orders" element={<OrderListPage />} />
           <Route path="/event" element={<SupplyPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>

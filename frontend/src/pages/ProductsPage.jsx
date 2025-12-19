@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import Footer from "../components/homecomponents/Footer";
-import bannerVideo from "../video/video.mp4";
+import bannerVideo from "../video/v2.mp4";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useCart } from '../context/cartContext';

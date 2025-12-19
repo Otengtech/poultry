@@ -1,10 +1,23 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useScrollReveal } from "../animation/useScrollReveal";
 import Footer from "../components/homecomponents/Footer";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaFacebookF, FaInstagram, FaWhatsapp, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaWhatsapp,
+  FaTwitter,
+  FaLinkedinIn,
+  FaTimes,
+  FaPhone,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaUser,
+  FaBriefcase,
+  FaGraduationCap,
+} from "react-icons/fa";
 
 const data = {
   banner: {
@@ -43,7 +56,8 @@ const data = {
   },
   values_section: {
     title: "Products",
-    description: "The business currently has the following products on the shelf;",
+    description:
+      "The business currently has the following products on the shelf;",
     products: [
       "Poultry / Chicken Eggs",
       "Broiler and Layer Chickens",
@@ -60,43 +74,276 @@ const data = {
   },
   achievement_section: {
     title: "Achievements",
-    description:" As a business, we have some remarkable achievements to date, including; acres of land acquired, a borehole to supply water, Five(5) Coops, and Five(5) room accommodation for workers, space outlined for the chicken chips production, access to market and paying customers, and business operations from 2 locations; Adenta and Aburi. We have received business support, both tangible and intangible, from many institutions including the NEIP, GEA, AdMa, GPP, TEF, MDF, GIZ, British Council and the Netherlands."
+    description:
+      " As a business, we have some remarkable achievements to date, including; acres of land acquired, a borehole to supply water, Five(5) Coops, and Five(5) room accommodation for workers, space outlined for the chicken chips production, access to market and paying customers, and business operations from 2 locations; Adenta and Aburi. We have received business support, both tangible and intangible, from many institutions including the NEIP, GEA, AdMa, GPP, TEF, MDF, GIZ, British Council and the Netherlands.",
   },
   quality_assurance: {
     title: "Quality Assurance",
-    description: "Guided by Standard Operating Procedures (SOP’s) developed with the CSIR and vetted by the FDA a production flow will be developed to guide production. Staff will be trained periodically to ensure compliance. A Quality Assurance member of the management team will be appointed to supervise and vet each batch of production before packaging is done for the market."
-  }
+    description:
+      "Guided by Standard Operating Procedures (SOP's) developed with the CSIR and vetted by the FDA a production flow will be developed to guide production. Staff will be trained periodically to ensure compliance. A Quality Assurance member of the management team will be appointed to supervise and vet each batch of production before packaging is done for the market.",
+  },
 };
 
 const AboutSection = () => {
   const bannerRef = useScrollReveal();
   const storyTitleRef = useScrollReveal();
   const storyTextRef = useScrollReveal();
-  const missionRef = useScrollReveal();
-  const visionRef = useScrollReveal();
   const productsRef = useScrollReveal();
   const problemSolutionRef = useScrollReveal();
   const titleRef = useScrollReveal();
-    const textRef = useScrollReveal();
-    const cardRefs = useScrollReveal();
+  const textRef = useScrollReveal();
 
   const [staff, setStaff] = useState([]);
-    const API_URL = import.meta.env.VITE_API_URL;
-  
-    useEffect(() => {
-      const fetchStaffs = async () => {
-        try {
-          const res = await axios.get(`${API_URL}/get-staff`);
-          setStaff(res.data.staff);
-        } catch (err) {
-          toast.error("error fetching staffs ", err);
-        }
-      };
-      fetchStaffs();
-    }, []);  
+  const [selectedStaff, setSelectedStaff] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    const fetchStaffs = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/get-staff`);
+        setStaff(res.data.staff);
+      } catch (err) {
+        toast.error("error fetching staffs ", err);
+      }
+    };
+    fetchStaffs();
+  }, []);
+
+  // Open modal with staff details
+  const openStaffModal = (staffMember) => {
+    setSelectedStaff(staffMember);
+    setIsModalOpen(true);
+    // Prevent body scrolling when modal is open
+    document.body.style.overflow = "hidden";
+  };
+
+  // Close modal
+  const closeStaffModal = () => {
+    setIsModalOpen(false);
+    setSelectedStaff(null);
+    // Restore body scrolling
+    document.body.style.overflow = "auto";
+  };
+
+  // Close modal when clicking outside content
+  const handleBackdropClick = (e) => {
+    if (e.target.classList.contains("modal-backdrop")) {
+      closeStaffModal();
+    }
+  };
+
+  // Close modal with Escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && isModalOpen) {
+        closeStaffModal();
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [isModalOpen]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-orange-50">
+      {/* Staff Details Modal */}
+      {isModalOpen && selectedStaff && (
+        <div
+          className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 backdrop-blur-sm"
+          onClick={handleBackdropClick}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden animate-modal-fade-in">
+            {/* Modal Header */}
+            <div className="relative p-6 border-b border-gray-200">
+              <button
+                onClick={closeStaffModal}
+                className="absolute right-6 top-6 p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 z-10"
+                aria-label="Close modal"
+              >
+                <FaTimes className="w-6 h-6 text-gray-600" />
+              </button>
+
+              <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                {/* Staff Image */}
+                <div className="relative w-40 h-40 flex-shrink-0">
+                  <div className="absolute inset-0 bg-gradient-to-br from-lime-500 to-emerald-600 rounded-2xl transform rotate-3" />
+                  <img
+                    src={selectedStaff.image}
+                    alt={selectedStaff.name}
+                    className="relative w-full h-full object-cover rounded-2xl border-4 border-white shadow-lg"
+                    onError={(e) => {
+                      e.target.src = "https://via.placeholder.com/400x400";
+                    }}
+                  />
+                </div>
+
+                {/* Staff Basic Info */}
+                <div className="flex-1 text-center md:text-left">
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                    {selectedStaff.name}
+                  </h2>
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-lime-100 text-lime-800 rounded-full mb-4">
+                    <FaBriefcase className="w-4 h-4" />
+                    <span className="font-semibold">{selectedStaff.title}</span>
+                  </div>
+                  <p className="text-gray-600 mb-4">
+                    {selectedStaff.position} at NAYA SUCCESS AXIS
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
+              <div className="grid md:grid-cols-3 gap-8">
+                {/* Left Column - Bio */}
+                <div className="md:col-span-2">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">
+                    Biography
+                  </h3>
+                  <p className="text-gray-700 leading-relaxed">
+                    {selectedStaff.bio ||
+                      `${selectedStaff.name} is a dedicated professional with extensive experience in poultry farming and agribusiness management. They play a crucial role in NAYA SUCCESS AXIS's mission to deliver high-quality poultry products while promoting sustainable farming practices.`}
+                  </p>
+
+                  {/* Responsibilities */}
+                  {selectedStaff.responsibilities && (
+                    <div className="mt-8">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-3">
+                        Key Responsibilities
+                      </h4>
+                      <ul className="space-y-2">
+                        {selectedStaff.responsibilities
+                          .split(",")
+                          .map((item, index) => (
+                            <li key={index} className="flex items-start gap-2">
+                              <div className="w-2 h-2 mt-2 bg-lime-500 rounded-full flex-shrink-0" />
+                              <span className="text-gray-700">{item.trim()}</span>
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
+                {/* Right Column - Contact & Details */}
+                <div className="space-y-6">
+                  {/* Contact Information */}
+                  <div className="bg-gray-50 rounded-xl p-5">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                      Contact Information
+                    </h4>
+                    <div className="space-y-3">
+                      {selectedStaff.email && (
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-blue-50 rounded-lg">
+                            <FaEnvelope className="w-4 h-4 text-blue-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Email</p>
+                            <a
+                              href={`mailto:${selectedStaff.email}`}
+                              className="text-blue-600 hover:underline font-medium"
+                            >
+                              {selectedStaff.email}
+                            </a>
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedStaff.phone && (
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-green-50 rounded-lg">
+                            <FaPhone className="w-4 h-4 text-green-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Phone</p>
+                            <a
+                              href={`tel:${selectedStaff.phone}`}
+                              className="text-gray-900 font-medium"
+                            >
+                              {selectedStaff.phone}
+                            </a>
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedStaff.location && (
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-orange-50 rounded-lg">
+                            <FaMapMarkerAlt className="w-4 h-4 text-orange-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Location</p>
+                            <p className="text-gray-900 font-medium">
+                              {selectedStaff.location}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Social Media */}
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                      Connect
+                    </h4>
+                    <div className="flex gap-3">
+                      <a
+                        href="#"
+                        className="p-3 bg-blue-100 text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-110"
+                        aria-label="Facebook"
+                      >
+                        <FaFacebookF className="w-5 h-5" />
+                      </a>
+                      <a
+                        href="#"
+                        className="p-3 bg-pink-100 text-pink-600 rounded-full hover:bg-pink-600 hover:text-white transition-all duration-300 hover:scale-110"
+                        aria-label="Instagram"
+                      >
+                        <FaInstagram className="w-5 h-5" />
+                      </a>
+                      <a
+                        href="#"
+                        className="p-3 bg-green-100 text-green-600 rounded-full hover:bg-green-600 hover:text-white transition-all duration-300 hover:scale-110"
+                        aria-label="WhatsApp"
+                      >
+                        <FaWhatsapp className="w-5 h-5" />
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Join Date */}
+                  {selectedStaff.joinDate && (
+                    <div className="bg-lime-50 rounded-xl p-5">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                        Member Since
+                      </h4>
+                      <p className="text-2xl font-bold text-lime-700">
+                        {selectedStaff.joinDate}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-6 border-t border-gray-200 bg-gray-50">
+              <div className="flex justify-between items-center">
+                <button
+                  onClick={closeStaffModal}
+                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200 font-medium"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Banner */}
       <div
         className="relative w-full h-96 lg:h-[420px] bg-cover bg-center"
@@ -163,8 +410,13 @@ const AboutSection = () => {
             </ul>
           </div>
           {/* Products */}
-          <div ref={productsRef} className="scroll-reveal p-8 rounded-3xl bg-amber-50">
-            <h3 className="text-3xl font-bold mb-4">{data.values_section.title}</h3>
+          <div
+            ref={productsRef}
+            className="scroll-reveal p-8 rounded-3xl bg-amber-50"
+          >
+            <h3 className="text-3xl font-bold mb-4">
+              {data.values_section.title}
+            </h3>
             <p className="mb-6">{data.values_section.description}</p>
             <ul className="space-y-2">
               {data.values_section.products.map((p, i) => (
@@ -189,15 +441,19 @@ const AboutSection = () => {
 
       <section className="py-10">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10">
-              {/* Acievement */}
+          {/* Acievement */}
           <div className="p-8 rounded-3xl bg-amber-50">
-            <h3 className="text-3xl font-bold mb-4">{data.achievement_section.title}</h3>
+            <h3 className="text-3xl font-bold mb-4">
+              {data.achievement_section.title}
+            </h3>
             <p className="mb-6">{data.achievement_section.description}</p>
           </div>
 
           {/* Quality Assurance */}
           <div className="p-8 rounded-3xl bg-amber-50">
-            <h3 className="text-3xl font-bold mb-4">{data.quality_assurance.title}</h3>
+            <h3 className="text-3xl font-bold mb-4">
+              {data.quality_assurance.title}
+            </h3>
             <p className="mb-6">{data.quality_assurance.description}</p>
           </div>
         </div>
@@ -221,14 +477,14 @@ const AboutSection = () => {
                 </h1>
                 <div className="h-1 w-20 bg-lime-500 rounded-full mx-auto lg:mx-0" />
               </div>
-  
+
               {/* DESCRIPTION */}
               <div ref={textRef} className="scroll-reveal mt-8 space-y-6">
                 <p className="text-lg lg:text-xl text-gray-600 leading-relaxed text-center lg:text-left">
-                  Our leaders works really hard to keep this wonderful company going to produce and meet consumers' needs.
+                  Our leaders works really hard to keep this wonderful company
+                  going to produce and meet consumers' needs.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
-                  
                   {/* MEMBER THUMBNAILS */}
                   <div className="flex -space-x-2">
                     {staff.slice(0, 4).map((member, idx) => (
@@ -251,108 +507,115 @@ const AboutSection = () => {
               </div>
             </div>
           </div>
-  
+
           {/* HORIZONTAL SCROLL STAFF CARDS */}
           <div className="relative">
             {/* Scroll Container */}
             <div className="flex gap-6 md:gap-8 pb-6 overflow-x-auto scrollbar-hide">
               {staff.slice(0, 3).map((member, index) => (
-                <div key={index} className="flex-shrink-0 w-[280px] md:w-[320px] lg:w-[350px]">
-                  {/* CARD DESIGN 1: MODERN PROFILE CARD */}
-                  <div className="group relative bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 h-full">
-                    {/* Background Pattern */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-lime-50/50 to-emerald-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
+                <div
+                  key={index}
+                  className="flex-shrink-0 w-[200px] md:w-[220px] lg:w-[240px] cursor-pointer transform transition-transform duration-300 hover:scale-[1.03]"
+                  onClick={() => openStaffModal(member)}
+                >
+                  {/* COMPACT CARD DESIGN */}
+                  <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 h-full border border-gray-100 hover:border-lime-200">
                     {/* Image Container */}
-                    <div className="relative h-64 md:h-72 overflow-hidden">
+                    <div className="relative h-32 md:h-36 overflow-hidden rounded-t-xl">
                       <img
                         src={member.image}
                         alt={member.name}
-                        className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
+                        className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                         onError={(e) => {
                           e.target.src = "https://via.placeholder.com/400x400";
                         }}
                       />
-                      
-                      {/* Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-                      
-                      {/* Position Badge */}
-                      <div className="absolute top-4 left-4">
-                        <span className="px-4 py-2 text-xs font-bold text-white bg-lime-600/90 backdrop-blur-sm rounded-full">
+
+                      {/* Minimal Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+
+                      {/* Compact Position Badge */}
+                      <div className="absolute top-2 left-2">
+                        <span className="px-2 py-1 text-[10px] font-semibold text-white bg-lime-600/90 rounded">
                           {member.position}
                         </span>
                       </div>
                     </div>
-  
-                    {/* Content Area */}
-                    <div className="relative p-6">
+
+                    {/* Compact Content Area */}
+                    <div className="p-3 md:p-4">
                       <div className="text-center">
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        <h3 className="text-sm font-bold text-gray-900 mb-1 truncate">
                           {member.name}
                         </h3>
-                        <p className="text-sm font-semibold text-lime-600 mb-3">
+                        <p className="text-xs font-semibold text-lime-600 mb-2 truncate">
                           {member.title}
                         </p>
-                        <p className="text-sm text-gray-600 mb-6 line-clamp-3">
-                          {member.bio || "Expert in poultry management and animal welfare"}
+                        <p className="text-xs text-gray-500 mb-3 line-clamp-2 leading-snug">
+                          {member.bio || "Expert in poultry management"}
                         </p>
                       </div>
-  
-                      {/* Social Icons */}
-                      <div className="flex justify-center gap-3 mt-6 pt-4 border-t">
-                        <a
-                          href="#"
-                          className="p-2.5 bg-gray-100 text-gray-700 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-110"
+
+                      {/* Compact Social Icons */}
+                      <div className="flex justify-center gap-2 mt-3 pt-3 border-t border-gray-100">
+                        <div
+                          className="p-1.5 bg-gray-100 text-gray-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-200 hover:scale-110"
                           aria-label="Facebook"
                         >
-                          <FaFacebookF className="w-4 h-4" />
-                        </a>
-                        <a
-                          href="#"
-                          className="p-2.5 bg-gray-100 text-gray-700 rounded-full hover:bg-pink-600 hover:text-white transition-all duration-300 hover:scale-110"
+                          <FaFacebookF className="w-3 h-3" />
+                        </div>
+                        <div
+                          className="p-1.5 bg-gray-100 text-gray-600 rounded-full hover:bg-pink-600 hover:text-white transition-all duration-200 hover:scale-110"
                           aria-label="Instagram"
                         >
-                          <FaInstagram className="w-4 h-4" />
-                        </a>
-                        <a
-                          href="#"
-                          className="p-2.5 bg-gray-100 text-gray-700 rounded-full hover:bg-green-600 hover:text-white transition-all duration-300 hover:scale-110"
+                          <FaInstagram className="w-3 h-3" />
+                        </div>
+                        <div
+                          className="p-1.5 bg-gray-100 text-gray-600 rounded-full hover:bg-green-600 hover:text-white transition-all duration-200 hover:scale-110"
                           aria-label="WhatsApp"
                         >
-                          <FaWhatsapp className="w-4 h-4" />
-                        </a>
+                          <FaWhatsapp className="w-3 h-3" />
+                        </div>
                       </div>
                     </div>
-  
-                    {/* Corner Decoration */}
-                    <div className="absolute top-0 right-0 w-16 h-16 bg-lime-500/10 rounded-bl-full transform translate-x-8 -translate-y-8 group-hover:bg-lime-500/20 transition-colors duration-500" />
                   </div>
                 </div>
               ))}
             </div>
-  
+
             {/* Scroll Indicators - Optional */}
             <div className="flex justify-center items-center gap-2 mt-8">
               {staff.slice(0, 3).map((_, index) => (
-                <div 
-                  key={index} 
-                  className={`w-2 h-2 rounded-full ${index === 0 ? 'bg-lime-600' : 'bg-gray-300'}`}
+                <div
+                  key={index}
+                  className={`w-2 h-2 rounded-full ${
+                    index === 0 ? "bg-lime-600" : "bg-gray-300"
+                  }`}
                 />
               ))}
             </div>
-  
+
             {/* Scroll Hint - Visible on desktop */}
             <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 -translate-x-4">
               <div className="flex items-center gap-1 text-gray-400">
                 <span className="text-sm">Scroll</span>
-                <svg className="w-5 h-5 animate-bounce-x" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-5 h-5 animate-bounce-x"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </div>
             </div>
           </div>
-          
+
           {/* View All Button - If you have more than 3 staff */}
           {staff.length > 3 && (
             <div className="text-center mt-12">
@@ -365,6 +628,60 @@ const AboutSection = () => {
       </section>
 
       <Footer />
+
+      {/* Modal Animation CSS */}
+      <style jsx>{`
+        @keyframes modal-fade-in {
+          from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        
+        .animate-modal-fade-in {
+          animation: modal-fade-in 0.3s ease-out forwards;
+        }
+        
+        @keyframes bounce-x {
+          0%, 100% {
+            transform: translateX(0);
+          }
+          50% {
+            transform: translateX(4px);
+          }
+        }
+        
+        .animate-bounce-x {
+          animation: bounce-x 1s infinite;
+        }
+        
+        /* Prevent body scroll when modal is open */
+        body.modal-open {
+          overflow: hidden;
+        }
+        
+        /* Scrollbar styling */
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        
+        /* Line clamp for text */
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      `}</style>
     </div>
   );
 };

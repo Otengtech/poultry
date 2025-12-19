@@ -33,6 +33,7 @@ import {
   DollarSign,
   BoxIcon,
 } from "lucide-react";
+import Footer from "../components/homecomponents/Footer";
 
 const eventTypes = [
   {
@@ -281,15 +282,9 @@ const SupplyPage = () => {
                   </div>
                 </div>
 
-                {/* Average Order Value */}
-                <div className="flex items-center justify-left gap-2 mt-3 text-sm text-gray-500">
-                  <span>{client.avgOrder}</span>
-                </div>
-
                 {/* Contact Info */}
                 <div className="flex items-center justify-left gap-2 mt-2 text-sm text-gray-500">
-                  <Users className="h-3 w-3" />
-                  <span>Contact: {client.contact}</span>
+                  <span>Look at the bottom of the page for contact info</span>
                 </div>
               </div>
             ))}
@@ -414,6 +409,7 @@ const SupplyPage = () => {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };

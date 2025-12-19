@@ -299,7 +299,7 @@ const ChatAssistant = () => {
 
   // Check if enough time has passed since last notification
   const timeSinceLastNotification = Date.now() - userActivity.lastNotificationTime;
-  const minNotificationInterval = force ? 1000 : 30000; // 30 seconds minimum between notifications
+  const minNotificationInterval = force ? 1000 : 1800000; // 30 seconds minimum between notifications
   
   if (timeSinceLastNotification < minNotificationInterval && !force) {
     return;

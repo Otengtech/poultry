@@ -27,70 +27,53 @@ const LatestSneakers = () => {
   // Initialize scrolling after products are loaded
   useEffect(() => {
     const el = scrollRef.current;
-    if (!el || product.length === 0) return;
+    if (!el) return;
 
-    // Wait a moment for DOM to render
-    setTimeout(() => {
-      const children = el.children;
-      if (children.length === 0) return;
+    const children = el.children;
+    const half = children.length / 2;
 
-      // Calculate width of original set
-      let width = 0;
-      for (let i = 0; i < product.length; i++) {
-        if (children[i]) {
-          const computedStyle = window.getComputedStyle(children[i]);
-          const marginLeft = parseFloat(computedStyle.marginLeft) || 0;
-          const marginRight = parseFloat(computedStyle.marginRight) || 0;
-          width += children[i].offsetWidth + marginLeft + marginRight;
-        }
+    // Calculate width of one set (first half)
+    let width = 0;
+    for (let i = 0; i < half; i++) {
+      width += children[i].offsetWidth;
+    }
+    widthRef.current = width;
+
+    const scroll = () => {
+      if (!isScrollingRef.current || !el) return;
+
+      el.scrollLeft += 3;
+
+      if (el.scrollLeft >= widthRef.current) {
+        el.scrollLeft = 0;
       }
-      
-      widthRef.current = width;
-      el.scrollLeft = 0;
-
-      const scroll = () => {
-        if (!isScrollingRef.current || !el) return;
-
-        el.scrollLeft += 1.5;
-
-        // Reset to start when reaching duplicated content
-        if (el.scrollLeft >= widthRef.current) {
-          el.scrollLeft = 0;
-        }
-
-        animationFrameId.current = requestAnimationFrame(scroll);
-      };
 
       animationFrameId.current = requestAnimationFrame(scroll);
+    };
 
-      const handleMouseEnter = () => {
-        isScrollingRef.current = false;
-        cancelAnimationFrame(animationFrameId.current);
-      };
+    animationFrameId.current = requestAnimationFrame(scroll);
 
-      const handleMouseLeave = () => {
-        if (!isScrollingRef.current) {
-          isScrollingRef.current = true;
-          animationFrameId.current = requestAnimationFrame(scroll);
-        }
-      };
+    const handleMouseEnter = () => {
+      isScrollingRef.current = false;
+      cancelAnimationFrame(animationFrameId.current);
+    };
 
-      el.addEventListener("mouseenter", handleMouseEnter);
-      el.addEventListener("mouseleave", handleMouseLeave);
-
-      return () => {
-        cancelAnimationFrame(animationFrameId.current);
-        el.removeEventListener("mouseenter", handleMouseEnter);
-        el.removeEventListener("mouseleave", handleMouseLeave);
-      };
-    }, 100);
-
-    return () => {
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current);
+    const handleMouseLeave = () => {
+      if (!isScrollingRef.current) {
+        isScrollingRef.current = true;
+        animationFrameId.current = requestAnimationFrame(scroll);
       }
     };
-  }, [product]);
+
+    el.addEventListener("mouseenter", handleMouseEnter);
+    el.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId.current);
+      el.removeEventListener("mouseenter", handleMouseEnter);
+      el.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, []);
 
   return (
     <section className="py-14">
