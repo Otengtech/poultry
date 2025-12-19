@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 
 const Location = () => {
   return (
-    <div className="min-h-[70vh] flex items-center justify-center px-6 md:py-10 py-6 bg-gray-900 text-white">
+    <div className="min-h-[70vh] flex items-center justify-center px-6 md:py-10 py-10 bg-gray-900 text-white">
       <div className="max-w-6xl w-full">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
           

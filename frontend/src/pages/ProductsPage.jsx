@@ -20,7 +20,7 @@ const ProductsSection = () => {
     { id: "all", name: "All" },
     { id: "eggs", name: "Eggs" },
     { id: "meat", name: "Meat" },
-    { id: "chicks", name: "Chicks" },
+    { id: "layer", name: "Layer" },
   ];
 
   const API_URL = import.meta.env.VITE_API_URL;
@@ -66,13 +66,6 @@ const ProductsSection = () => {
     );
 
     if (existingProductIndex > -1) {
-      // Product already exists - update quantity
-      const updatedCart = [...existingCart];
-      updatedCart[existingProductIndex].quantity += 1;
-      updatedCart[existingProductIndex].totalPrice = 
-        updatedCart[existingProductIndex].quantity * parseFloat(product.price);
-      
-      updateCart(updatedCart); // CHANGE THIS LINE
       toast.info(`Increased ${product.name} quantity in cart`);
     } else {
       // Add new product to cart with quantity 1
