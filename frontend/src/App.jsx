@@ -20,7 +20,6 @@ const ReviewPage = lazy(() => import("./pages/ReviewPage"));
 const BlogPage = lazy(() => import("./pages/BlogPage"));
 const FAQPage = lazy(() => import("./pages/FAQPage"));
 const CartPage = lazy(() => import("./pages/CartPage"));
-const OrderPage = lazy(() => import("./pages/OrderPage"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const SupplyPage = lazy(() => import("./pages/SupplyPage"));
 
@@ -43,7 +42,6 @@ function App() {
           <Route path="/review" element={<ReviewPage />} />
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/cart" element={<CartPage />} />
-          <Route path="/orders" element={<OrderListPage />} />
           <Route path="/event" element={<SupplyPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>

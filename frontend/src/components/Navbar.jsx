@@ -26,7 +26,6 @@ const ResponsiveNavbar = () => {
   ];
   
   const pagesDropdownItems = [
-    { label: "My Orders", href: "/orders" },
     { label: "Event", href: "/event" },
     { label: "Reviews", href: "/review" },
     { label: "Privacy", href: "/privacy" },

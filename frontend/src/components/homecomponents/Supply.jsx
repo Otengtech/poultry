@@ -19,8 +19,7 @@ const eventTypes = [
     description: "Regular supply for daily menu preparation",
     delivery: "Daily morning deliveries before opening hours",
     Icon: Utensils,
-    avgOrder: "₵500-₵2,000 daily",
-    contact: "Restaurant Manager",
+    contact: "Team",
   },
   {
     name: "Hotels",
@@ -29,8 +28,7 @@ const eventTypes = [
     description: "Supply for breakfast buffets and room service",
     delivery: "Early morning deliveries (5-7 AM)",
     Icon: Building,
-    avgOrder: "₵800-₵3,000 weekly",
-    contact: "Executive Chef",
+    contact: "Team",
   },
   {
     name: "Individuals",
@@ -39,8 +37,7 @@ const eventTypes = [
     description: "Home cooking and family consumption",
     delivery: "Flexible timing, same-day or scheduled",
     Icon: Home,
-    avgOrder: "₵100-₵500 per order",
-    contact: "Direct Customer",
+    contact: "Team",
   },
   {
     name: "Bulk Wholesale",
@@ -49,8 +46,7 @@ const eventTypes = [
     description: "Large volume distribution to resellers",
     delivery: "Scheduled pickups or deliveries",
     Icon: Package,
-    avgOrder: "₵5,000-₵20,000 monthly",
-    contact: "Wholesale Manager",
+    contact: "Team",
   },
 ];
 
@@ -92,11 +88,11 @@ const SupplyPage = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="bg-gradient-to-r from-lime-500 to-green-600 text-white py-16">
+      <section className="bg-white text-gray-700 py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h3 className="text-4xl font-bold mb-6">Ready to Order?</h3>
-            <p className="text-xl mb-8 max-w-2xl mx-auto text-lime-100">
+            <p className="text-xl mb-8 max-w-2xl mx-auto text-gray-500">
               Contact us today for fresh poultry products delivered to your
               doorstep. Check out main Event Page for more info.
             </p>
@@ -106,7 +102,7 @@ const SupplyPage = () => {
             <div className="flex flex-col md:flex-row justify-center gap-4">
               <Link
                 to="/event"
-                className="bg-white text-lime-600 hover:bg-gray-100 font-bold py-4 px-8 rounded-lg text-lg transition transform hover:-translate-y-1 flex items-center justify-center shadow-lg"
+                className="bg-lime-500 text-gray-700 font-bold py-4 px-8 rounded-lg text-lg transition transform hover:-translate-y-1 flex items-center justify-center shadow-lg"
               >
                 <Calendar className="mr-3" />
                 Events we supply
