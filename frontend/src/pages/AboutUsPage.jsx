@@ -521,7 +521,7 @@ const AboutSection = () => {
                   {/* COMPACT CARD DESIGN */}
                   <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 h-full border border-gray-100 hover:border-lime-200">
                     {/* Image Container */}
-                    <div className="relative h-32 md:h-36 overflow-hidden rounded-t-xl">
+                    <div className="relative h-44 md:h-48 overflow-hidden rounded-t-xl">
                       <img
                         src={member.image}
                         alt={member.name}
