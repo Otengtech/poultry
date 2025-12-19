@@ -1,21 +1,22 @@
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import axios from "axios"
 import { toast } from "react-toastify";
 
 const LatestSneakers = () => {
   const scrollRef = useRef(null);
   const animationFrameId = useRef(null);
+  const widthRef = useRef(0);
   const isScrollingRef = useRef(true);
-  const [product, setProducts] = useState([]);
+  const [product, setProducts] = useState([])
 
   const API_URL = import.meta.env.VITE_API_URL;
-
+  
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await axios.get(`${API_URL}/get-product`);
-        setProducts(res.data.data || []);
-      } catch {
+        setProducts(res.data.data);
+      } catch (err) {
         toast.error("Failed to load products");
       }
     };
@@ -23,87 +24,87 @@ const LatestSneakers = () => {
     fetchProducts();
   }, []);
 
-  // Auto scrolling effect
+  // Initialize scrolling after products are loaded
   useEffect(() => {
     const el = scrollRef.current;
-    if (!el || product.length === 0) return;
+    if (!el) return;
 
-    // Wait for DOM + images to settle
-    const initScroll = () => {
-      const maxScroll = el.scrollWidth / 2;
+    const children = el.children;
+    const half = children.length / 2;
 
-      const scroll = () => {
-        if (!isScrollingRef.current) return;
+    // Calculate width of one set (first half)
+    let width = 0;
+    for (let i = 0; i < half; i++) {
+      width += children[i].offsetWidth;
+    }
+    widthRef.current = width;
 
-        el.scrollLeft += 0.4; // 👈 SLOW speed
+    const scroll = () => {
+      if (!isScrollingRef.current || !el) return;
 
-        if (el.scrollLeft >= maxScroll) {
-          el.scrollLeft = 0;
-        }
+      el.scrollLeft += 1.5;
 
-        animationFrameId.current = requestAnimationFrame(scroll);
-      };
+      if (el.scrollLeft >= widthRef.current) {
+        el.scrollLeft = 0;
+      }
 
       animationFrameId.current = requestAnimationFrame(scroll);
-
-      const pause = () => {
-        isScrollingRef.current = false;
-        cancelAnimationFrame(animationFrameId.current);
-      };
-
-      const resume = () => {
-        if (!isScrollingRef.current) {
-          isScrollingRef.current = true;
-          animationFrameId.current = requestAnimationFrame(scroll);
-        }
-      };
-
-      el.addEventListener("mouseenter", pause);
-      el.addEventListener("mouseleave", resume);
-
-      return () => {
-        cancelAnimationFrame(animationFrameId.current);
-        el.removeEventListener("mouseenter", pause);
-        el.removeEventListener("mouseleave", resume);
-      };
     };
 
-    const timeout = setTimeout(initScroll, 300);
+    animationFrameId.current = requestAnimationFrame(scroll);
 
-    return () => clearTimeout(timeout);
-  }, [product]);
+    const handleMouseEnter = () => {
+      isScrollingRef.current = false;
+      cancelAnimationFrame(animationFrameId.current);
+    };
+
+    const handleMouseLeave = () => {
+      if (!isScrollingRef.current) {
+        isScrollingRef.current = true;
+        animationFrameId.current = requestAnimationFrame(scroll);
+      }
+    };
+
+    el.addEventListener("mouseenter", handleMouseEnter);
+    el.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId.current);
+      el.removeEventListener("mouseenter", handleMouseEnter);
+      el.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, []);
 
   return (
     <section className="py-14">
-      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-6">
+      <div className="text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold text-center mb-6">
         Our Top Products
-      </h2>
-
+      </div>
       <div
         ref={scrollRef}
-        className="flex w-full items-center overflow-x-hidden px-4"
+        className="flex w-fullitems-center justify-center overflow-x-auto no-scrollbar px-4"
+        style={{ scrollBehavior: "auto", scrollSnapType: "none" }}
       >
+        {/* Render products twice for seamless scrolling */}
         {[...product, ...product].map((item, index) => (
           <div
             key={`${item._id || item.name}-${index}`}
-            className="w-72 flex-shrink-0 bg-white text-black p-4 mx-2 rounded-2xl transition-transform duration-300 hover:scale-105"
+            className="w-72 flex-shrink-0 bg-white text-black p-4 mx-2 my-2 rounded-2xl transition-transform duration-300 transform hover:scale-105"
           >
             <img
               src={item.image}
               alt={item.name}
               className="w-full h-36 object-cover rounded-lg mb-4"
-              loading="lazy"
               onError={(e) => {
-                e.target.src =
-                  "https://via.placeholder.com/288x144/cccccc/969696?text=Product+Image";
+                e.target.src = "https://via.placeholder.com/288x144/cccccc/969696?text=Product+Image";
               }}
             />
             <h3 className="text-lg font-bold text-center">{item.name}</h3>
             {item.description && (
-              <p className="text-gray-600 line-clamp-3 text-sm mt-2">
-                {item.description}
-              </p>
-            )}
+            <p className="text-left text-gray-600 line-clamp-3 text-sm mt-2">
+              {item.description}
+            </p>
+          )}
           </div>
         ))}
       </div>

@@ -225,50 +225,70 @@ const AboutSection = () => {
             </div>
 
             {/* Right Column - Quality Selector Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-              {qualities.map((quality) => {
-                const isActive = quality.id === activeQuality.id;
-                
-                return (
-                  <button
-                    key={quality.id}
-                    onClick={() => setActiveQuality(quality)}
-                    className={`p-4 md:p-6 rounded-xl text-left transition-all duration-300 ${
-                      isActive 
-                        ? 'bg-lime-50 border-2 border-lime-200 shadow-lg transform -translate-y-1' 
-                        : 'bg-white border border-gray-200 hover:border-lime-200 hover:shadow-md'
-                    }`}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className={`p-3 rounded-lg ${
-                        isActive ? 'bg-lime-100 text-lime-700' : 'bg-gray-100 text-gray-600'
-                      }`}>
-                        {React.createElement(Icons[quality.icon], { className: "h-6 w-6" })}
-                      </div>
-                      <div className="flex-1">
-                        <h4 className={`font-bold text-lg mb-2 ${
-                          isActive ? 'text-gray-900' : 'text-gray-800'
-                        }`}>
-                          {quality.title}
-                        </h4>
-                        <p className={`text-sm ${
-                          isActive ? 'text-gray-700' : 'text-gray-600'
-                        }`}>
-                          {quality.description}
-                        </p>
-                        {isActive && (
-                          <div className="mt-3">
-                            <span className="inline-flex items-center gap-1 text-sm font-medium text-lime-600">
-                              Active <Icons.CheckCircle className="h-4 w-4" />
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+            <div
+  className="
+    flex gap-4 overflow-x-auto pb-2 scroll-smooth snap-x snap-mandatory
+    sm:grid sm:grid-cols-2 sm:overflow-visible
+    md:gap-6
+  "
+>
+  {qualities.map((quality) => {
+    const isActive = quality.id === activeQuality.id;
+
+    return (
+      <button
+        key={quality.id}
+        onClick={() => setActiveQuality(quality)}
+        className={`snap-start min-w-[260px] sm:min-w-0 p-4 md:p-6 rounded-xl text-left transition-all duration-300 ${
+          isActive
+            ? "bg-lime-50 border-2 border-lime-200 shadow-lg transform -translate-y-1"
+            : "bg-white border border-gray-200 hover:border-lime-200 hover:shadow-md"
+        }`}
+      >
+        <div className="flex items-start gap-4">
+          <div
+            className={`p-3 rounded-lg ${
+              isActive
+                ? "bg-lime-100 text-lime-700"
+                : "bg-gray-100 text-gray-600"
+            }`}
+          >
+            {React.createElement(Icons[quality.icon], {
+              className: "h-6 w-6",
+            })}
+          </div>
+
+          <div className="flex-1">
+            <h4
+              className={`font-bold text-lg mb-2 ${
+                isActive ? "text-gray-900" : "text-gray-800"
+              }`}
+            >
+              {quality.title}
+            </h4>
+
+            <p
+              className={`text-sm ${
+                isActive ? "text-gray-700" : "text-gray-600"
+              }`}
+            >
+              {quality.description}
+            </p>
+
+            {isActive && (
+              <div className="mt-3">
+                <span className="inline-flex items-center gap-1 text-sm font-medium text-lime-600">
+                  Active <Icons.CheckCircle className="h-4 w-4" />
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      </button>
+    );
+  })}
+</div>
+
           </div>
 
           {/* Mobile Quality Indicators */}
