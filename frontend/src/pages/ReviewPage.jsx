@@ -20,7 +20,6 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 /* ===================== COMPONENT ===================== */
 const ReviewPage = () => {
-
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -340,7 +339,6 @@ const ReviewPage = () => {
                       src={featuredReview.avatar}
                       alt={featuredReview.name}
                       className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover border-2 border-white"
-                      
                     />
                     <div className="min-w-0">
                       <h3 className="font-bold text-sm md:text-base truncate">
@@ -692,8 +690,9 @@ const ReviewPage = () => {
                     value={formData.message}
                     onChange={handleInputChange}
                     rows={4}
+                    maxLength={300}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition-all text-sm md:text-base"
-                    placeholder="Share your experience with our products..."
+                    placeholder="Share your experience with our products... (200 characters max)"
                     required
                     disabled={submitting}
                   />

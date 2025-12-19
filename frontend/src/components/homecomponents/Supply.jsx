@@ -1,12 +1,6 @@
 // SupplyPage.jsx - Poultry Business Supplies Page
 import React from "react";
-import {
-  FaPhone,
-  FaEnvelope,
-  FaCalendarCheck,
-  FaWhatsapp,
-  FaShoppingCart,
-} from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import {
   Utensils,
@@ -63,70 +57,36 @@ const eventTypes = [
 const SupplyPage = () => {
   return (
     <div className="min-h-screen bg-white">
-
       {/* Client Types */}
       <section className="bg-lime-50 py-12">
         <div className="container mx-auto px-4">
           <h3 className="text-5xl font-bold text-center text-gray-800 mb-10">
             Who We Supply
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
+          
+          {/* Desktop Grid (hidden on mobile) */}
+          <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {eventTypes.map((client, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-xl p-5 text-center overflow-x-auto scrollbar-hide shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 group"
-              >
-                {/* Icon with count badge */}
-                <div className="relative mb-4">
-                  <div
-                    className={`inline-flex items-center justify-left ${
-                      client.color.split(" ")[0]
-                    } p-3 rounded-2xl mx-auto group-hover:scale-110 transition-transform duration-300`}
-                  >
-                    <div className={client.color.split(" ")[1]}>
-                      <client.Icon className="h-6 w-6" />
-                    </div>
-                  </div>
-                  <div className="absolute -top-2 -right-2 bg-green-100 border border-gray-200 rounded-full w-8 h-8 flex items-center justify-center shadow-md">
-                    <span
-                      className={`text-xs font-bold ${
-                        client.color.split(" ")[1]
-                      }`}
-                    >
-                      {client.count}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Client Name */}
-                <h4 className="font-bold text-gray-800 text-lg mb-2">
-                  {client.name}
-                </h4>
-
-                {/* Description */}
-                <p className="text-sm text-gray-600 mb-3 min-h-[40px]">
-                  {client.description}
-                </p>
-
-                {/* Delivery Info */}
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <div className="flex items-center justify-left gap-2 text-sm text-gray-500 mb-2">
-                    <span className="font-medium">Delivery: Contact for delivery info</span>
-                  </div>
-                </div>
-
-                {/* Average Order Value */}
-                <div className="flex items-center justify-left gap-2 mt-3 text-sm text-gray-500">
-                  <span>{client.avgOrder}</span>
-                </div>
-
-                {/* Contact Info */}
-                <div className="flex items-center justify-left gap-2 mt-2 text-sm text-gray-500">
-                  <Users className="h-3 w-3" />
-                  <span>Contact: {client.contact}</span>
-                </div>
-              </div>
+              <ClientCard key={index} client={client} />
             ))}
+          </div>
+          
+          {/* Mobile Horizontal Scroll (shown on mobile) */}
+          <div className="md:hidden">
+            <div className="flex overflow-x-auto pb-4 space-x-4 scrollbar-hide snap-x snap-mandatory">
+              {eventTypes.map((client, index) => (
+                <div 
+                  key={index} 
+                  className="flex-shrink-0 w-[280px] snap-start"
+                >
+                  <ClientCard client={client} />
+                </div>
+              ))}
+            </div>
+            {/* Scroll hint for mobile users */}
+            <div className="text-center mt-4 text-gray-500 text-sm">
+              <p>← Slide to see more →</p>
+            </div>
           </div>
         </div>
       </section>
@@ -155,6 +115,63 @@ const SupplyPage = () => {
           </div>
         </div>
       </section>
+    </div>
+  );
+};
+
+// Separate ClientCard component for reusability
+const ClientCard = ({ client }) => {
+  return (
+    <div className="bg-white rounded-xl p-5 text-center shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 group h-full">
+      {/* Icon with count badge */}
+      <div className="relative mb-4">
+        <div
+          className={`inline-flex items-center justify-center ${
+            client.color.split(" ")[0]
+          } p-3 rounded-2xl mx-auto group-hover:scale-110 transition-transform duration-300`}
+        >
+          <div className={client.color.split(" ")[1]}>
+            <client.Icon className="h-6 w-6" />
+          </div>
+        </div>
+        <div className="absolute -top-2 -right-2 bg-green-100 border border-gray-200 rounded-full w-8 h-8 flex items-center justify-center shadow-md">
+          <span
+            className={`text-xs font-bold ${
+              client.color.split(" ")[1]
+            }`}
+          >
+            {client.count}
+          </span>
+        </div>
+      </div>
+
+      {/* Client Name */}
+      <h4 className="font-bold text-gray-800 text-lg mb-2">
+        {client.name}
+      </h4>
+
+      {/* Description */}
+      <p className="text-sm text-gray-600 mb-3 min-h-[40px]">
+        {client.description}
+      </p>
+
+      {/* Delivery Info */}
+      <div className="mt-4 pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-2">
+          <span className="font-medium">Delivery: Contact for delivery info</span>
+        </div>
+      </div>
+
+      {/* Average Order Value */}
+      <div className="flex items-center justify-center gap-2 mt-3 text-sm text-gray-500">
+        <span>{client.avgOrder}</span>
+      </div>
+
+      {/* Contact Info */}
+      <div className="flex items-center justify-center gap-2 mt-2 text-sm text-gray-500">
+        <FaUsers className="h-3 w-3" />
+        <span>Contact: {client.contact}</span>
+      </div>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import OurTeam from '../components/homecomponents/OurTeam';
 import TestimonialSection from '../components/homecomponents/TestimonialsSection';
 import Footer from '../components/homecomponents/Footer';
 import Supply from '../components/homecomponents/Supply';
+import Location from '../components/homecomponents/Location';
 import LatestPoultry from "../components/LatestPoultry";
 import HowWeOperate from "../components/homecomponents/HowWeOperate";
 import Loader from "../components/Loader";
@@ -15,12 +16,13 @@ const Home = () => {
   return (
     <div>
       <HeroSection />
-      <WhyChooseUsSection />
+      <Location />
       <LatestPoultry />
-      <HowWeOperate />
+      <WhyChooseUsSection />
       <Supply />
-      <OurTeam />
+      <HowWeOperate />
       <TestimonialSection />
+      <OurTeam />
       <Newsletter />
       <Footer />
     </div>

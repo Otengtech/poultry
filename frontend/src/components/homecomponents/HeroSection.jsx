@@ -6,37 +6,31 @@ const heroImage = "/assets/heroimage.jpg";
 
 const heroData = {
   heroMessages: [
-    {
-      title: "NAYA SUCCESS AXIS FOODS",
-      description:
-        "Experience quality eggs, meats and chicks nurtured with care and delivered to you.",
-    },
-    {
-      title: "Premium Poultry Services",
-      description:
-        "We provide healthy livestock and reliable delivery for farms and homes.",
-    },
-    {
-      title: "Quality, Fresh and Organic",
-      description:
-        "Enjoy farm-fresh products raised with the highest standards for safety and nutrition.",
-    },
-    {
-      title: "Trusted by Farmers Nationwide",
-      description:
-        "Your reliable partner for poultry supply, consulting, and farm management.",
-    },
-    {
-      title: "Healthy Birds, Healthy Business",
-      description:
-        "Our expert poultry practices ensure your birds grow strong, healthy, and productive.",
-    },
-    {
-      title: "Sustainable Farming Solutions",
-      description:
-        "We combine modern poultry techniques with eco-friendly methods to support long-term growth.",
-    },
-  ],
+  {
+    title: "Ghana's Poultry Leader",
+    description: "Operating from Adenta and Aburi, delivering quality poultry products across the nation since 2017.",
+  },
+  {
+    title: "Strategic Dual Locations",
+    description: "Adenta headquarters for operations, Aburi farm for optimal production—serving all Ghana efficiently.",
+  },
+  {
+    title: "Complete Poultry Solutions",
+    description: "From chicks supply to farm management, we provide end-to-end poultry solutions for success.",
+  },
+  {
+    title: "Quality Assured Products",
+    description: "Healthy chickens, fresh eggs, and premium meats—all raised with expert care and attention.",
+  },
+  {
+    title: "Nationwide Delivery Network",
+    description: "Efficient logistics ensuring timely delivery of fresh poultry products to farms and homes.",
+  },
+  {
+    title: "Expert Support Always",
+    description: "Continuous guidance, training, and support helping farmers achieve sustainable poultry farming success.",
+  },
+]
 };
 
 const HeroSection = () => {
