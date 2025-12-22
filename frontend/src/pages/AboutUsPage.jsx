@@ -23,6 +23,7 @@ import p3 from "../assets/p3.jpg";
 import p5 from "../assets/p5.jpg";
 import p2 from "../assets/p2.jpg";
 import p6 from "../assets/p6.jpg";
+
 const data = {
   banner: {
     title: "ABOUT PAGE",
@@ -355,196 +356,229 @@ const AboutSection = () => {
         </div>
       )}
 
-      {/* Banner */}
+      {/* Banner - Responsive */}
       <div
-        className="relative w-full h-96 lg:h-[420px] bg-cover bg-center"
+        className="relative w-full h-64 sm:h-80 md:h-96 lg:h-[420px] bg-cover bg-center"
         style={{ backgroundImage: `url(${data.banner.image})` }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center px-4">
           <h1
             ref={bannerRef}
-            className="scroll-reveal opacity-0 translate-y-10 text-5xl lg:text-7xl font-bold text-white"
+            className="scroll-reveal opacity-0 translate-y-10 text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white text-center"
           >
             {data.banner.title}
           </h1>
         </div>
       </div>
 
-      {/* Story */}
-      <section className="py-10 md:px-20">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+      {/* Story Section - Responsive Grid */}
+      <section className="py-8 sm:py-10 md:py-12 px-4 sm:px-6 md:px-8 lg:px-20">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 lg:gap-12 items-center">
+          {/* Left Column - Story Content */}
           <div>
-  <span className="inline-block px-4 py-2 mb-4 bg-amber-100 text-amber-800 rounded-full">
-    {data.story.since}
-  </span>
+            <span className="inline-block px-4 py-2 mb-4 bg-amber-100 text-amber-800 rounded-full text-sm md:text-base">
+              {data.story.since}
+            </span>
 
-  <h2
-    ref={storyTitleRef}
-    className="scroll-reveal opacity-0 translate-y-10 text-4xl font-black mb-4"
-  >
-    {data.story.title}
-  </h2>
+            <h2
+              ref={storyTitleRef}
+              className="scroll-reveal opacity-0 translate-y-10 text-2xl sm:text-3xl md:text-4xl font-black mb-4 md:mb-6"
+            >
+              {data.story.title}
+            </h2>
 
-  <div className="rounded-2xl">
-    <img
-      ref={imageRef}
-      src={p1}
-      alt="image"
-      className="scroll-reveal mt-4 max-w-3xl rounded-xl object-cover"
-    />
-  </div>
-</div>
+            {/* Image with max-w-3xl constraint */}
+            <div className="flex justify-center mt-6 md:mt-8">
+              <div className="w-full max-w-3xl">
+                <img
+                  ref={imageRef}
+                  src={p1}
+                  alt="Our story"
+                  className="scroll-reveal w-full h-auto rounded-xl object-cover shadow-lg"
+                />
+              </div>
+            </div>
+          </div>
 
-
+          {/* Right Column - Story Text */}
           <div
             ref={storyTextRef}
-            className="scroll-reveal opacity-0 translate-y-10 text-gray-600 space-y-4"
+            className="scroll-reveal opacity-0 translate-y-10 text-gray-600 space-y-4 text-base sm:text-lg"
           >
             {data.story.paragraphs.map((p, i) => (
-              <p key={i}>{p}</p>
+              <p key={i} className="leading-relaxed">{p}</p>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Mission, Vision, Products, Problem & Solution */}
-      <section className="py-10 bg-white">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10">
-          {/* Mission */}
-          <div className=" p-8 rounded-3xl bg-amber-50">
-            <h3 className="text-3xl font-bold mb-4">{data.mission.title}</h3>
-            <p className="mb-6">{data.mission.description}</p>
-            <ul className="space-y-2">
+      {/* Mission & Vision Section - Responsive Grid */}
+      <section className="py-8 sm:py-10 md:py-12 bg-white px-4 sm:px-6 md:px-8">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
+          {/* Mission Card */}
+          <div className="p-6 sm:p-8 rounded-2xl md:rounded-3xl bg-amber-50">
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-4 md:mb-6">
+              {data.mission.title}
+            </h3>
+            <p className="mb-6 text-base sm:text-lg">{data.mission.description}</p>
+            <ul className="space-y-2 mb-6 md:mb-8">
               {data.mission.points.map((m, i) => (
-                <li key={i}>• {m}</li>
+                <li key={i} className="flex items-start gap-2">
+                  <span className="text-amber-600 mt-1">•</span>
+                  <span className="text-base sm:text-lg">{m}</span>
+                </li>
               ))}
             </ul>
-            <div className="rounded-2xl">
-    <img
-      ref={image3Ref}
-      src={p3}
-      alt="image"
-      className="scroll-reveal mt-4 max-w-3xl rounded-xl object-cover"
-    />
-  </div>
+            {/* Image with max-w-3xl constraint */}
+            <div className="flex justify-center">
+              <div className="w-full max-w-3xl">
+                <img
+                  ref={image3Ref}
+                  src={p3}
+                  alt="Our mission"
+                  className="scroll-reveal w-full h-auto rounded-xl object-cover shadow-md mt-4"
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Vision */}
-          <div className="p-8 rounded-3xl bg-orange-50">
-            <h3 className="text-3xl font-bold mb-4">{data.vision.title}</h3>
-            <p className="mb-6">{data.vision.description}</p>
-            <ul className="space-y-2">
+          {/* Vision Card */}
+          <div className="p-6 sm:p-8 rounded-2xl md:rounded-3xl bg-orange-50">
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-4 md:mb-6">
+              {data.vision.title}
+            </h3>
+            <p className="mb-6 text-base sm:text-lg">{data.vision.description}</p>
+            <ul className="space-y-2 mb-6 md:mb-8">
               {data.vision.points.map((v, i) => (
-                <li key={i}>• {v}</li>
+                <li key={i} className="flex items-start gap-2">
+                  <span className="text-orange-600 mt-1">•</span>
+                  <span className="text-base sm:text-lg">{v}</span>
+                </li>
               ))}
             </ul>
-            <div className="rounded-2xl">
-    <img
-      ref={image4Ref}
-      src={p5}
-      alt="image"
-      className="scroll-reveal mt-4 max-w-3xl rounded-xl object-cover"
-    />
-  </div>
+            {/* Image with max-w-3xl constraint */}
+            <div className="flex justify-center">
+              <div className="w-full max-w-3xl">
+                <img
+                  ref={image4Ref}
+                  src={p5}
+                  alt="Our vision"
+                  className="scroll-reveal w-full h-auto rounded-xl object-cover shadow-md mt-4"
+                />
+              </div>
+            </div>
           </div>
-          {/* Products */}
+
+          {/* Products Card */}
           <div
             ref={productsRef}
-            className="scroll-reveal p-8 rounded-3xl bg-amber-50"
+            className="scroll-reveal p-6 sm:p-8 rounded-2xl md:rounded-3xl bg-amber-50"
           >
-            <h3 className="text-3xl font-bold mb-4">
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-4 md:mb-6">
               {data.values_section.title}
             </h3>
-            <p className="mb-6">{data.values_section.description}</p>
+            <p className="mb-6 text-base sm:text-lg">{data.values_section.description}</p>
             <ul className="space-y-2">
               {data.values_section.products.map((p, i) => (
-                <li key={i}>• {p}</li>
+                <li key={i} className="flex items-start gap-2">
+                  <span className="text-amber-600 mt-1">•</span>
+                  <span className="text-base sm:text-lg">{p}</span>
+                </li>
               ))}
             </ul>
           </div>
 
-          {/* Problem & Solution */}
+          {/* Problem & Solution Card */}
           <div
             ref={problemSolutionRef}
-            className="scroll-reveal p-8 rounded-3xl bg-orange-50"
+            className="scroll-reveal p-6 sm:p-8 rounded-2xl md:rounded-3xl bg-orange-50"
           >
-            <h3 className="text-3xl font-bold mb-2">Problem</h3>
-            <p className="mb-6">{data.values_section.problem}</p>
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-4">
+              Problem
+            </h3>
+            <p className="mb-6 md:mb-8 text-base sm:text-lg">{data.values_section.problem}</p>
 
-            <h3 className="text-3xl font-bold mb-2">Solution</h3>
-            <p>{data.values_section.solution}</p>
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-4">
+              Solution
+            </h3>
+            <p className="text-base sm:text-lg">{data.values_section.solution}</p>
           </div>
         </div>
       </section>
 
-      <section className="py-10">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10">
-          {/* Acievement */}
-          <div className="p-8 rounded-3xl bg-amber-50">
-            <h3 className="text-3xl font-bold mb-4">
+      {/* Achievements & Quality Assurance Section */}
+      <section className="py-8 sm:py-10 md:py-12 px-4 sm:px-6 md:px-8">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
+          {/* Achievement Card */}
+          <div className="p-6 sm:p-8 rounded-2xl md:rounded-3xl bg-amber-50">
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-4 md:mb-6">
               {data.achievement_section.title}
             </h3>
-            <p className="mb-6">{data.achievement_section.description}</p>
-            <div className="rounded-2xl">
-    <img
-      ref={image5Ref}
-      src={p2}
-      alt="image"
-      className="scroll-reveal mt-4 max-w-3xl rounded-xl object-cover"
-    />
-  </div>
+            <p className="mb-6 text-base sm:text-lg">{data.achievement_section.description}</p>
+            {/* Image with max-w-3xl constraint */}
+            <div className="flex justify-center">
+              <div className="w-full max-w-3xl">
+                <img
+                  ref={image5Ref}
+                  src={p2}
+                  alt="Our achievements"
+                  className="scroll-reveal w-full h-auto rounded-xl object-cover shadow-md mt-4"
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Quality Assurance */}
-          <div className="p-8 rounded-3xl bg-amber-50">
-            <h3 className="text-3xl font-bold mb-4">
+          {/* Quality Assurance Card */}
+          <div className="p-6 sm:p-8 rounded-2xl md:rounded-3xl bg-amber-50">
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-4 md:mb-6">
               {data.quality_assurance.title}
             </h3>
-            <p className="mb-6">{data.quality_assurance.description}</p>
-            <div className="rounded-2xl">
-    <img
-      ref={image6Ref}
-      src={p6}
-      alt="image"
-      className="scroll-reveal mt-4 max-w-3xl rounded-xl object-cover"
-    />
-  </div>
+            <p className="mb-6 text-base sm:text-lg">{data.quality_assurance.description}</p>
+            {/* Image with max-w-3xl constraint */}
+            <div className="flex justify-center">
+              <div className="w-full max-w-3xl">
+                <img
+                  ref={image6Ref}
+                  src={p6}
+                  alt="Quality assurance"
+                  className="scroll-reveal w-full h-auto rounded-xl object-cover shadow-md mt-4"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ===============================
-          STAFF TEAM SECTION
-      ================================ */}
-      <section className="py-16 bg-gradient-to-b from-white to-lime-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-          {/* TOP CONTENT */}
-          <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start mb-16">
+      {/* Staff Team Section - Responsive */}
+      <section className="py-12 sm:py-14 md:py-16 bg-gradient-to-b from-white to-lime-50 px-4 sm:px-6 md:px-8">
+        <div className="container mx-auto max-w-7xl">
+          {/* Top Content */}
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start mb-12 md:mb-16">
             <div className="lg:w-2/3 mx-auto">
-              {/* TITLE */}
-              <div ref={titleRef} className="scroll-reveal space-y-4">
+              {/* Title */}
+              <div ref={titleRef} className="scroll-reveal space-y-4 text-center lg:text-left">
                 <span className="inline-block text-sm font-semibold text-lime-600 bg-emerald-50 px-4 py-2 rounded-full">
                   Our Leaders
                 </span>
-                <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight text-center lg:text-left">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
                   Meet Our Main Leaders
                 </h1>
                 <div className="h-1 w-20 bg-lime-500 rounded-full mx-auto lg:mx-0" />
               </div>
 
-              {/* DESCRIPTION */}
-              <div ref={textRef} className="scroll-reveal mt-8 space-y-6">
-                <p className="text-lg lg:text-xl text-gray-600 leading-relaxed text-center lg:text-left">
+              {/* Description */}
+              <div ref={textRef} className="scroll-reveal mt-6 md:mt-8 space-y-6">
+                <p className="text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed text-center lg:text-left">
                   Our leaders works really hard to keep this wonderful company
                   going to produce and meet consumers' needs.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
-                  {/* MEMBER THUMBNAILS */}
+                  {/* Member Thumbnails */}
                   <div className="flex -space-x-2">
                     {staff.slice(0, 4).map((member, idx) => (
                       <div
                         key={idx}
-                        className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200"
+                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white overflow-hidden bg-gray-200"
                       >
                         <img
                           src={member.image}
@@ -562,20 +596,20 @@ const AboutSection = () => {
             </div>
           </div>
 
-          {/* HORIZONTAL SCROLL STAFF CARDS */}
+          {/* Horizontal Scroll Staff Cards - Responsive */}
           <div className="relative">
             {/* Scroll Container */}
-            <div className="flex gap-6 md:gap-8 pb-6 overflow-x-auto scrollbar-hide">
+            <div className="flex gap-4 sm:gap-6 md:gap-8 pb-4 sm:pb-6 overflow-x-auto scrollbar-hide px-2">
               {staff.slice(0, 3).map((member, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 w-[200px] md:w-[220px] lg:w-[240px] cursor-pointer transform transition-transform duration-300 hover:scale-[1.03]"
+                  className="flex-shrink-0 w-[180px] sm:w-[200px] md:w-[220px] lg:w-[240px] cursor-pointer transform transition-transform duration-300 hover:scale-[1.03]"
                   onClick={() => openStaffModal(member)}
                 >
-                  {/* COMPACT CARD DESIGN */}
+                  {/* Compact Card Design */}
                   <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 h-full border border-gray-100 hover:border-lime-200">
                     {/* Image Container */}
-                    <div className="relative h-44 md:h-48 overflow-hidden rounded-t-xl">
+                    <div className="relative h-40 sm:h-44 md:h-48 overflow-hidden rounded-t-xl">
                       <img
                         src={member.image}
                         alt={member.name}
@@ -597,12 +631,12 @@ const AboutSection = () => {
                     </div>
 
                     {/* Compact Content Area */}
-                    <div className="p-3 md:p-4">
+                    <div className="p-3 sm:p-4">
                       <div className="text-center">
-                        <h3 className="text-sm font-bold text-gray-900 mb-1 truncate">
+                        <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1 truncate">
                           {member.name}
                         </h3>
-                        <p className="text-xs font-semibold text-lime-600 mb-2 truncate">
+                        <p className="text-xs sm:text-sm font-semibold text-lime-600 mb-2 truncate">
                           {member.title}
                         </p>
                         <p className="text-xs text-gray-500 mb-3 line-clamp-2 leading-snug">
@@ -616,19 +650,19 @@ const AboutSection = () => {
                           className="p-1.5 bg-gray-100 text-gray-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-200 hover:scale-110"
                           aria-label="Facebook"
                         >
-                          <FaFacebookF className="w-3 h-3" />
+                          <FaFacebookF className="w-3 h-3 sm:w-4 sm:h-4" />
                         </div>
                         <div
                           className="p-1.5 bg-gray-100 text-gray-600 rounded-full hover:bg-pink-600 hover:text-white transition-all duration-200 hover:scale-110"
                           aria-label="Instagram"
                         >
-                          <FaInstagram className="w-3 h-3" />
+                          <FaInstagram className="w-3 h-3 sm:w-4 sm:h-4" />
                         </div>
                         <div
                           className="p-1.5 bg-gray-100 text-gray-600 rounded-full hover:bg-green-600 hover:text-white transition-all duration-200 hover:scale-110"
                           aria-label="WhatsApp"
                         >
-                          <FaWhatsapp className="w-3 h-3" />
+                          <FaWhatsapp className="w-3 h-3 sm:w-4 sm:h-4" />
                         </div>
                       </div>
                     </div>
@@ -637,8 +671,8 @@ const AboutSection = () => {
               ))}
             </div>
 
-            {/* Scroll Indicators - Optional */}
-            <div className="flex justify-center items-center gap-2 mt-8">
+            {/* Scroll Indicators - Hidden on mobile, visible on tablet+ */}
+            <div className="hidden sm:flex justify-center items-center gap-2 mt-6 md:mt-8">
               {staff.slice(0, 3).map((_, index) => (
                 <div
                   key={index}
@@ -649,7 +683,7 @@ const AboutSection = () => {
               ))}
             </div>
 
-            {/* Scroll Hint - Visible on desktop */}
+            {/* Scroll Hint - Hidden on mobile */}
             <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 -translate-x-4">
               <div className="flex items-center gap-1 text-gray-400">
                 <span className="text-sm">Scroll</span>
@@ -672,8 +706,8 @@ const AboutSection = () => {
 
           {/* View All Button - If you have more than 3 staff */}
           {staff.length > 3 && (
-            <div className="text-center mt-12">
-              <button className="px-8 py-3 bg-lime-600 hover:bg-lime-700 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105">
+            <div className="text-center mt-8 sm:mt-12">
+              <button className="px-6 sm:px-8 py-3 bg-lime-600 hover:bg-lime-700 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 text-sm sm:text-base">
                 View All Team Members ({staff.length})
               </button>
             </div>
@@ -735,6 +769,18 @@ const AboutSection = () => {
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
+        }
+
+        /* Responsive typography */
+        @media (max-width: 640px) {
+          .text-2xl {
+            font-size: 1.5rem;
+            line-height: 2rem;
+          }
+          .text-3xl {
+            font-size: 1.875rem;
+            line-height: 2.25rem;
+          }
         }
       `}</style>
     </div>
