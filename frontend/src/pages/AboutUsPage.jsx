@@ -97,6 +97,10 @@ const AboutSection = () => {
   const titleRef = useScrollReveal();
   const textRef = useScrollReveal();
   const imageRef = useScrollReveal();
+  const image3Ref = useScrollReveal();
+  const image4Ref = useScrollReveal();
+  const image5Ref = useScrollReveal();
+  const image6Ref = useScrollReveal();
 
   const [staff, setStaff] = useState([]);
   const [selectedStaff, setSelectedStaff] = useState(null);
@@ -370,24 +374,27 @@ const AboutSection = () => {
       <section className="py-10 md:px-20">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
           <div>
-            <span className="inline-block px-4 py-2 mb-4 bg-amber-100 text-amber-800 rounded-full">
-              {data.story.since}
-            </span>
-            <h2
-              ref={storyTitleRef}
-              className="scroll-reveal opacity-0 translate-y-10 text-4xl font-black mb-4"
-            >
-              {data.story.title}
-            </h2>
-            <div className="rounded-2xl">
-            <img
-              ref={imageRef}
-              src={p1}
-              alt="image"
-              clasName="scroll-reveal mt-4 w-full rounded-xl object-cover"
-            />
-            </div>
-          </div>
+  <span className="inline-block px-4 py-2 mb-4 bg-amber-100 text-amber-800 rounded-full">
+    {data.story.since}
+  </span>
+
+  <h2
+    ref={storyTitleRef}
+    className="scroll-reveal opacity-0 translate-y-10 text-4xl font-black mb-4"
+  >
+    {data.story.title}
+  </h2>
+
+  <div className="rounded-2xl">
+    <img
+      ref={imageRef}
+      src={p1}
+      alt="image"
+      className="scroll-reveal mt-4 max-w-3xl rounded-xl object-cover"
+    />
+  </div>
+</div>
+
 
           <div
             ref={storyTextRef}
@@ -412,12 +419,14 @@ const AboutSection = () => {
                 <li key={i}>• {m}</li>
               ))}
             </ul>
-            <img
-              ref={imageRef}
-              src={p3}
-              alt="image"
-              clasName="scroll-reveal w-full mt-4 rounded-xl object-cover"
-            />
+            <div className="rounded-2xl">
+    <img
+      ref={image3Ref}
+      src={p3}
+      alt="image"
+      className="scroll-reveal mt-4 max-w-3xl rounded-xl object-cover"
+    />
+  </div>
           </div>
 
           {/* Vision */}
@@ -429,12 +438,14 @@ const AboutSection = () => {
                 <li key={i}>• {v}</li>
               ))}
             </ul>
-            <img
-              ref={imageRef}
-              src={p5}
-              alt="image"
-              clasName="scroll-reveal w-full rounded-xl mt-4 object-cover"
-            />
+            <div className="rounded-2xl">
+    <img
+      ref={image4Ref}
+      src={p5}
+      alt="image"
+      className="scroll-reveal mt-4 max-w-3xl rounded-xl object-cover"
+    />
+  </div>
           </div>
           {/* Products */}
           <div
@@ -474,12 +485,14 @@ const AboutSection = () => {
               {data.achievement_section.title}
             </h3>
             <p className="mb-6">{data.achievement_section.description}</p>
-            <img
-              ref={imageRef}
-              src={p2}
-              alt="image"
-              clasName="scroll-reveal w-full rounded-xl mt-4 object-cover"
-            />
+            <div className="rounded-2xl">
+    <img
+      ref={image5Ref}
+      src={p2}
+      alt="image"
+      className="scroll-reveal mt-4 max-w-3xl rounded-xl object-cover"
+    />
+  </div>
           </div>
 
           {/* Quality Assurance */}
@@ -488,12 +501,14 @@ const AboutSection = () => {
               {data.quality_assurance.title}
             </h3>
             <p className="mb-6">{data.quality_assurance.description}</p>
-            <img
-              ref={imageRef}
-              src={p6}
-              alt="image"
-              clasName="scroll-reveal w-full rounded-xl mt-4 object-cover"
-            />
+            <div className="rounded-2xl">
+    <img
+      ref={image6Ref}
+      src={p6}
+      alt="image"
+      className="scroll-reveal mt-4 max-w-3xl rounded-xl object-cover"
+    />
+  </div>
           </div>
         </div>
       </section>
