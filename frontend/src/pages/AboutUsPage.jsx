@@ -18,7 +18,11 @@ import {
   FaBriefcase,
   FaGraduationCap,
 } from "react-icons/fa";
-
+import p1 from "../assets/p7.jpg";
+import p3 from "../assets/p3.jpg";
+import p5 from "../assets/p5.jpg";
+import p2 from "../assets/p2.jpg";
+import p6 from "../assets/p6.jpg";
 const data = {
   banner: {
     title: "ABOUT PAGE",
@@ -92,6 +96,7 @@ const AboutSection = () => {
   const problemSolutionRef = useScrollReveal();
   const titleRef = useScrollReveal();
   const textRef = useScrollReveal();
+  const imageRef = useScrollReveal();
 
   const [staff, setStaff] = useState([]);
   const [selectedStaff, setSelectedStaff] = useState(null);
@@ -218,7 +223,9 @@ const AboutSection = () => {
                           .map((item, index) => (
                             <li key={index} className="flex items-start gap-2">
                               <div className="w-2 h-2 mt-2 bg-lime-500 rounded-full flex-shrink-0" />
-                              <span className="text-gray-700">{item.trim()}</span>
+                              <span className="text-gray-700">
+                                {item.trim()}
+                              </span>
                             </li>
                           ))}
                       </ul>
@@ -360,7 +367,7 @@ const AboutSection = () => {
       </div>
 
       {/* Story */}
-      <section className="py-10">
+      <section className="py-10 md:px-20">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
           <div>
             <span className="inline-block px-4 py-2 mb-4 bg-amber-100 text-amber-800 rounded-full">
@@ -372,6 +379,14 @@ const AboutSection = () => {
             >
               {data.story.title}
             </h2>
+            <div className="rounded-2xl">
+            <img
+              ref={imageRef}
+              src={p1}
+              alt="image"
+              clasName="scroll-reveal mt-4 w-full rounded-xl object-cover"
+            />
+            </div>
           </div>
 
           <div
@@ -397,6 +412,12 @@ const AboutSection = () => {
                 <li key={i}>• {m}</li>
               ))}
             </ul>
+            <img
+              ref={imageRef}
+              src={p3}
+              alt="image"
+              clasName="scroll-reveal w-full mt-4 rounded-xl object-cover"
+            />
           </div>
 
           {/* Vision */}
@@ -408,6 +429,12 @@ const AboutSection = () => {
                 <li key={i}>• {v}</li>
               ))}
             </ul>
+            <img
+              ref={imageRef}
+              src={p5}
+              alt="image"
+              clasName="scroll-reveal w-full rounded-xl mt-4 object-cover"
+            />
           </div>
           {/* Products */}
           <div
@@ -447,6 +474,12 @@ const AboutSection = () => {
               {data.achievement_section.title}
             </h3>
             <p className="mb-6">{data.achievement_section.description}</p>
+            <img
+              ref={imageRef}
+              src={p2}
+              alt="image"
+              clasName="scroll-reveal w-full rounded-xl mt-4 object-cover"
+            />
           </div>
 
           {/* Quality Assurance */}
@@ -455,6 +488,12 @@ const AboutSection = () => {
               {data.quality_assurance.title}
             </h3>
             <p className="mb-6">{data.quality_assurance.description}</p>
+            <img
+              ref={imageRef}
+              src={p6}
+              alt="image"
+              clasName="scroll-reveal w-full rounded-xl mt-4 object-cover"
+            />
           </div>
         </div>
       </section>
@@ -641,39 +680,40 @@ const AboutSection = () => {
             transform: translateY(0) scale(1);
           }
         }
-        
+
         .animate-modal-fade-in {
           animation: modal-fade-in 0.3s ease-out forwards;
         }
-        
+
         @keyframes bounce-x {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateX(0);
           }
           50% {
             transform: translateX(4px);
           }
         }
-        
+
         .animate-bounce-x {
           animation: bounce-x 1s infinite;
         }
-        
+
         /* Prevent body scroll when modal is open */
         body.modal-open {
           overflow: hidden;
         }
-        
+
         /* Scrollbar styling */
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
         }
-        
+
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
-        
+
         /* Line clamp for text */
         .line-clamp-2 {
           display: -webkit-box;
