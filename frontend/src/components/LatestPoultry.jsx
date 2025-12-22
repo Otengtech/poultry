@@ -33,7 +33,7 @@ const LatestSneakers = () => {
 
     let animationId;
     let position = 0;
-    const speed = 2; // adjust speed here
+    const speed = 0.7; // adjust speed here
 
     const animate = () => {
       position -= speed;
