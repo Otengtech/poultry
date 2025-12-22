@@ -166,8 +166,7 @@ const CartPage = () => {
             paymentMethod: "cash",
           });
 
-          // Redirect to orders page
-          navigate("/order");
+        
         } else {
           throw new Error(response.data.message || "Failed to place order");
         }
