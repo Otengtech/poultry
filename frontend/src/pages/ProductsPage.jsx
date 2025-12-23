@@ -18,9 +18,12 @@ const ProductsSection = () => {
 
   const productCategories = [
     { id: "all", name: "All" },
+    { id: "layers", name: "Layer" },
+    { id: "broiler", name: "Broiler" },
+    { id: "back", name: "Back" },
+    { id: "breast", name: "Breast" },
     { id: "eggs", name: "Eggs" },
-    { id: "meat", name: "Meat" },
-    { id: "layer", name: "Layer" },
+    { id: "drumstick", name: "Drumstick" },
   ];
 
   const API_URL = import.meta.env.VITE_API_URL;
