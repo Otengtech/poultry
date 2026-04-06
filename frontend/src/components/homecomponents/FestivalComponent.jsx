@@ -15,8 +15,16 @@ import {
 import image from "../../assets/easter.jpg";
 import { Link } from "react-router-dom";
 
+// MANUAL OVERRIDE - Change this to true to force Easter to show, false to use automatic dates
+const FORCE_EASTER_ENABLED = true; // Set to false to revert to automatic date checking
+
 // Helper function to check if celebration is active
 const isCelebrationActive = (celebration) => {
+    // Easter manual override
+    if (celebration === 'easter' && FORCE_EASTER_ENABLED) {
+        return true;
+    }
+
     const today = new Date();
     const year = today.getFullYear();
 
@@ -250,6 +258,8 @@ const CelebrationFloatingButton = ({ celebration }) => {
 // Main Festival Component
 const FestivalComponent = () => {
     const getActiveCelebration = () => {
+        // Priority: Manual Easter override first, then check others normally
+        if (FORCE_EASTER_ENABLED && isCelebrationActive('easter')) return 'easter';
         if (isCelebrationActive('easter')) return 'easter';
         if (isCelebrationActive('christmas')) return 'christmas';
         if (isCelebrationActive('newyear')) return 'newyear';
