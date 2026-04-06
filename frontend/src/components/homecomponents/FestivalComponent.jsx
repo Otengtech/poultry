@@ -82,7 +82,7 @@ const CelebrationModal = ({ isOpen, onClose, celebration }) => {
                     greeting: "Wishing you a blessed Easter celebration!",
                     message: "Thank you for being a valued part of our Naya Success Axis family. May this season bring you joy, peace, and wonderful moments with your loved ones.",
                     signature: "With warm regards,",
-                    signatureName: "The Naya Success Axis Team",
+                    signatureName: "The NAYA Success Axis Team",
                     buttonColor: "bg-amber-500 hover:bg-amber-600"
                 };
 
