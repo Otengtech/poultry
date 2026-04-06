@@ -51,7 +51,7 @@ const ResponsiveNavbar = () => {
   ];
 
   return (
-    <nav className="bg-black shadow-md sticky top-0 z-30">
+    <nav className="bg-white shadow-md sticky top-0 z-30">
       <div className="w-full px-4 sm:px-6 lg:px-12">
         {/* NAVBAR MAIN ROW - Organized Layout */}
         <div className="flex items-center justify-between h-16">
