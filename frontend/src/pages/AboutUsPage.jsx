@@ -1,0 +1,706 @@
+import React, { useEffect, useState } from "react";
+import { useScrollReveal } from "../animation/useScrollReveal";
+import Footer from "../components/homecomponents/Footer";
+import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaWhatsapp,
+  FaTimes,
+  FaPhone,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaBriefcase,
+} from "react-icons/fa";
+import p1 from "../assets/p7.jpg";
+import p3 from "../assets/p3.jpg";
+import p5 from "../assets/p5.jpg";
+import p2 from "../assets/p2.jpg";
+import p6 from "../assets/p6.jpg";
+import { Helmet } from "react-helmet-async";
+
+const data = {
+  banner: {
+    title: "ABOUT PAGE",
+    image: "../../assets/banner1.jpg",
+  },
+  story: {
+    since: "Since 2017",
+    title: "This Is Our Story",
+    paragraphs: [
+      "NAYA SUCCESS AXIS is an Agribusiness that started as a backyard poultry farm in 2017. It was registered as a fulltime business in April 2019 at the Registrar General Department. It Currently has 2 branches in Accra – Adenta and Aburi - Mariakrom in the Eastern Region. NAYA SUCCESS AXIS aims to be one of the poultry giants in Ghana and the subregion.",
+      "The core business is Poultry farming & processing to increase the shelf-life of chicken and add variety to locally produced chicken. The business employs Four(4) fulltime staff and Four(4) other part-time and casual staff. We have over Thirty(30) others working indirectly along our value chain operations.",
+    ],
+  },
+  mission: {
+    title: "Our Mission",
+    description:
+      "To provide convenient, ready-to-consume, locally raised (and spiced) Chicken with longer shelf-life and Eggs to consumers.",
+    points: [
+      "Deliver premium quality poultry products",
+      "Promote sustainable farming practices",
+      "Ensure animal welfare in all operations",
+      "Support local farming communities",
+    ],
+  },
+  vision: {
+    title: "Our Vision",
+    description:
+      "Leader in locally produced poultry products, changing mindsets, and making positive impact in communities",
+    points: [
+      "Lead in sustainable poultry farming",
+      "Expand nationwide with quality standards",
+      "Innovate with eco-friendly technologies",
+      "Educate next-generation farmers",
+    ],
+  },
+  values_section: {
+    title: "Products",
+    description:
+      "The business currently has the following products on the shelf;",
+    products: [
+      "Poultry / Chicken Eggs",
+      "Broiler and Layer Chickens",
+      "Charcoal Smoked Chicken",
+      "Spicy Grilled Chicken",
+      "Chicken Chips and Khebabs",
+      "Poultry Manure",
+      "Dog Food from the Offal",
+    ],
+    problem:
+      "Local poultry processors in Ghana lack the infrastructure and equipment to produce chicken cuts and other processed options and varieties preferred by most consumers.",
+    solution:
+      "Crunchy Chicken Chips made with locally reared chicken, spiced, dried, and thinly sliced to last for not less than one month. Our solution adds value to chicken to increase shelf-life and reduce post-harvest losses.",
+  },
+  achievement_section: {
+    title: "Achievements",
+    description:
+      " As a business, we have some remarkable achievements to date, including; acres of land acquired, a borehole to supply water, Five(5) Coops, and Five(5) room accommodation for workers, space outlined for the chicken chips production, access to market and paying customers, and business operations from 2 locations; Adenta and Aburi. We have received business support, both tangible and intangible, from many institutions including the NEIP, GEA, AdMa, GPP, TEF, MDF, GIZ, British Council and the Netherlands.",
+  },
+  quality_assurance: {
+    title: "Quality Assurance",
+    description:
+      "Guided by Standard Operating Procedures (SOP's) developed with the CSIR and vetted by the FDA a production flow will be developed to guide production. Staff will be trained periodically to ensure compliance. A Quality Assurance member of the management team will be appointed to supervise and vet each batch of production before packaging is done for the market.",
+  },
+};
+
+const AboutSection = () => {
+  const bannerRef = useScrollReveal();
+  const storyTitleRef = useScrollReveal();
+  const storyTextRef = useScrollReveal();
+  const productsRef = useScrollReveal();
+  const problemSolutionRef = useScrollReveal();
+  const titleRef = useScrollReveal();
+  const textRef = useScrollReveal();
+  const imageRef = useScrollReveal();
+  const image3Ref = useScrollReveal();
+  const image4Ref = useScrollReveal();
+  const image5Ref = useScrollReveal();
+  const image6Ref = useScrollReveal();
+
+  const [staff, setStaff] = useState([]);
+  const [selectedStaff, setSelectedStaff] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    const fetchStaffs = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/get-staff`);
+        setStaff(res.data.staff);
+      } catch (err) {
+        toast.error("error fetching staffs ", err);
+      }
+    };
+    fetchStaffs();
+  }, []);
+
+  // Open modal with staff details
+  const openStaffModal = (staffMember) => {
+    setSelectedStaff(staffMember);
+    setIsModalOpen(true);
+    // Prevent body scrolling when modal is open
+    document.body.style.overflow = "hidden";
+  };
+
+  // Close modal
+  const closeStaffModal = () => {
+    setIsModalOpen(false);
+    setSelectedStaff(null);
+    // Restore body scrolling
+    document.body.style.overflow = "auto";
+  };
+
+  // Close modal when clicking outside content
+  const handleBackdropClick = (e) => {
+    if (e.target.classList.contains("modal-backdrop")) {
+      closeStaffModal();
+    }
+  };
+
+  // Close modal with Escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && isModalOpen) {
+        closeStaffModal();
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [isModalOpen]);
+
+  return (
+    <>
+    <Helmet>
+  <title>About Naya Success Axis - Poultry Farming in Ghana Since 2017</title>
+  <meta name="description" content="Naya Success Axis: Ghana poultry farm started 2017, registered 2019. 2 branches in Accra & Eastern Region. Poultry farming, processing & value chain specialists." />
+  <meta name="keywords" content="Naya Success Axis Ghana, poultry farm Ghana, agricultural business Ghana, chicken processing, poultry value chain, Ghana poultry industry" />
+  <link rel="canonical" href="https://www.nayasuccessaxis.com/about" />
+  
+</Helmet>
+
+    <div className="min-h-screen bg-gradient-to-b from-white to-orange-50">
+      {/* Staff Details Modal */}
+      {isModalOpen && selectedStaff && (
+        <div
+          className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 backdrop-blur-sm"
+          onClick={handleBackdropClick}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-hide animate-modal-fade-in">
+            {/* Modal Header */}
+            <div className="relative p-6 border-b border-gray-200">
+              <button
+                onClick={closeStaffModal}
+                className="absolute right-6 top-6 p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 z-10"
+                aria-label="Close modal"
+              >
+                <FaTimes className="w-6 h-6 text-gray-600" />
+              </button>
+
+              <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                {/* Staff Image */}
+                <div className="relative w-40 h-40 flex-shrink-0">
+                  <div className="absolute inset-0 bg-gradient-to-br from-lime-500 to-emerald-600 rounded-2xl transform rotate-3" />
+                  <img
+                    src={selectedStaff.image}
+                    alt={selectedStaff.name}
+                    className="relative w-full h-full object-cover rounded-2xl border-4 border-white shadow-lg"
+                    onError={(e) => {
+                      e.target.src = "https://via.placeholder.com/400x400";
+                    }}
+                  />
+                </div>
+
+                {/* Staff Basic Info */}
+                <div className="flex-1 text-center md:text-left">
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                    {selectedStaff.name}
+                  </h2>
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-lime-100 text-lime-800 rounded-full mb-4">
+                    <FaBriefcase className="w-4 h-4" />
+                    <span className="font-semibold">{selectedStaff.title}</span>
+                  </div>
+                  <p className="text-gray-600 mb-4">
+                    {selectedStaff.position} at NAYA SUCCESS AXIS
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
+              <div className="grid md:grid-cols-3 gap-8">
+                {/* Left Column - Bio */}
+                <div className="md:col-span-2">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">
+                    Biography
+                  </h3>
+                  <p className="text-gray-700 leading-relaxed">
+                    {selectedStaff.bio ||
+                      `${selectedStaff.name} is a dedicated professional with extensive experience in poultry farming and agribusiness management. They play a crucial role in NAYA SUCCESS AXIS's mission to deliver high-quality poultry products while promoting sustainable farming practices.`}
+                  </p>
+
+                  {/* Responsibilities */}
+                  {selectedStaff.responsibilities && (
+                    <div className="mt-8">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-3">
+                        Key Responsibilities
+                      </h4>
+                      <ul className="space-y-2">
+                        {selectedStaff.responsibilities
+                          .split(",")
+                          .map((item, index) => (
+                            <li key={index} className="flex items-start gap-2">
+                              <div className="w-2 h-2 mt-2 bg-lime-500 rounded-full flex-shrink-0" />
+                              <span className="text-gray-700">
+                                {item.trim()}
+                              </span>
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
+                {/* Right Column - Contact & Details */}
+                <div className="space-y-6">
+                  {/* Contact Information */}
+                  <div className="bg-gray-50 rounded-xl p-5">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                      Contact Information
+                    </h4>
+                    <div className="space-y-3">
+                      {selectedStaff.email && (
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-blue-50 rounded-lg">
+                            <FaEnvelope className="w-4 h-4 text-blue-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Email</p>
+                            <a
+                              href={`mailto:${selectedStaff.email}`}
+                              className="text-blue-600 hover:underline font-medium"
+                            >
+                              {selectedStaff.email}
+                            </a>
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedStaff.phone && (
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-green-50 rounded-lg">
+                            <FaPhone className="w-4 h-4 text-green-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Phone</p>
+                            <a
+                              href={`tel:${selectedStaff.phone}`}
+                              className="text-gray-900 font-medium"
+                            >
+                              {selectedStaff.phone}
+                            </a>
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedStaff.location && (
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-orange-50 rounded-lg">
+                            <FaMapMarkerAlt className="w-4 h-4 text-orange-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Location</p>
+                            <p className="text-gray-900 font-medium">
+                              {selectedStaff.location}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Social Media */}
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                      Connect
+                    </h4>
+                    <div className="flex gap-3">
+                      <a
+                        href="#"
+                        className="p-3 bg-blue-100 text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-110"
+                        aria-label="Facebook"
+                      >
+                        <FaFacebookF className="w-5 h-5" />
+                      </a>
+                      <a
+                        href="#"
+                        className="p-3 bg-pink-100 text-pink-600 rounded-full hover:bg-pink-600 hover:text-white transition-all duration-300 hover:scale-110"
+                        aria-label="Instagram"
+                      >
+                        <FaInstagram className="w-5 h-5" />
+                      </a>
+                      <a
+                        href="#"
+                        className="p-3 bg-green-100 text-green-600 rounded-full hover:bg-green-600 hover:text-white transition-all duration-300 hover:scale-110"
+                        aria-label="WhatsApp"
+                      >
+                        <FaWhatsapp className="w-5 h-5" />
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Join Date */}
+                  {selectedStaff.joinDate && (
+                    <div className="bg-lime-50 rounded-xl p-5">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                        Member Since
+                      </h4>
+                      <p className="text-2xl font-bold text-lime-700">
+                        {selectedStaff.joinDate}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-6 border-t border-gray-200 bg-gray-50">
+              <div className="flex justify-between items-center">
+                <button
+                  onClick={closeStaffModal}
+                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200 font-medium"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Banner - Responsive */}
+      <div
+        className="relative w-full h-64 sm:h-80 md:h-96 lg:h-[420px] bg-cover bg-center"
+        style={{ backgroundImage: `url(${data.banner.image})` }}
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center px-4">
+          <h1
+            ref={bannerRef}
+            className="scroll-reveal opacity-0 translate-y-10 text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white text-center"
+          >
+            {data.banner.title}
+          </h1>
+        </div>
+      </div>
+
+      {/* Story Section - Responsive Grid */}
+      <section className="py-8 sm:py-10 md:py-12 px-4 sm:px-6 md:px-8 lg:px-20">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 lg:gap-12 items-center">
+          {/* Left Column - Story Content */}
+          <div>
+            <span className="inline-block px-4 py-2 mb-4 bg-amber-100 text-amber-800 rounded-full text-sm md:text-base">
+              {data.story.since}
+            </span>
+
+            <h2
+              ref={storyTitleRef}
+              className="scroll-reveal opacity-0 translate-y-10 text-2xl sm:text-3xl md:text-4xl font-black mb-4 md:mb-6"
+            >
+              {data.story.title}
+            </h2>
+
+            {/* Image with max-w-3xl constraint */}
+            <div className="flex justify-center mt-6 md:mt-8">
+              <div className="w-full max-w-3xl">
+                <img
+                  ref={imageRef}
+                  src={p1}
+                  alt="Our story"
+                  className="scroll-reveal w-full h-auto rounded-xl object-cover shadow-lg"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Story Text */}
+          <div
+            ref={storyTextRef}
+            className="scroll-reveal opacity-0 translate-y-10 text-gray-600 space-y-4 text-base sm:text-lg"
+          >
+            {data.story.paragraphs.map((p, i) => (
+              <p key={i} className="leading-relaxed">{p}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Mission & Vision Section - Responsive Grid */}
+      <section className="py-8 sm:py-10 md:py-12 bg-white px-4 sm:px-6 md:px-8">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
+          {/* Mission Card */}
+          <div className="p-6 sm:p-8 rounded-2xl md:rounded-3xl bg-amber-50">
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-4 md:mb-6">
+              {data.mission.title}
+            </h3>
+            <p className="mb-6 text-base sm:text-lg">{data.mission.description}</p>
+            <ul className="space-y-2 mb-6 md:mb-8">
+              {data.mission.points.map((m, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="text-amber-600 mt-1">•</span>
+                  <span className="text-base sm:text-lg">{m}</span>
+                </li>
+              ))}
+            </ul>
+            {/* Image with max-w-3xl constraint */}
+            <div className="flex justify-center">
+              <div className="w-full max-w-3xl">
+                <img
+                  ref={image3Ref}
+                  src={p3}
+                  alt="Our mission"
+                  loading="lazy"
+                  className="scroll-reveal w-full h-auto rounded-xl object-cover shadow-md mt-4"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Vision Card */}
+          <div className="p-6 sm:p-8 rounded-2xl md:rounded-3xl bg-orange-50">
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-4 md:mb-6">
+              {data.vision.title}
+            </h3>
+            <p className="mb-6 text-base sm:text-lg">{data.vision.description}</p>
+            <ul className="space-y-2 mb-6 md:mb-8">
+              {data.vision.points.map((v, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="text-orange-600 mt-1">•</span>
+                  <span className="text-base sm:text-lg">{v}</span>
+                </li>
+              ))}
+            </ul>
+            {/* Image with max-w-3xl constraint */}
+            <div className="flex justify-center">
+              <div className="w-full max-w-3xl">
+                <img
+                  ref={image4Ref}
+                  src={p5}
+                  alt="Our vision"
+                  className="scroll-reveal w-full h-auto rounded-xl object-cover shadow-md mt-4"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Products Card */}
+          <div
+            ref={productsRef}
+            className="scroll-reveal p-6 sm:p-8 rounded-2xl md:rounded-3xl bg-amber-50"
+          >
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-4 md:mb-6">
+              {data.values_section.title}
+            </h3>
+            <p className="mb-6 text-base sm:text-lg">{data.values_section.description}</p>
+            <ul className="space-y-2">
+              {data.values_section.products.map((p, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="text-amber-600 mt-1">•</span>
+                  <span className="text-base sm:text-lg">{p}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Problem & Solution Card */}
+          <div
+            ref={problemSolutionRef}
+            className="scroll-reveal p-6 sm:p-8 rounded-2xl md:rounded-3xl bg-orange-50"
+          >
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-4">
+              Problem
+            </h3>
+            <p className="mb-6 md:mb-8 text-base sm:text-lg">{data.values_section.problem}</p>
+
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-4">
+              Solution
+            </h3>
+            <p className="text-base sm:text-lg">{data.values_section.solution}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Achievements & Quality Assurance Section */}
+      <section className="py-8 sm:py-10 md:py-12 px-4 sm:px-6 md:px-8">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
+          {/* Achievement Card */}
+          <div className="p-6 sm:p-8 rounded-2xl md:rounded-3xl bg-amber-50">
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-4 md:mb-6">
+              {data.achievement_section.title}
+            </h3>
+            <p className="mb-6 text-base sm:text-lg">{data.achievement_section.description}</p>
+            {/* Image with max-w-3xl constraint */}
+            <div className="flex justify-center">
+              <div className="w-full max-w-3xl">
+                <img
+                  ref={image5Ref}
+                  src={p2}
+                  alt="Our achievements"
+                  loading="lazy"
+                  className="scroll-reveal w-full h-auto rounded-xl object-cover shadow-md mt-4"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Quality Assurance Card */}
+          <div className="p-6 sm:p-8 rounded-2xl md:rounded-3xl bg-amber-50">
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-4 md:mb-6">
+              {data.quality_assurance.title}
+            </h3>
+            <p className="mb-6 text-base sm:text-lg">{data.quality_assurance.description}</p>
+            {/* Image with max-w-3xl constraint */}
+            <div className="flex justify-center">
+              <div className="w-full max-w-3xl">
+                <img
+                  ref={image6Ref}
+                  src={p6}
+                  alt="Quality assurance"
+                  loading="lazy"
+                  className="scroll-reveal w-full h-auto rounded-xl object-cover shadow-md mt-4"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Staff Team Section - Responsive */}
+      <section className="py-12 sm:py-14 md:py-16 bg-gradient-to-b from-white to-lime-50 px-4 sm:px-6 md:px-8">
+        <div className="container mx-auto max-w-7xl">
+          {/* Top Content */}
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start mb-12 md:mb-16">
+            <div className="lg:w-2/3 mx-auto">
+              {/* Title */}
+              <div ref={titleRef} className="scroll-reveal space-y-4 text-center lg:text-left">
+                <span className="inline-block text-sm font-semibold text-lime-600 bg-emerald-50 px-4 py-2 rounded-full">
+                  Our Leaders
+                </span>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                  Meet Our Main Leaders
+                </h1>
+                <div className="h-1 w-20 bg-lime-500 rounded-full mx-auto lg:mx-0" />
+              </div>
+
+              {/* Description */}
+              <div ref={textRef} className="scroll-reveal mt-6 md:mt-8 space-y-6">
+                <p className="text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed text-center lg:text-left">
+                  Our leaders works really hard to keep this wonderful company
+                  going to produce and meet consumers' needs.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                  {/* Member Thumbnails */}
+                  <div className="flex -space-x-2">
+                    {staff.slice(0, 3).reverse().map((member, idx) => (
+                      <div
+                        key={idx}
+                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white overflow-hidden bg-gray-200"
+                      >
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                          onError={(e) => {
+                            e.target.src = "https://via.placeholder.com/100";
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Horizontal Scroll Staff Cards - Responsive */}
+          <div className="relative">
+            {/* Scroll Container */}
+            <div className="flex gap-4 sm:gap-6 md:gap-8 pb-4 sm:pb-6 items-center justify-center overflow-x-auto scrollbar-hide px-2">
+              {staff.slice(0, 3).reverse().map((member, index) => (
+                <div
+                  key={index}
+                  className="flex-shrink-0 w-[180px] sm:w-[200px] md:w-[220px] lg:w-[240px] cursor-pointer transform transition-transform duration-300 hover:scale-[1.03]"
+                  onClick={() => openStaffModal(member)}
+                >
+                  {/* Compact Card Design */}
+                  <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 h-full border border-gray-100 hover:border-lime-200">
+                    {/* Image Container */}
+                    <div className="relative h-40 sm:h-44 md:h-48 overflow-hidden rounded-t-xl">
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        loading="lazy"
+                        className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                        onError={(e) => {
+                          e.target.src = "https://via.placeholder.com/400x400";
+                        }}
+                      />
+
+                      {/* Minimal Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+
+                      {/* Compact Position Badge */}
+                      <div className="absolute top-2 left-2">
+                        <span className="px-2 py-1 text-[10px] font-semibold text-white bg-lime-600/90 rounded">
+                          {member.position}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Compact Content Area */}
+                    <div className="p-3 sm:p-4">
+                      <div className="text-center">
+                        <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1 truncate">
+                          {member.name}
+                        </h3>
+                        <p className="text-xs sm:text-sm font-semibold text-lime-600 mb-2 truncate">
+                          {member.title}
+                        </p>
+                        <p className="text-xs text-gray-500 mb-3 line-clamp-2 leading-snug">
+                          {member.bio || "Expert in poultry management"}
+                        </p>
+                      </div>
+
+                      {/* Compact Social Icons */}
+                      <div className="flex justify-center gap-2 mt-3 pt-3 border-t border-gray-100">
+                        <button
+                          className="p-1.5 bg-gray-100 text-gray-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-200 hover:scale-110"
+                          aria-label="Facebook"
+                        >
+                          <FaFacebookF className="w-3 h-3 sm:w-4 sm:h-4" />
+                        </button>
+                        <button
+                          className="p-1.5 bg-gray-100 text-gray-600 rounded-full hover:bg-pink-600 hover:text-white transition-all duration-200 hover:scale-110"
+                          aria-label="Instagram"
+                        >
+                          <FaInstagram className="w-3 h-3 sm:w-4 sm:h-4" />
+                        </button>
+                        <button
+                          className="p-1.5 bg-gray-100 text-gray-600 rounded-full hover:bg-green-600 hover:text-white transition-all duration-200 hover:scale-110"
+                          aria-label="WhatsApp"
+                        >
+                          <FaWhatsapp className="w-3 h-3 sm:w-4 sm:h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Scroll Indicators - Hidden on mobile, visible on tablet+ */}
+            <div className="hidden sm:flex justify-center items-center gap-2 mt-6 md:mt-8">
+              {staff.slice(0, 3).reverse().map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-2 h-2 rounded-full ${
+                    index === 0 ? "bg-lime-600" : "bg-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+    </>
+  );
+};
+
+export default AboutSection;

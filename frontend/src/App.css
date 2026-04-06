@@ -1,0 +1,214 @@
+/* =================================== */
+/* OPTIMIZED CSS - KEEPS ALL CLASSES  */
+/* =================================== */
+
+/* Keep all fonts but optimize weights */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =================================== */
+/* GLOBAL STYLES (MINIMAL) */
+/* =================================== */
+body {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+}
+
+html, * {
+  scroll-behavior: smooth;
+}
+
+/* =================================== */
+/* YOUR EXISTING UTILITY CLASSES */
+/* =================================== */
+.color { background-color: #adff2f; }
+
+.gradient-text {
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes swing {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(5deg); }
+  40% { transform: rotate(-5deg); }
+  60% { transform: rotate(3deg); }
+  80% { transform: rotate(-3deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes scale-up {
+  0% { 
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% { 
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-swing {
+  animation: swing 2s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.animate-scale-up {
+  animation: scale-up 0.2s ease-out;
+}
+
+.hover-lift { transition: transform 0.3s ease; }
+.hover-lift:hover { transform: translateY(-4px); }
+
+/* =================================== */
+/* SCROLLBARS (COMPACT) */
+/* =================================== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { 
+  background: #4ade80;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: #22c55e; }
+
+/* Your scrollbar hide classes */
+.custom-scrollbar::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
+.custom-scrollbar,
+.no-scrollbar,
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Your thin scrollbar */
+.scrollbar-thin::-webkit-scrollbar { 
+  height: 6px;
+  cursor: pointer;
+}
+.scrollbar-thin::-webkit-scrollbar-track { 
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb { 
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+/* =================================== */
+/* CONSOLIDATED ANIMATIONS */
+/* =================================== */
+/* Combined all similar animations */
+@keyframes slideInFromRight {
+  0% { transform: translateX(100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInFromLeft {
+  0% { transform: translateX(-100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ping-slow {
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes news-scroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+
+@keyframes subtle-zoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.03); }
+}
+
+/* Your animation classes */
+.animate-slide-up { animation: slide-up 0.3s ease-out; }
+.animate-fade-in { animation: fade-in 0.2s ease-out; }
+.animate-ping-slow { animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
+.animate-news-scroll { animation: news-scroll 20s linear infinite; }
+.animate-smooth-scroll { animation: news-scroll 30s linear infinite; } /* Reused animation */
+
+.pause-animation { animation-play-state: paused; }
+
+/* Scroll reveal (unchanged) */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 600ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =================================== */
+/* YOUR EXISTING STYLES (COMPACTED) */
+/* =================================== */
+img { transition: transform 0.7s ease; }
+.group:hover .animate-smooth-scroll { animation-play-state: paused; }
+.transform, .opacity-100, .opacity-0 { will-change: transform, opacity; }
+
+/* Prevent iOS zoom */
+input, textarea, select { font-size: 16px; }
+
+/* =================================== */
+/* MEDIA QUERIES (KEPT AS IS) */
+/* =================================== */
+@media (max-height: 600px) and (orientation: landscape) {
+  .mobile-full-height { height: 100vh; }
+}
+
+@media (max-width: 768px) {
+  .content-container {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scale-105 { animation: subtle-zoom 20s infinite alternate ease-in-out; }
+}
+
+/* Chat responsive (unchanged) */
+@media (max-width: 640px) {
+  .chat-button { right: 16px; bottom: 16px; }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .chat-button { right: 24px; bottom: 24px; }
+}
+
+@media (min-width: 769px) {
+  .chat-button { right: 32px; bottom: 32px; }
+}
+
+/* Mobile chat adjustments (from second set) */
+@media (max-width: 640px) {
+  .chat-button { bottom: 5rem; right: 1rem; }
+  .chat-window {
+    bottom: 6rem;
+    right: 1rem;
+    width: calc(100vw - 2rem);
+    height: 70vh;
+  }
+}
