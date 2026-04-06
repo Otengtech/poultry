@@ -7,11 +7,5 @@
   ],
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
-  "installCommand": "pnpm install --no-frozen-lockfile --reporter=silent",
-  "framework": "vite",
-  "functions": {
-    "api/*": {
-      "maxDuration": 10
-    }
-  }
+  "installCommand": "pnpm install"
 }
