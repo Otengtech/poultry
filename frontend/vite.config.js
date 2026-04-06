@@ -1,13 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
-
     server: {
-      // Only use proxy in development
       proxy: mode === 'development' ? {
         '/api': {
           target: 'https://naya-axis-foods-backend.vercel.app',
@@ -17,9 +14,20 @@ export default defineConfig(({ mode }) => {
         }
       } : undefined
     },
-
     define: {
       'process.env.NODE_ENV': JSON.stringify(mode)
+    },
+    build: {
+      outDir: 'dist',
+      sourcemap: false,
+      rollupOptions: {
+        output: {
+          manualChunks: undefined
+        }
+      }
+    },
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'react-router-dom']
     }
   };
 });
