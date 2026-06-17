@@ -47,6 +47,8 @@ function App() {
             <Route path="/order" element={<OrderPage />} />
             <Route path="/event" element={<SupplyPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/404" element={<NotFound />} />
+            <Route path="*" element={<Navigate to="/404" />} />
           </Routes>
           <TopButton />
 
