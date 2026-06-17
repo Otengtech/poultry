@@ -31,7 +31,7 @@ function App() {
         <div className="min-h-screen flex flex-col">
           <Navbar />
           <ChatAssistant />
-          <FestivalBanner />
+          {/* <FestivalBanner /> */}
           <Routes>
             {/* Regular page routes */}
             <Route path="/" element={<Home />} />
